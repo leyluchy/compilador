@@ -1,0 +1,33 @@
+estimada_cajita_magica
+necesito:	
+ posta n
+ enterito a,b,i
+ discretito c,d
+ jeroglifico cadeña, s
+
+para
+
+
+*+(/)[]><- <= >= == =/= , ; leeme mostrame avast lta?
+i<-1	
+a <- 15
+
+
+si i==15 por_favor
+
+	i<-214748364
+sino
+	mientras a<7 
+		i <- 5 + b
+	goto_mientras
+
+gracias -/gergege$gsrhtd  /-
+-/gergege-/gergege$gsrhtd  /-$gsrhtd  /-
+
+cadeña <- "string espacio ñññ ÑÑÑ"
+"jhfkhgkhgkghgkhgkkjhjhkjhkjhkjhkjhkjhkjhkjhkjhkjhk"
+
+
+	
+
+salu2

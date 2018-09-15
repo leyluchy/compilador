@@ -1,0 +1,12 @@
+Bienvenido al lexico extendido del lenguaje.
+
+Lexema		Token
+avast		AVG
+enterito	INT o numero entero
+jeroglifico	STRING
+lta?		INLIST
+posta		FLOAT o numero real
+estimada_cajita_magica	BEGIN
+salu2		END
+necesito	DECVAR
+para		ENDDEC
