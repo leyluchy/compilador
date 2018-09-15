@@ -1,12 +1,14 @@
 %{
-#include <stdio.h>
-#include <stdlib.h>
-#include <conio.h>
-#include <string.h>
-#include "y.tab.h"
-FILE  *yyin;
-int yylval;
-int cota_error(void);
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <conio.h>
+	#include <string.h>
+	#include "y.tab.h"
+	
+	int cota_error(void);
+	
+	FILE  *yyin;
+	int yylval;
 %}
 
 %option noyywrap  
@@ -22,10 +24,11 @@ CTE_STRING	\"{WHATEVER}*\"
 COMENTARIO	\-\/.*\/\-
 
 %%
-
+ /* Inicio y fin de programa */
 "estimada_cajita_magica"	{ return START;}
 "salu2"						{ return END;}
 
+ /* Seccion de declaracion de variables y tipos de datos */
 "necesito:"					{ return DECVAR;}
 "para"						{ return ENDDEC;}
 "enterito"					{ return INT;}
@@ -33,6 +36,7 @@ COMENTARIO	\-\/.*\/\-
 "posta"						{ return FLOAT;}
 "jeroglifico"				{ return STRING;}
 
+ /* Bloques de control */
 "mientras"					{ return WHILE;}
 "goto_mientras"				{ return ENDWHILE;}
 "si"						{ return IF;}
@@ -40,11 +44,19 @@ COMENTARIO	\-\/.*\/\-
 "sino"						{ return ELSE;}
 "gracias"					{ return ENDIF;}
 
+ /* Operadores logicos */
+"y"							{ return AND;}
+"o"							{ return OR;}
+"no"						{ return NOT;}
+
+ /* Operadores */
 "<-"						{ return ASIG;}
 "+"							{ return MAS;}
 "-"							{ return MENOS;}
 "*"							{ return POR;}
 "/"							{ return DIVIDIDO;}
+
+ /* Comparadores */
 "<"							{ return MENOR;}
 ">"							{ return MAYOR;}
 "<="						{ return MENOR_IGUAL;}
@@ -52,6 +64,7 @@ COMENTARIO	\-\/.*\/\-
 "=="						{ return IGUAL;}
 "=/="						{ return DISTINTO;}
 
+ /* Otros simbolos */
 "("							{ return PA;}
 ")"							{ return PC;}
 "["							{ return CA;}
@@ -59,22 +72,27 @@ COMENTARIO	\-\/.*\/\-
 ","							{ return COMA;}
 ";"							{ return PUNTO_COMA;}
 
+ /* Funciones */
 "leeme"						{ return READ;}
 "mostrame"					{ return WRITE;}
 "avast"						{ return AVG;}
 "lta?"						{ return INLIST;}
 
+ /* Identificadores y constantes */
 {ID}						{ return ID;}
-{CTE_INT}					{ if(atoll(yytext)<=2147483647){
+{CTE_INT}					{ 
+								if(atoll(yytext)<=2147483647){
 									return CTE_INT;
 								}
 								cota_error();
 							}
 {CTE_FLOAT}					{ return CTE_FLOAT;}
-{CTE_STRING}				{ 	if(strlen(yytext)<=30){
-									return CTE_STRING;}
+{CTE_STRING}				{ 	
+								if(strlen(yytext)<=30){
+									return CTE_STRING;
+								}
 								cota_error();
-}
+							}
 {COMENTARIO}				
 
 %%

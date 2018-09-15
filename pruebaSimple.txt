@@ -1,4 +1,4 @@
-estimada_cajita_magica
+﻿estimada_cajita_magica
 necesito:	
  posta n
  enterito a,b,i
@@ -7,6 +7,7 @@ necesito:
 
 para
 
+y no o
 
 *+(/)[]><- <= >= == =/= , ; leeme mostrame avast lta?
 i<-1	
