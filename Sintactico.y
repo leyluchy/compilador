@@ -3,9 +3,9 @@
 	#include <stdlib.h>
 	#include <conio.h>
 	#include "y.tab.h"
-	
+
 	int yyerror();
-	
+
 	int yystopparser=0;
 	FILE  *yyin;
 %}
@@ -42,10 +42,38 @@
 
 %%
 
-programa: 
-	START bloque END;
+programa: START seccion_declaracion bloque END;
 
-bloque:
+seccion_declaracion: DECVAR bloque_dec ENDDEC;
+
+bloque_dec: bloque_dec declaracion;
+
+bloque_dec: declaracion;
+
+declaracion: t_dato lista_id PUNTO_COMA;
+
+t_dato: FLOAT | INT | STRING;
+
+lista_id: lista_id COMA ID;
+
+lista_id: ID;
+
+bloque: bloque sentencia;
+
+bloque: sentencia;
+
+sentencia: asignacion | bloque_if | bloque_while | expresion_aritmetica; /* puede no haber sentencias? lo mismo para if y while */
+
+asignacion: ID ASIG expresion_aritmetica; /*terminar de desarrollar*/
+
+bloque_if: IF expresion_booleana THEN bloque ENDIF; /*terminar de desarrollar*/
+
+bloque_if: IF expresion_booleana THEN bloque ELSE bloque ENDIF; /*terminar de desarrollar*/
+
+bloque_while: WHILE expresion_booleana bloque ENDWHILE;
+
+
+/* bloque:
 	toquen | bloque toquen;
 
 toquen:
@@ -87,7 +115,7 @@ toquen:
 |CTE_STRING	{printf("CTE_STRING ");}
 |AND	{printf("AND ");}
 |OR		{printf("OR ");}
-|NOT	{printf("NOT ");};
+|NOT	{printf("NOT ");};  */
 
 %%
 
