@@ -62,9 +62,9 @@ bloque: bloque sentencia;
 
 bloque: sentencia;
 
-sentencia: asignacion | bloque_if | bloque_while | expresion_aritmetica; /* puede no haber sentencias? lo mismo para if y while */
+sentencia: asignacion | bloque_if | bloque_while | expresion_aritmetica; /* puede no haber sentencias? lo mismo para if y while, la expresion_aritmetica está porque si */
 
-asignacion: ID ASIG expresion_aritmetica; /*terminar de desarrollar*/
+asignacion: ID ASIG expresion; /*terminar de desarrollar, puede ser una exp aritmetica, o una cadena, así que es una expresion*/
 
 bloque_if: IF expresion_booleana THEN bloque ENDIF; /*terminar de desarrollar*/
 
