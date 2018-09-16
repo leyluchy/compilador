@@ -43,43 +43,66 @@
 
 %%
 
-programa: START seccion_declaracion bloque END {printf("\nCOMPILACION EXITOSA");};
+programa: 
+	START seccion_declaracion bloque END 	{printf("\nCOMPILACION EXITOSA");};
 
-seccion_declaracion: DECVAR bloque_dec ENDDEC {printf("\nRegla 1");};
+ /* Declaracion de variables */
+seccion_declaracion: 
+	DECVAR bloque_dec ENDDEC 				{printf("\nRegla 1");};
 
-bloque_dec: bloque_dec declaracion{printf("\nRegla 2");};
+bloque_dec: 
+	bloque_dec declaracion					{printf("\nRegla 2");}
+	| declaracion							{printf("\nRegla 3");};
 
-bloque_dec: declaracion{printf("\nRegla 3");};
+declaracion: 
+	t_dato lista_id PUNTO_COMA				{printf("\nRegla 4");};
 
-declaracion: t_dato lista_id PUNTO_COMA{printf("\nRegla 4");};
+t_dato: 
+	FLOAT		{printf("\nRegla 5");} 
+	| INT		{printf("\nRegla 6");} 
+	| STRING	{printf("\nRegla 7");};
 
-t_dato: FLOAT{printf("\nRegla 5");} | INT{printf("\nRegla 6");} | STRING{printf("\nRegla 7");};
+lista_id: 
+	lista_id COMA ID	{printf("\nRegla 8");}
+	| ID				{printf("\nRegla 9");};
 
-lista_id: lista_id COMA ID{printf("\nRegla 8");};
+ /* Seccion de codigo */
+bloque: 
+	bloque sentencia	{printf("\nRegla 10");}
+	| sentencia			{printf("\nRegla 11");};
 
-lista_id: ID{printf("\nRegla 9");};
+sentencia: 
+	asignacion			{printf("\nRegla 12");}; 
+	/* | bloque_if | bloque_while | lectura | escritura | expresion_aritmetica PUNTO_COMA; */ 
+	/* puede no haber sentencias? lo mismo para if y while, la expresion_aritmetica está porque si */
 
-bloque: bloque sentencia{printf("\nRegla 10");};
+asignacion: 
+	ID ASIG expresion PUNTO_COMA	{printf("\nRegla 13");}; /* terminar de desarrollar, puede ser una exp aritmetica, o una cadena, así que es una expresion */
 
-bloque: sentencia{printf("\nRegla 11");};
+expresion: 
+	expresion_cadena				{printf("\nRegla 14");} 
+	| expresion_aritmetica			{printf("\nRegla 15");};
 
-sentencia: asignacion{printf("\nRegla 12");}; /* | bloque_if | bloque_while | lectura | escritura | expresion_aritmetica PUNTO_COMA; */ /* puede no haber sentencias? lo mismo para if y while, la expresion_aritmetica está porque si */
+expresion_cadena: 
+	CTE_STRING						{printf("\nRegla 16");};
 
-asignacion: ID ASIG expresion PUNTO_COMA{printf("\nRegla 13");}; /* terminar de desarrollar, puede ser una exp aritmetica, o una cadena, así que es una expresion */
+expresion_aritmetica: 
+	expresion_aritmetica MAS termino 		{printf("\nRegla 17");}
+	| expresion_aritmetica MENOS termino 	{printf("\nRegla 18");}
+	| termino								{printf("\nRegla 19");};
 
-expresion: expresion_cadena{printf("\nRegla 14");} | expresion_aritmetica{printf("\nRegla 15");};
+termino: 
+	termino POR factor 			{printf("\nRegla 20");}
+	| termino DIVIDIDO factor 	{printf("\nRegla 21");}
+	| factor					{printf("\nRegla 22");};
 
-expresion_cadena: CTE_STRING{printf("\nRegla 16");};
+factor: 
+	PA expresion_aritmetica PC	{printf("\nRegla 23");}; /* puedo multiplicar por una string? ya no xD */
 
-expresion_aritmetica: expresion_aritmetica MAS termino {printf("\nRegla 17");}| expresion_aritmetica MENOS termino {printf("\nRegla 18");}| termino{printf("\nRegla 19");};
-
-termino: termino POR factor {printf("\nRegla 20");}| termino DIVIDIDO factor {printf("\nRegla 21");}| factor{printf("\nRegla 22");};
-
-factor: PA expresion_aritmetica PC{printf("\nRegla 23");}; /* puedo multiplicar por una string? ya no xD */
-
-factor: ID{printf("\nRegla 24");};
-
-factor: CTE_FLOAT{printf("\nRegla 25");} | CTE_INT{printf("\nRegla 26");}; /* de aca para atras esta mas o menos listo */
+factor: 
+	ID			{printf("\nRegla 24");};
+	| CTE_FLOAT	{printf("\nRegla 25");} 
+	| CTE_INT	{printf("\nRegla 26");}; /* de aca para atras esta mas o menos listo */
 
 /* prueba 1: descomentar lo de abajo para que sea leído ------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
