@@ -10,7 +10,8 @@
 	FILE  *yyin;
 %}
 
-%token START END
+%token START
+%token END
 
 %token DECVAR ENDDEC
 %token INT FLOAT STRING
@@ -42,35 +43,51 @@
 
 %%
 
-programa: START seccion_declaracion bloque END;
+programa: START seccion_declaracion bloque END {printf("\nCOMPILACION EXITOSA");};
 
-seccion_declaracion: DECVAR bloque_dec ENDDEC;
+seccion_declaracion: DECVAR bloque_dec ENDDEC {printf("\nRegla 1");};
 
-bloque_dec: bloque_dec declaracion;
+bloque_dec: bloque_dec declaracion{printf("\nRegla 2");};
 
-bloque_dec: declaracion;
+bloque_dec: declaracion{printf("\nRegla 3");};
 
-declaracion: t_dato lista_id PUNTO_COMA;
+declaracion: t_dato lista_id PUNTO_COMA{printf("\nRegla 4");};
 
-t_dato: FLOAT | INT | STRING;
+t_dato: FLOAT{printf("\nRegla 5");} | INT{printf("\nRegla 6");} | STRING{printf("\nRegla 7");};
 
-lista_id: lista_id COMA ID;
+lista_id: lista_id COMA ID{printf("\nRegla 8");};
 
-lista_id: ID;
+lista_id: ID{printf("\nRegla 9");};
 
-bloque: bloque sentencia;
+bloque: bloque sentencia{printf("\nRegla 10");};
 
-bloque: sentencia;
+bloque: sentencia{printf("\nRegla 11");};
 
-sentencia: asignacion | bloque_if | bloque_while | expresion_aritmetica; /* puede no haber sentencias? lo mismo para if y while, la expresion_aritmetica está porque si */
+sentencia: asignacion{printf("\nRegla 12");}; /* | bloque_if | bloque_while | lectura | escritura | expresion_aritmetica PUNTO_COMA; */ /* puede no haber sentencias? lo mismo para if y while, la expresion_aritmetica está porque si */
 
-asignacion: ID ASIG expresion; /*terminar de desarrollar, puede ser una exp aritmetica, o una cadena, así que es una expresion*/
+asignacion: ID ASIG expresion PUNTO_COMA{printf("\nRegla 13");}; /* terminar de desarrollar, puede ser una exp aritmetica, o una cadena, así que es una expresion */
 
-bloque_if: IF expresion_booleana THEN bloque ENDIF; /*terminar de desarrollar*/
+expresion: expresion_cadena{printf("\nRegla 14");} | expresion_aritmetica{printf("\nRegla 15");};
 
-bloque_if: IF expresion_booleana THEN bloque ELSE bloque ENDIF; /*terminar de desarrollar*/
+expresion_cadena: CTE_STRING{printf("\nRegla 16");};
 
-bloque_while: WHILE expresion_booleana bloque ENDWHILE;
+expresion_aritmetica: expresion_aritmetica MAS termino {printf("\nRegla 17");}| expresion_aritmetica MENOS termino {printf("\nRegla 18");}| termino{printf("\nRegla 19");};
+
+termino: termino POR factor {printf("\nRegla 20");}| termino DIVIDIDO factor {printf("\nRegla 21");}| factor{printf("\nRegla 22");};
+
+factor: PA expresion_aritmetica PC{printf("\nRegla 23");}; /* puedo multiplicar por una string? ya no xD */
+
+factor: ID{printf("\nRegla 24");};
+
+factor: CTE_FLOAT{printf("\nRegla 25");} | CTE_INT{printf("\nRegla 26");}; /* de aca para atras esta mas o menos listo */
+
+/* prueba 1: descomentar lo de abajo para que sea leído ------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+
+/* bloque_if: IF expresion_booleana THEN bloque ENDIF; /* /* terminar de desarrollar */
+
+/* bloque_if: IF expresion_booleana THEN bloque ELSE bloque ENDIF; /* /* terminar de desarrollar */
+
+/* bloque_while: WHILE expresion_booleana bloque ENDWHILE; */
 
 
 /* bloque:
