@@ -96,22 +96,26 @@ t_dato:
 
 lista_id:
 	lista_id COMA ID	{
-							printf("\nRegla 8: lista_id es lista_id COMA ID, ID: %s", yylval.string_val);
+							printf("Regla 8: lista_id es lista_id COMA ID | ID: %s\n", yylval.string_val);
 							agregarVarATabla(yylval.string_val);
 						}
 	| ID				{	
-							printf("\nRegla 9: lista_id es ID: %s", yylval.string_val);
+							printf("Regla 9: lista_id es ID | ID: %s\n", yylval.string_val);
 							agregarVarATabla(yylval.string_val);
 						};
 
  /* Seccion de codigo */
 bloque:
-	bloque sentencia	{printf("Regla 10\n");}
-	| sentencia			{printf("Regla 11\n");};
+	bloque sentencia	{printf("Regla 10: bloque es bloque sentencia\n");}
+	| sentencia			{printf("Regla 11: bloque es sentencia\n");};
 
 sentencia:
-	asignacion PUNTO_COMA			{printf("\nRegla 12");};
-	| bloque_if; | bloque_while | lectura PUNTO_COMA | escritura PUNTO_COMA | expresion_aritmetica PUNTO_COMA;
+	asignacion PUNTO_COMA			{printf("Regla 12: sentencia es asignacion PUNTO_COMA\n");};
+	| bloque_if 
+	| bloque_while 
+	| lectura PUNTO_COMA 
+	| escritura PUNTO_COMA 
+	| expresion_aritmetica PUNTO_COMA;
 	/* puede no haber sentencias? lo mismo para if y while, la expresion_aritmetica est� porque si */
 
 bloque_if:
@@ -190,50 +194,6 @@ lectura:
 escritura:
     WRITE ID
     | WRITE CTE_STRING;
-
-/* bloque:
-	toquen | bloque toquen;
-
-toquen:
- DECVAR      {printf("DECVAR ");}
- |ENDDEC     {printf("ENDDEC ");}
- |INT        {printf("INT ");}
- |FLOAT      {printf("FLOAT ");}
- |STRING     {printf("STRING ");}
- |WHILE      {printf("WHILE ");}
- |ENDWHILE   {printf("ENDWHILE ");}
- |IF         {printf("IF ");}
- |THEN       {printf("THEN ");}
- |ELSE       {printf("ELSE ");}
- |ENDIF      {printf("ENDIF ");}
- |ASIG       {printf("ASIG ");}
- |MAS        {printf("MAS ");}
- |MENOS      {printf("MENOS ");}
- |POR        {printf("POR ");}
- |DIVIDIDO   {printf("DVD ");}
- |MENOR      {printf("MENOR ");}
- |MAYOR      {printf("MAYOR ");}
- |MENOR_IGUAL{printf("MENOR_IGUAL ");}
- |MAYOR_IGUAL{printf("MAYOR_IGUAL ");}
- |IGUAL      {printf("IGUAL ");}
- |DISTINTO   {printf("DISTINTO ");}
- |PA         {printf("PA ");}
- |PC         {printf("PC ");}
- |CA         {printf("CA ");}
- |CC         {printf("CC ");}
- |COMA       {printf("COMA ");}
- |PUNTO_COMA {printf("PUNTO_COMA ");}
- |READ       {printf("READ ");}
- |WRITE      {printf("WRITE ");}
- |AVG        {printf("AVG ");}
- |INLIST    {printf("INLIST ");}
-|ID			{printf("ID ");}
-|CTE_FLOAT	{printf("CTE_FLOAT ");}
-|CTE_INT	{printf("CTE_INT ");}
-|CTE_STRING	{printf("CTE_STRING ");}
-|AND	{printf("AND ");}
-|OR		{printf("OR ");}
-|NOT	{printf("NOT ");};  */
 
 %%
 
