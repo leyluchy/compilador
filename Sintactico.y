@@ -8,6 +8,24 @@
 
 	int yystopparser=0;
 	FILE  *yyin;
+	
+	define Int 1;
+	define Float 2;
+	define String 3;
+	define CteInt 4;
+	define CteFloat 5;
+	define CteString 6;
+	
+	typedef struct {
+		char* nombre;
+		int tipo_dato;
+		char* valor_s;
+		float valor_f;
+		int valor_i;
+		int longitud;
+	} simbolo;
+	
+	simbolo[300] tabla_simbolo;
 %}
 
 %union {
