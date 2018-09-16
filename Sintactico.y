@@ -3,18 +3,21 @@
 	#include <stdlib.h>
 	#include <conio.h>
 	#include "y.tab.h"
+	
+	#define Int 1;
+	#define Float 2;
+	#define String 3;
+	#define CteInt 4;
+	#define CteFloat 5;
+	#define CteString 6;
 
 	int yyerror();
+	void agregarVarATabla(char* nombre);
 
 	int yystopparser=0;
 	FILE  *yyin;
 	
-	define Int 1;
-	define Float 2;
-	define String 3;
-	define CteInt 4;
-	define CteFloat 5;
-	define CteString 6;
+	
 	
 	typedef struct {
 		char* nombre;
@@ -90,7 +93,10 @@ t_dato:
 
 lista_id: 
 	lista_id COMA ID	{printf("\nRegla 8: lista_id es lista_id COMA ID, ID: %s", yylval.string_val);}
-	| ID				{printf("\nRegla 9: lista_id es ID: %s", yylval.string_val);};
+	| ID				{	
+							printf("\nRegla 9: lista_id es ID: %s", yylval.string_val);
+							agregarVarATabla(yylval.string_val);
+						};
 
  /* Seccion de codigo */
 bloque: 
@@ -205,4 +211,10 @@ int yyerror(void)
 	printf("Syntax Error\n");
 	system ("Pause");
 	exit (1);
+ }
+
+ void agregarVarATabla(char* nombre){
+	 //Si se llena, error
+	 if(buscarEnTabla(nombre) == -1)
+		 //Agregar a tabla
  }

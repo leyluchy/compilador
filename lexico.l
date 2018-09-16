@@ -88,6 +88,13 @@ COMENTARIO	\-\/.*\/\-
 {CTE_INT}					{ 
 								if(atoll(yytext)<=2147483647){
 									yylval.int_val = atoi(yytext);
+									
+									int length = strlen(yytext) + 2;
+									char nombre_cte[length]
+									strcpy(nombre_cte, "_");
+									strcat(nombre_cte, yytext);
+									yylval.string_val = nombre_cte;
+									printf("*** %s ***", nombre_cte);
 									return CTE_INT;
 								}
 								cota_error();
