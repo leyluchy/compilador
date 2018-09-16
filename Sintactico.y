@@ -10,6 +10,12 @@
 	FILE  *yyin;
 %}
 
+%union {
+	int entero_val;
+	float float_val;
+	char *string_val;
+}
+
 %token START
 %token END
 
