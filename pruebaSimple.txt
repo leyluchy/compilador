@@ -7,4 +7,7 @@ jeroglifico cadeña, s;
 para
 a <- (4/4*(4+4)-3/4)*(4*5.4+4/5)-4+3;
 cadeña <- "hey baby";
+si 4*8-(56+9)<4-1 y 1=/=1 por_favor
+a <- 5;
+gracias
 salu2

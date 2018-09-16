@@ -100,8 +100,17 @@ bloque:
 
 sentencia:
 	asignacion			{printf("\nRegla 12");};
-	/* | bloque_if | bloque_while | lectura | escritura | expresion_aritmetica PUNTO_COMA; */
+	| bloque_if; /* | bloque_while | lectura | escritura | expresion_aritmetica PUNTO_COMA; */
 	/* puede no haber sentencias? lo mismo para if y while, la expresion_aritmetica está porque si */
+
+bloque_if:
+    IF expresion_logica THEN bloque ENDIF{printf("\nBloque if completado");};
+
+bloque_if:
+    IF expresion_logica THEN bloque ELSE bloque ENDIF{printf("\nBloque if completado");};
+
+bloque_while:
+    WHILE expresion_logica bloque ENDWHILE{printf("\nBloque while completado");};
 
 asignacion:
 	ID ASIG expresion PUNTO_COMA	{printf("\nRegla 13");}; /* terminar de desarrollar, puede ser una exp aritmetica, o una cadena, así que es una expresion */
@@ -133,11 +142,24 @@ factor:
 
 /* prueba 1: descomentar lo de abajo para que sea leído ------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-/* bloque_if: IF expresion_booleana THEN bloque ENDIF; /* /* terminar de desarrollar */
+expresion_logica:                             /* (algo) && (algo) O (algo) || (algo) O (algo), por si no queda claro */
+    expresion_logica AND termino_logico{printf("\nExpresion logica encontrada");}
+    | expresion_logica OR termino_logico{printf("\nExpresion logica encontrada");}
+    | termino_logico{printf("\nExpresion logica encontrada");}
+    | NOT termino_logico{printf("\nExpresion logica encontrada");};
 
-/* bloque_if: IF expresion_booleana THEN bloque ELSE bloque ENDIF; /* /* terminar de desarrollar */
+termino_logico:
+    expresion_aritmetica comp_bool expresion_aritmetica{printf("\nTermino logico encontrada");};
+/*    | average
+    | inlist; */
 
-/* bloque_while: WHILE expresion_booleana bloque ENDWHILE; */
+comp_bool:
+    MENOR{printf("\nComparador booleano hallado");}
+    |MAYOR{printf("\nComparador booleano hallado");}
+    |MENOR_IGUAL{printf("\nComparador booleano hallado");}
+    |MAYOR_IGUAL{printf("\nComparador booleano hallado");}
+    |IGUAL{printf("\nComparador booleano hallado");}
+    |DISTINTO{printf("\nComparador booleano hallado");};
 
 
 /* bloque:
