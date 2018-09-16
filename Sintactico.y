@@ -44,8 +44,10 @@
 %token AVG
 %token INLIST
 
-%token ID
-%token CTE_FLOAT CTE_INT CTE_STRING
+%token <string_val>ID
+%token <float>CTE_FLOAT 
+%token <int>CTE_INT 
+%token <string_val>CTE_STRING
 
 %%
 
@@ -54,23 +56,23 @@ programa:
 
  /* Declaracion de variables */
 seccion_declaracion: 
-	DECVAR bloque_dec ENDDEC 				{printf("\nRegla 1");};
+	DECVAR bloque_dec ENDDEC 				{printf("\nRegla 1: Seccion declaracion es DECVAR bloque_dec ENDEC");};
 
 bloque_dec: 
-	bloque_dec declaracion					{printf("\nRegla 2");}
-	| declaracion							{printf("\nRegla 3");};
+	bloque_dec declaracion					{printf("\nRegla 2: bloque_dec es bloque_dec declaracion");}
+	| declaracion							{printf("\nRegla 3: bloque_dec es declaracion");};
 
 declaracion: 
-	t_dato lista_id PUNTO_COMA				{printf("\nRegla 4");};
+	t_dato lista_id PUNTO_COMA				{printf("\nRegla 4: declaracion es t_dato lista_id PUNTO_COMA");};
 
 t_dato: 
-	FLOAT		{printf("\nRegla 5");} 
-	| INT		{printf("\nRegla 6");} 
-	| STRING	{printf("\nRegla 7");};
+	FLOAT		{printf("\nRegla 5: t_dato es FLOAT");} 
+	| INT		{printf("\nRegla 6: t_dato es INT");} 
+	| STRING	{printf("\nRegla 7: t_dato es STRING");};
 
 lista_id: 
-	lista_id COMA ID	{printf("\nRegla 8");}
-	| ID				{printf("\nRegla 9");};
+	lista_id COMA ID	{printf("\nRegla 8: lista_id es lista_id COMA ID, ID: %s", yylval.string_val);}
+	| ID				{printf("\nRegla 9: lista_id es ID: %s", yylval.string_val);};
 
  /* Seccion de codigo */
 bloque: 
