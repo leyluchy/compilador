@@ -99,8 +99,8 @@ bloque:
 	| sentencia			{printf("\nRegla 11");};
 
 sentencia:
-	asignacion			{printf("\nRegla 12");};
-	| bloque_if; /* | bloque_while | lectura | escritura | expresion_aritmetica PUNTO_COMA; */
+	asignacion PUNTO_COMA			{printf("\nRegla 12");};
+	| bloque_if; | bloque_while | lectura PUNTO_COMA | escritura PUNTO_COMA | expresion_aritmetica PUNTO_COMA;
 	/* puede no haber sentencias? lo mismo para if y while, la expresion_aritmetica está porque si */
 
 bloque_if:
@@ -113,7 +113,7 @@ bloque_while:
     WHILE expresion_logica bloque ENDWHILE{printf("\nBloque while completado");};
 
 asignacion:
-	ID ASIG expresion PUNTO_COMA	{printf("\nRegla 13");}; /* terminar de desarrollar, puede ser una exp aritmetica, o una cadena, así que es una expresion */
+	ID ASIG expresion	{printf("\nRegla 13");}; /* terminar de desarrollar, puede ser una exp aritmetica, o una cadena, así que es una expresion */
 
 expresion:
 	expresion_cadena				{printf("\nRegla 14");}
@@ -133,14 +133,13 @@ termino:
 	| factor					{printf("\nRegla 22");};
 
 factor:
-	PA expresion_aritmetica PC	{printf("\nRegla 23");}; /* puedo multiplicar por una string? ya no xD */
+	PA expresion_aritmetica PC	{printf("\nRegla 23");} /* puedo multiplicar por una string? ya no xD */
+    | average;
 
 factor:
 	ID			{printf("\nRegla 24");};
 	| CTE_FLOAT	{printf("\nRegla 25");}
 	| CTE_INT	{printf("\nRegla 26");}; /* de aca para atras esta mas o menos listo */
-
-/* prueba 1: descomentar lo de abajo para que sea leído ------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
 expresion_logica:                             /* (algo) && (algo) O (algo) || (algo) O (algo), por si no queda claro */
     expresion_logica AND termino_logico{printf("\nExpresion logica encontrada");}
@@ -149,9 +148,8 @@ expresion_logica:                             /* (algo) && (algo) O (algo) || (a
     | NOT termino_logico{printf("\nExpresion logica encontrada");};
 
 termino_logico:
-    expresion_aritmetica comp_bool expresion_aritmetica{printf("\nTermino logico encontrada");};
-/*    | average
-    | inlist; */
+    expresion_aritmetica comp_bool expresion_aritmetica{printf("\nTermino logico encontrada");}
+    | inlist;
 
 comp_bool:
     MENOR{printf("\nComparador booleano hallado");}
@@ -161,6 +159,26 @@ comp_bool:
     |IGUAL{printf("\nComparador booleano hallado");}
     |DISTINTO{printf("\nComparador booleano hallado");};
 
+average:
+    AVG PA CA lista_exp_coma CC PC;
+
+inlist:
+    INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC;
+
+lista_exp_coma:
+    lista_exp_coma COMA expresion_aritmetica
+    | expresion_aritmetica;
+
+lista_exp_pc:
+    lista_exp_pc PUNTO_COMA expresion_aritmetica
+    | expresion_aritmetica;
+
+lectura:
+    READ ID;
+
+escritura:
+    WRITE ID
+    | WRITE CTE_STRING;
 
 /* bloque:
 	toquen | bloque toquen;
