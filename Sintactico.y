@@ -14,7 +14,7 @@
 	
 	#define TAMANIO_TABLA 300
 
-	int yyerror();
+	int yyerror(char* mensaje);
 	void agregarVarATabla(char* nombre);
 	int buscarEnTabla(char * name);
 
@@ -76,23 +76,23 @@
 %%
 
 programa:
-	START seccion_declaracion bloque END 	{printf("\nCOMPILACION EXITOSA");};
+	START seccion_declaracion bloque END 	{printf("\nCOMPILACION EXITOSA\n");};
 
  /* Declaracion de variables */
 seccion_declaracion:
-	DECVAR bloque_dec ENDDEC 				{printf("\nRegla 1: Seccion declaracion es DECVAR bloque_dec ENDEC");};
+	DECVAR bloque_dec ENDDEC 				{printf("Regla 1: Seccion declaracion es DECVAR bloque_dec ENDEC\n");};
 
 bloque_dec:
-	bloque_dec declaracion					{printf("\nRegla 2: bloque_dec es bloque_dec declaracion");}
-	| declaracion							{printf("\nRegla 3: bloque_dec es declaracion");};
+	bloque_dec declaracion					{printf("Regla 2: bloque_dec es bloque_dec declaracion\n");}
+	| declaracion							{printf("Regla 3: bloque_dec es declaracion\n");};
 
 declaracion:
-	t_dato lista_id PUNTO_COMA				{printf("\nRegla 4: declaracion es t_dato lista_id PUNTO_COMA");};
+	t_dato lista_id PUNTO_COMA				{printf("Regla 4: declaracion es t_dato lista_id PUNTO_COMA\n");};
 
 t_dato:
-	FLOAT		{printf("\nRegla 5: t_dato es FLOAT");}
-	| INT		{printf("\nRegla 6: t_dato es INT");}
-	| STRING	{printf("\nRegla 7: t_dato es STRING");};
+	FLOAT		{printf("Regla 5: t_dato es FLOAT\n");}
+	| INT		{printf("Regla 6: t_dato es INT\n");}
+	| STRING	{printf("Regla 7: t_dato es STRING\n");};
 
 lista_id:
 	lista_id COMA ID	{
@@ -106,28 +106,28 @@ lista_id:
 
  /* Seccion de codigo */
 bloque:
-	bloque sentencia	{printf("\nRegla 10");}
-	| sentencia			{printf("\nRegla 11");};
+	bloque sentencia	{printf("Regla 10\n");}
+	| sentencia			{printf("Regla 11\n");};
 
 sentencia:
-	asignacion			{printf("\nRegla 12");};
+	asignacion			{printf("Regla 12\n");};
 	/* | bloque_if | bloque_while | lectura | escritura | expresion_aritmetica PUNTO_COMA; */
 	/* puede no haber sentencias? lo mismo para if y while, la expresion_aritmetica est� porque si */
 
 asignacion:
-	ID ASIG expresion PUNTO_COMA	{printf("\nRegla 13");}; /* terminar de desarrollar, puede ser una exp aritmetica, o una cadena, as� que es una expresion */
+	ID ASIG expresion PUNTO_COMA	{printf("Regla 13\n");}; /* terminar de desarrollar, puede ser una exp aritmetica, o una cadena, as� que es una expresion */
 
 expresion:
-	expresion_cadena				{printf("\nRegla 14");}
-	| expresion_aritmetica			{printf("\nRegla 15");};
+	expresion_cadena				{printf("Regla 14\n");}
+	| expresion_aritmetica			{printf("Regla 15\n");};
 
 expresion_cadena:
-	CTE_STRING						{printf("\nRegla 16");};
+	CTE_STRING						{printf("Regla 16\n");};
 
 expresion_aritmetica:
-	expresion_aritmetica MAS termino 		{printf("\nRegla 17");}
-	| expresion_aritmetica MENOS termino 	{printf("\nRegla 18");}
-	| termino								{printf("\nRegla 19");};
+	expresion_aritmetica MAS termino 		{printf("Regla 17\n");}
+	| expresion_aritmetica MENOS termino 	{printf("Regla 18\n");}
+	| termino								{printf("Regla 19\n");};
 
 termino:
 	termino POR factor 			{printf("Regla 20\n");}
