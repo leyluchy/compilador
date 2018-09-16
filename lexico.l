@@ -90,22 +90,39 @@ COMENTARIO	\-\/.*\/\-
 									yylval.int_val = atoi(yytext);
 									
 									int length = strlen(yytext) + 2;
-									char nombre_cte[length]
+									char nombre_cte[length];
 									strcpy(nombre_cte, "_");
 									strcat(nombre_cte, yytext);
 									yylval.string_val = nombre_cte;
 									printf("*** %s ***", nombre_cte);
+									
 									return CTE_INT;
 								}
 								cota_error();
 							}
 {CTE_FLOAT}					{ 	
 								yylval.float_val = atof(yytext);
+								
+								int length = strlen(yytext) + 2;
+								char nombre_cte[length];
+								strcpy(nombre_cte, "_");
+								strcat(nombre_cte, yytext);
+								yylval.string_val = nombre_cte;
+								printf("*** %s ***", nombre_cte);
+									
 								return CTE_FLOAT;
 							}
 {CTE_STRING}				{ 	
 								if(strlen(yytext)<=30){
 									yylval.string_val = yytext;
+									
+									int length = strlen(yytext) + 2;
+									char nombre_cte[length];
+									strcpy(nombre_cte, "_");
+									strcat(nombre_cte, yytext);
+									yylval.string_val = nombre_cte;
+									printf("*** %s ***", nombre_cte);
+									
 									return CTE_STRING;
 								}
 								cota_error();
