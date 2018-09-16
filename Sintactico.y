@@ -4,18 +4,17 @@
 	#include <conio.h>
 	#include <string.h>
 	#include "y.tab.h"
+    #define Int 1
+	#define Float 2
+	#define String 3
+	#define CteInt 4
+	#define CteFloat 5
+	#define CteString 6
 
 	int yyerror();
 
 	int yystopparser=0;
 	FILE  *yyin;
-
-	define Int 1;
-	define Float 2;
-	define String 3;
-	define CteInt 4;
-	define CteFloat 5;
-	define CteString 6;
 
 	typedef struct {
 		char* nombre;
