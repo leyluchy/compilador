@@ -25,7 +25,7 @@
 		int longitud;
 	} simbolo;
 
-	simbolo[300] tabla_simbolo;
+	simbolo tabla_simbolo[300];
 	int fin_tabla;
 %}
 
@@ -213,7 +213,7 @@ int yyerror(void)
  int buscarEnTabla(char * name){
     int i=0;
     while(i<=fin_tabla){
-        if(strcmp(tabla_simbolo.nombre,name) == 0){
+        if(strcmp(tabla_simbolo->nombre,name) == 0){
         return i;
         }
         i++;
