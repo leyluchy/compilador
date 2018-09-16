@@ -8,7 +8,6 @@
 	int cota_error(void);
 	
 	FILE  *yyin;
-	int yylval;
 %}
 
 %option noyywrap  
@@ -79,16 +78,27 @@ COMENTARIO	\-\/.*\/\-
 "lta?"						{ return INLIST;}
 
  /* Identificadores y constantes */
-{ID}						{ return ID;}
+{ID}						{ 
+								if(strlen(yytext) <= 30){
+									yylval.string_val = yytext;
+									return ID;
+								}
+								cota_error();
+							}
 {CTE_INT}					{ 
 								if(atoll(yytext)<=2147483647){
+									yylval.int_val = atoi(yytext);
 									return CTE_INT;
 								}
 								cota_error();
 							}
-{CTE_FLOAT}					{ return CTE_FLOAT;}
+{CTE_FLOAT}					{ 	
+								yylval.float_val = atof(yytext);
+								return CTE_FLOAT;
+							}
 {CTE_STRING}				{ 	
 								if(strlen(yytext)<=30){
+									yylval.string_val = yytext;
 									return CTE_STRING;
 								}
 								cota_error();

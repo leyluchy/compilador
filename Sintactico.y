@@ -11,7 +11,7 @@
 %}
 
 %union {
-	int entero_val;
+	int int_val;
 	float float_val;
 	char *string_val;
 }
