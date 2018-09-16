@@ -4,15 +4,19 @@
 	#include <conio.h>
 	#include <string.h>
 	#include "y.tab.h"
+	
     #define Int 1
 	#define Float 2
 	#define String 3
 	#define CteInt 4
 	#define CteFloat 5
 	#define CteString 6
+	
+	#define TAMANIO_TABLA 300
 
 	int yyerror();
-	//void agregarVarATabla(char* nombre);
+	void agregarVarATabla(char* nombre);
+	int buscarEnTabla(char * name);
 
 	int yystopparser=0;
 	FILE  *yyin;
@@ -26,8 +30,8 @@
 		int longitud;
 	} simbolo;
 
-	simbolo tabla_simbolo[300];
-	int fin_tabla;
+	simbolo tabla_simbolo[TAMANIO_TABLA];
+	int fin_tabla = -1;
 %}
 
 %union {
@@ -91,10 +95,13 @@ t_dato:
 	| STRING	{printf("\nRegla 7: t_dato es STRING");};
 
 lista_id:
-	lista_id COMA ID	{printf("\nRegla 8: lista_id es lista_id COMA ID, ID: %s", yylval.string_val);}
+	lista_id COMA ID	{
+							printf("\nRegla 8: lista_id es lista_id COMA ID, ID: %s", yylval.string_val);
+							agregarVarATabla(yylval.string_val);
+						}
 	| ID				{	
 							printf("\nRegla 9: lista_id es ID: %s", yylval.string_val);
-							//agregarVarATabla(yylval.string_val);
+							agregarVarATabla(yylval.string_val);
 						};
 
  /* Seccion de codigo */
@@ -123,17 +130,17 @@ expresion_aritmetica:
 	| termino								{printf("\nRegla 19");};
 
 termino:
-	termino POR factor 			{printf("\nRegla 20");}
-	| termino DIVIDIDO factor 	{printf("\nRegla 21");}
-	| factor					{printf("\nRegla 22");};
+	termino POR factor 			{printf("Regla 20\n");}
+	| termino DIVIDIDO factor 	{printf("Regla 21\n");}
+	| factor					{printf("Regla 22\n");};
 
 factor:
-	PA expresion_aritmetica PC	{printf("\nRegla 23");}; /* puedo multiplicar por una string? ya no xD */
+	PA expresion_aritmetica PC	{printf("Regla 23\n");}; /* puedo multiplicar por una string? ya no xD */
 
 factor:
-	ID			{printf("\nRegla 24");};
-	| CTE_FLOAT	{printf("\nRegla 25");}
-	| CTE_INT	{printf("\nRegla 26");}; /* de aca para atras esta mas o menos listo */
+	ID			{printf("Regla 24\n");};
+	| CTE_FLOAT	{printf("Regla 25\n");}
+	| CTE_INT	{printf("Regla 26\n");}; /* de aca para atras esta mas o menos listo */
 
 /* prueba 1: descomentar lo de abajo para que sea le�do ------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
@@ -205,26 +212,39 @@ int main(int argc,char *argv[])
 }
 
 
-int yyerror(void)
+int yyerror(char* mensaje)
  {
-	printf("Syntax Error\n");
+	printf("Syntax Error: %s\n", mensaje);
 	system ("Pause");
 	exit (1);
  }
 
- /*
+ /** Agrega un nuevo nombre de variable a la tabla **/
  void agregarVarATabla(char* nombre){
 	 //Si se llena, error
-	 if(buscarEnTabla(nombre) == -1)
+	 if(fin_tabla >= TAMANIO_TABLA - 1){
+		 printf("Error: me quede sin espacio en la tabla de simbolos. Sori, gordi.\n");
+		 system("Pause");
+		 exit(2);
+	 }
+	 //Si no hay otra variable con el mismo nombre...
+	 if(buscarEnTabla(nombre) == -1){
 		 //Agregar a tabla
- }*/
+		 fin_tabla++;
+		 tabla_simbolo[fin_tabla].nombre = (char*) malloc((strlen(nombre)+1)*sizeof(char));
+		 strcpy(tabla_simbolo[fin_tabla].nombre, nombre);
+	 }
+	 else yyerror("Encontre dos declaraciones de variables con el mismo nombre. Decidite."); //Error, ya existe esa variable
+		 
+ }
+ 
  /* Devuleve la posici�n en la que se encuentra el elemento buscado, -1 si no encontr� el elemento */
 
  int buscarEnTabla(char * name){
     int i=0;
     while(i<=fin_tabla){
-        if(strcmp(tabla_simbolo->nombre,name) == 0){
-        return i;
+        if(strcmp(tabla_simbolo[i].nombre,name) == 0){
+			return i;
         }
         i++;
     }
