@@ -5,15 +5,9 @@ enterito a,b,i;
 discretito c,d;
 jeroglifico cadeña, s;
 para
-leeme a;
-mostrame "hola mundo";
-mostrame a;
 a <- (4/4*(4+4)-3/4)*(4*5.4+4/5)-4+3;
 cadeña <- "hey baby";
-si 4*8-(56+9)<4-1 y lta?(a;[4*8-(56+9);4;asd;g*1]) por_favor
-mientras no algo+algo==algo
-a<-a*avast([avast([1,2,3])],xd,kcio);
-goto_while
+si 4*8-(56+9)<4-1 y 1=/=1 por_favor
 a <- 5;
 gracias
 salu2
