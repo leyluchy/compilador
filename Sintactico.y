@@ -2,20 +2,21 @@
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include <conio.h>
+	#include <string.h>
 	#include "y.tab.h"
 
 	int yyerror();
 
 	int yystopparser=0;
 	FILE  *yyin;
-	
+
 	define Int 1;
 	define Float 2;
 	define String 3;
 	define CteInt 4;
 	define CteFloat 5;
 	define CteString 6;
-	
+
 	typedef struct {
 		char* nombre;
 		int tipo_dato;
@@ -24,8 +25,9 @@
 		int valor_i;
 		int longitud;
 	} simbolo;
-	
+
 	simbolo[300] tabla_simbolo;
+	int fin_tabla;
 %}
 
 %union {
@@ -63,71 +65,71 @@
 %token INLIST
 
 %token <string_val>ID
-%token <float>CTE_FLOAT 
-%token <int>CTE_INT 
+%token <float>CTE_FLOAT
+%token <int>CTE_INT
 %token <string_val>CTE_STRING
 
 %%
 
-programa: 
+programa:
 	START seccion_declaracion bloque END 	{printf("\nCOMPILACION EXITOSA");};
 
  /* Declaracion de variables */
-seccion_declaracion: 
+seccion_declaracion:
 	DECVAR bloque_dec ENDDEC 				{printf("\nRegla 1: Seccion declaracion es DECVAR bloque_dec ENDEC");};
 
-bloque_dec: 
+bloque_dec:
 	bloque_dec declaracion					{printf("\nRegla 2: bloque_dec es bloque_dec declaracion");}
 	| declaracion							{printf("\nRegla 3: bloque_dec es declaracion");};
 
-declaracion: 
+declaracion:
 	t_dato lista_id PUNTO_COMA				{printf("\nRegla 4: declaracion es t_dato lista_id PUNTO_COMA");};
 
-t_dato: 
-	FLOAT		{printf("\nRegla 5: t_dato es FLOAT");} 
-	| INT		{printf("\nRegla 6: t_dato es INT");} 
+t_dato:
+	FLOAT		{printf("\nRegla 5: t_dato es FLOAT");}
+	| INT		{printf("\nRegla 6: t_dato es INT");}
 	| STRING	{printf("\nRegla 7: t_dato es STRING");};
 
-lista_id: 
+lista_id:
 	lista_id COMA ID	{printf("\nRegla 8: lista_id es lista_id COMA ID, ID: %s", yylval.string_val);}
 	| ID				{printf("\nRegla 9: lista_id es ID: %s", yylval.string_val);};
 
  /* Seccion de codigo */
-bloque: 
+bloque:
 	bloque sentencia	{printf("\nRegla 10");}
 	| sentencia			{printf("\nRegla 11");};
 
-sentencia: 
-	asignacion			{printf("\nRegla 12");}; 
-	/* | bloque_if | bloque_while | lectura | escritura | expresion_aritmetica PUNTO_COMA; */ 
+sentencia:
+	asignacion			{printf("\nRegla 12");};
+	/* | bloque_if | bloque_while | lectura | escritura | expresion_aritmetica PUNTO_COMA; */
 	/* puede no haber sentencias? lo mismo para if y while, la expresion_aritmetica está porque si */
 
-asignacion: 
+asignacion:
 	ID ASIG expresion PUNTO_COMA	{printf("\nRegla 13");}; /* terminar de desarrollar, puede ser una exp aritmetica, o una cadena, así que es una expresion */
 
-expresion: 
-	expresion_cadena				{printf("\nRegla 14");} 
+expresion:
+	expresion_cadena				{printf("\nRegla 14");}
 	| expresion_aritmetica			{printf("\nRegla 15");};
 
-expresion_cadena: 
+expresion_cadena:
 	CTE_STRING						{printf("\nRegla 16");};
 
-expresion_aritmetica: 
+expresion_aritmetica:
 	expresion_aritmetica MAS termino 		{printf("\nRegla 17");}
 	| expresion_aritmetica MENOS termino 	{printf("\nRegla 18");}
 	| termino								{printf("\nRegla 19");};
 
-termino: 
+termino:
 	termino POR factor 			{printf("\nRegla 20");}
 	| termino DIVIDIDO factor 	{printf("\nRegla 21");}
 	| factor					{printf("\nRegla 22");};
 
-factor: 
+factor:
 	PA expresion_aritmetica PC	{printf("\nRegla 23");}; /* puedo multiplicar por una string? ya no xD */
 
-factor: 
+factor:
 	ID			{printf("\nRegla 24");};
-	| CTE_FLOAT	{printf("\nRegla 25");} 
+	| CTE_FLOAT	{printf("\nRegla 25");}
 	| CTE_INT	{printf("\nRegla 26");}; /* de aca para atras esta mas o menos listo */
 
 /* prueba 1: descomentar lo de abajo para que sea leído ------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
@@ -205,4 +207,17 @@ int yyerror(void)
 	printf("Syntax Error\n");
 	system ("Pause");
 	exit (1);
+ }
+
+ /* Devuleve la posición en la que se encuentra el elemento buscado, -1 si no encontró el elemento */
+
+ int buscarEnTabla(char * name){
+    int i=0;
+    while(i<=fin_tabla){
+        if(strcmp(tabla_simbolo.nombre,name) == 0){
+        return i;
+        }
+        i++;
+    }
+    return -1;
  }
