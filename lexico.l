@@ -5,7 +5,7 @@
 	#include <string.h>
 	#include "y.tab.h"
 	
-	int cota_error(void);
+	int cota_error(char* mensaje);
 	
 	FILE  *yyin;
 %}
@@ -83,7 +83,7 @@ COMENTARIO	\-\/.*\/\-
 									yylval.string_val = yytext;
 									return ID;
 								}
-								cota_error();
+								cota_error("intenta limitar tus nombres de variables a 30 caracteres. Dale, soy generoso.");
 							}
 {CTE_INT}					{ 
 								if(atoll(yytext)<=2147483647){
@@ -94,11 +94,10 @@ COMENTARIO	\-\/.*\/\-
 									strcpy(nombre_cte, "_");
 									strcat(nombre_cte, yytext);
 									yylval.string_val = nombre_cte;
-									printf("*** %s ***", nombre_cte);
 									
 									return CTE_INT;
 								}
-								cota_error();
+								cota_error("superaste el tamanio maximo para numeros enteros. Realmente necesitas un numero tan grande?");
 							}
 {CTE_FLOAT}					{ 	
 								yylval.float_val = atof(yytext);
@@ -108,7 +107,6 @@ COMENTARIO	\-\/.*\/\-
 								strcpy(nombre_cte, "_");
 								strcat(nombre_cte, yytext);
 								yylval.string_val = nombre_cte;
-								printf("*** %s ***", nombre_cte);
 									
 								return CTE_FLOAT;
 							}
@@ -121,19 +119,18 @@ COMENTARIO	\-\/.*\/\-
 									strcpy(nombre_cte, "_");
 									strcat(nombre_cte, yytext);
 									yylval.string_val = nombre_cte;
-									printf("*** %s ***", nombre_cte);
 									
 									return CTE_STRING;
 								}
-								cota_error();
+								cota_error("intenta limitar tus jeroglificos a 30 caracteres.");
 							}
 {COMENTARIO}				
 
 %%
 
-int cota_error(void)
+int cota_error(char* mensaje)
 {
-	printf("Error lexico: cota superada\n");
+	printf("Error lexico: %s\n", mensaje);
 	system ("Pause");
 	exit (1);
 }
