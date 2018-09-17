@@ -16,7 +16,9 @@
 
 	int yyerror(char* mensaje);
 	void agregarVarATabla(char* nombre);
+	void agregarTiposDatosATabla(void);
 	int buscarEnTabla(char * name);
+	void guardarTabla(void);
 
 	int yystopparser=0;
 	FILE  *yyin;
@@ -32,6 +34,10 @@
 
 	simbolo tabla_simbolo[TAMANIO_TABLA];
 	int fin_tabla = -1;
+
+	int varADeclarar1 = 0;
+	int cantVarsADeclarar = 0;
+	int tipoDatoADeclarar;
 %}
 
 %union {
@@ -76,7 +82,10 @@
 %%
 
 programa:
-	START seccion_declaracion bloque END 	            {printf("\nCOMPILACION EXITOSA\n");};
+	START seccion_declaracion bloque END 	            {
+															printf("\nCOMPILACION EXITOSA\n");
+															guardarTabla();
+														}; /*TODO: Guardar tabla en txt*/
 
  /* Declaracion de variables */
 
@@ -90,22 +99,35 @@ bloque_dec:
 declaracion:
 	t_dato lista_id PUNTO_COMA				            {
 															printf("Regla 4: declaracion es t_dato lista_id PUNTO_COMA\n");
+															 agregarTiposDatosATabla();
 															/*TODO:Asignar tipos de datos a tabla de simbolos*/
 														};
 
 t_dato:
-	FLOAT		                                        {printf("Regla 5: t_dato es FLOAT\n");} /*TODO: Guardar el tipo de dato*/
-	| INT		                                        {printf("Regla 6: t_dato es INT\n");} /*TODO: Guardar el tipo de dato*/
-	| STRING	                                        {printf("Regla 7: t_dato es STRING\n");}; /*TODO: Guardar el tipo de dato*/
+	FLOAT		                                        {
+															printf("Regla 5: t_dato es FLOAT\n");
+															tipoDatoADeclarar = Float;
+														}
+	| INT		                                        {
+															printf("Regla 6: t_dato es INT\n");
+															tipoDatoADeclarar = Int;
+														}
+	| STRING	                                        {
+															printf("Regla 7: t_dato es STRING\n");
+															tipoDatoADeclarar = String;
+														};
 
 lista_id:
 	lista_id COMA ID	                                {
 	                                                        printf("Regla 8: lista_id es lista_id COMA ID | ID: %s\n", yylval.string_val);
 	                                                        agregarVarATabla(yylval.string_val);
+															cantVarsADeclarar++;
                                                         }
 	| ID				                                {
 	                                                        printf("Regla 9: lista_id es ID | ID: %s\n", yylval.string_val);
 	                                                        agregarVarATabla(yylval.string_val);
+															varADeclarar1 = fin_tabla; /* Guardo posicion de primer variable de esta lista de declaracion. */
+															cantVarsADeclarar = 1;
                                                         };
 
  /* Fin de Declaracion de variables */
@@ -262,3 +284,49 @@ int yyerror(char* mensaje)
     }
     return -1;
  }
+
+void agregarTiposDatosATabla(){
+	for(int i = 0; i < cantVarsADeclarar; i++){
+		tabla_simbolo[varADeclarar1 + i].tipo_dato = tipoDatoADeclarar;
+	}
+}
+
+void guardarTabla(){
+	if(fin_tabla == -1)
+		yyerror("No encontre la tabla de simbolos");
+
+	FILE* arch = fopen("ts.txt", "w");
+	if(!arch){
+		printf("No pude crear el archivo ts.txt\n");
+		return;
+	}
+
+	for(int i = 0; i <= fin_tabla; i++){
+
+		fprintf(arch, "%s\t", tabla_simbolo[i].nombre);
+
+		switch (tabla_simbolo[i].tipo_dato){
+		case Float:
+			fprintf(arch, "FLOAT");
+			break;
+		case Int:
+			fprintf(arch, "INT");
+			break;
+		case String:
+			fprintf(arch, "STRING");
+			break;
+		case CteFloat:
+			fprintf(arch, "CTE_FLOAT\t%f", tabla_simbolo[i].valor_f);
+			break;
+		case CteInt:
+			fprintf(arch, "CTE_INT\t%d", tabla_simbolo[i].valor_i);
+			break;
+		case CteString:
+			fprintf(arch, "CTE_STRING\t%s\t%d", tabla_simbolo[i].valor_s, tabla_simbolo[i].longitud);
+			break;
+		}
+
+		fprintf(arch, "\n");
+	}
+	fclose(arch);
+}
