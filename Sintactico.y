@@ -5,7 +5,7 @@
 	#include <string.h>
 	#include "y.tab.h"
 
-    #define Int 1
+  	#define Int 1
 	#define Float 2
 	#define String 3
 	#define CteInt 4
@@ -81,28 +81,31 @@ programa:
  /* Declaracion de variables */
 
 seccion_declaracion:
-	DECVAR bloque_dec ENDDEC 				            {printf("Regla 1: Seccion declaracion es DECVAR bloque_dec ENDEC\n");};
+	DECVAR bloque_dec ENDDEC 				            {printf("Regla 1: Seccion declaracion es DECVAR bloque_dec ENDEC\n\n");};
 
 bloque_dec:
 	bloque_dec declaracion					            {printf("Regla 2: bloque_dec es bloque_dec declaracion\n");}
 	| declaracion							            {printf("Regla 3: bloque_dec es declaracion\n");};
 
 declaracion:
-	t_dato lista_id PUNTO_COMA				            {printf("Regla 4: declaracion es t_dato lista_id PUNTO_COMA\n");};
+	t_dato lista_id PUNTO_COMA				            {
+															printf("Regla 4: declaracion es t_dato lista_id PUNTO_COMA\n");
+															/*TODO:Asignar tipos de datos a tabla de simbolos*/
+														};
 
 t_dato:
-	FLOAT		                                        {printf("Regla 5: t_dato es FLOAT\n");}
-	| INT		                                        {printf("Regla 6: t_dato es INT\n");}
-	| STRING	                                        {printf("Regla 7: t_dato es STRING\n");};
+	FLOAT		                                        {printf("Regla 5: t_dato es FLOAT\n");} /*TODO: Guardar el tipo de dato*/
+	| INT		                                        {printf("Regla 6: t_dato es INT\n");} /*TODO: Guardar el tipo de dato*/
+	| STRING	                                        {printf("Regla 7: t_dato es STRING\n");}; /*TODO: Guardar el tipo de dato*/
 
 lista_id:
 	lista_id COMA ID	                                {
-                                                        printf("Regla 8: lista_id es lista_id COMA ID | ID: %s\n", yylval.string_val);
-                                                        agregarVarATabla(yylval.string_val);
+	                                                        printf("Regla 8: lista_id es lista_id COMA ID | ID: %s\n", yylval.string_val);
+	                                                        agregarVarATabla(yylval.string_val);
                                                         }
 	| ID				                                {
-                                                        printf("Regla 9: lista_id es ID | ID: %s\n", yylval.string_val);
-                                                        agregarVarATabla(yylval.string_val);
+	                                                        printf("Regla 9: lista_id es ID | ID: %s\n", yylval.string_val);
+	                                                        agregarVarATabla(yylval.string_val);
                                                         };
 
  /* Fin de Declaracion de variables */
@@ -122,23 +125,25 @@ sentencia:
 	| expresion_aritmetica PUNTO_COMA                   {printf("Regla 17: sentencia es expresion_aritmetica PUNTO_COMA\n");};
 
 bloque_if:
-    IF expresion_logica THEN bloque ENDIF               {printf("Regla 18: bloque_if es IF expresion_logica THEN bloque ENDIF\n");};
+    IF expresion_logica THEN bloque ENDIF               {printf("Regla 18: bloque_if es IF expresion_logica THEN bloque ENDIF\n\n");};
 
 bloque_if:
-    IF expresion_logica THEN bloque ELSE bloque ENDIF   {printf("Regla 19: bloque_if es IF expresion_logica THEN bloque ELSE bloque ENDIF\n");};
+    IF expresion_logica THEN bloque ELSE bloque ENDIF   {printf("Regla 19: bloque_if es IF expresion_logica THEN bloque ELSE bloque ENDIF\n\n");};
 
 bloque_while:
-    WHILE expresion_logica bloque ENDWHILE              {printf("Regla 20: bloque_while es WHILE expresion_logica bloque ENDWHILE\n");};
+    WHILE expresion_logica bloque ENDWHILE              {printf("Regla 20: bloque_while es WHILE expresion_logica bloque ENDWHILE\n\n");};
 
 asignacion:
-	ID ASIG expresion	                                {printf("Regla 21: asignacion es ID ASIG expresion\n");};
+	ID ASIG expresion	                                {printf("Regla 21: asignacion es ID ASIG expresion\n\n");};
+
+/* Expresiones aritmeticas y otras */
 
 expresion:
-	expresion_cadena				                    {printf("Regla 22: expresion es expresion_cadena\n");}
+	expresion_cadena				                    {printf("Regla 22: expresion es expresion_cadena\n");} /*Se podria poner CTE STRING directamente?*/
 	| expresion_aritmetica			                    {printf("Regla 23: expresion es expresion_aritmetica\n");};
 
 expresion_cadena:
-	CTE_STRING						                    {printf("Regla 24: expresion_cadena es CTE_STRING\n");};
+	CTE_STRING						                    {printf("Regla 24: expresion_cadena es CTE_STRING\n");}; /*TODO: Guardar nombre, valor y longitud en tabla de simbolos*/
 
 expresion_aritmetica:
 	expresion_aritmetica MAS termino 		            {printf("Regla 25: expresion_aritmetica es expresion_aritmetica MAS termino\n");}
@@ -152,12 +157,14 @@ termino:
 
 factor:
 	PA expresion_aritmetica PC	                        {printf("Regla 31: factor es PA expresion_aritmetica PC\n");}
-    | average                                           {printf("Regla 32:factor es average\n");};
+    | average                                           {printf("Regla 32: factor es average\n");};
 
 factor:
-	ID			                                        {printf("Regla 33: factor es ID\n");}
-	| CTE_FLOAT	                                        {printf("Regla 34: factor es CTE_FLOAT\n");}
-	| CTE_INT	                                        {printf("Regla 35: factor es CTE_INT\n");};
+	ID			                                        {printf("Regla 33: factor es ID\n");} /*TODO: Chequear que exista en tabla de simbolos*/
+	| CTE_FLOAT	                                        {printf("Regla 34: factor es CTE_FLOAT\n");} /*TODO: Guardar nombre y valor en tabla de simbolos*/
+	| CTE_INT	                                        {printf("Regla 35: factor es CTE_INT\n");}; /*TODO: Guardar nombre y valor en tabla de simbolos*/
+
+/* Expresiones logicas */
 
 expresion_logica:
     termino_logico AND termino_logico                   {printf("Regla 36: expresion_logica es termino_logico AND termino_logico\n");}
@@ -177,11 +184,13 @@ comp_bool:
     |IGUAL                                              {printf("Regla 46: comp_bool es IGUAL\n");}
     |DISTINTO                                           {printf("Regla 47: comp_bool es DISTINTO\n");};
 
+/* Funciones nativas */
+
 average:
-    AVG PA CA lista_exp_coma CC PC                      {printf("Regla 48: average es AVG PA CA lista_exp_coma CC PC\n");};
+    AVG PA CA lista_exp_coma CC PC                      {printf("Regla 48: average es AVG PA CA lista_exp_coma CC PC\n\n");};
 
 inlist:
-    INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC       {printf("Regla 49: inlist es INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC\n");};
+    INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC       {printf("Regla 49: inlist es INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC\n\n");}; /*TODO: Chequear que exista ID en tabla de simbolos*/
 
 lista_exp_coma:
     lista_exp_coma COMA expresion_aritmetica            {printf("Regla 50: lista_exp_coma es lista_exp_coma COMA expresion_aritmetica\n");}
@@ -192,11 +201,11 @@ lista_exp_pc:
     | expresion_aritmetica                              {printf("Regla 53: lista_exp_pc es expresion_aritmetica\n");};
 
 lectura:
-    READ ID                                             {printf("Regla 54: lectura es READ ID\n");};
+    READ ID                                             {printf("Regla 54: lectura es READ ID\n\n");}; /*TODO: Chequear que exista ID en tabla de simbolos*/
 
 escritura:
-    WRITE ID                                            {printf("Regla 55: escritura es WRITE ID\n");}
-    | WRITE CTE_STRING                                  {printf("Regla 56: escritura es WRITE CTE_STRING\n");};
+    WRITE ID                                            {printf("Regla 55: escritura es WRITE ID\n\n");} /*TODO: Chequear que exista ID en tabla de simbolos*/
+    | WRITE CTE_STRING                                  {printf("Regla 56: escritura es WRITE CTE_STRING\n\n");}; /*TODO: Guardar nombre, valor y longitud en tabla de simbolos*/
 
 %%
 
