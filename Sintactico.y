@@ -17,6 +17,7 @@
 	int yyerror(char* mensaje);
 	void agregarVarATabla(char* nombre);
 	void agregarTiposDatosATabla(void);
+	void agregarCteStringATabla(char* nombre);
 	int buscarEnTabla(char * name);
 	void guardarTabla(void);
 
@@ -85,7 +86,7 @@ programa:
 	START seccion_declaracion bloque END 	            {
 															printf("\nCOMPILACION EXITOSA\n");
 															guardarTabla();
-														}; /*TODO: Guardar tabla en txt*/
+														};
 
  /* Declaracion de variables */
 
@@ -100,7 +101,6 @@ declaracion:
 	t_dato lista_id PUNTO_COMA				            {
 															printf("Regla 4: declaracion es t_dato lista_id PUNTO_COMA\n");
 															 agregarTiposDatosATabla();
-															/*TODO:Asignar tipos de datos a tabla de simbolos*/
 														};
 
 t_dato:
@@ -165,7 +165,10 @@ expresion:
 	| expresion_aritmetica			                    {printf("Regla 23: expresion es expresion_aritmetica\n");};
 
 expresion_cadena:
-	CTE_STRING						                    {printf("Regla 24: expresion_cadena es CTE_STRING\n");}; /*TODO: Guardar nombre, valor y longitud en tabla de simbolos*/
+	CTE_STRING						                    {
+															printf("Regla 24: expresion_cadena es CTE_STRING\n");
+															agregarCteStringATabla(yylval.string_val);
+														}; /*TODO: Guardar nombre, valor y longitud en tabla de simbolos*/
 
 expresion_aritmetica:
 	expresion_aritmetica MAS termino 		            {printf("Regla 25: expresion_aritmetica es expresion_aritmetica MAS termino\n");}
@@ -227,7 +230,10 @@ lectura:
 
 escritura:
     WRITE ID                                            {printf("Regla 55: escritura es WRITE ID\n\n");} /*TODO: Chequear que exista ID en tabla de simbolos*/
-    | WRITE CTE_STRING                                  {printf("Regla 56: escritura es WRITE CTE_STRING\n\n");}; /*TODO: Guardar nombre, valor y longitud en tabla de simbolos*/
+    | WRITE CTE_STRING                                  {
+															printf("Regla 56: escritura es WRITE CTE_STRING\n\n");
+															agregarCteStringATabla(yylval.string_val);
+														};
 
 %%
 
@@ -295,7 +301,7 @@ void guardarTabla(){
 	if(fin_tabla == -1)
 		yyerror("No encontre la tabla de simbolos");
 
-	FILE* arch = fopen("ts.txt", "w");
+	FILE* arch = fopen("ts.txt", "w+");
 	if(!arch){
 		printf("No pude crear el archivo ts.txt\n");
 		return;
@@ -329,4 +335,30 @@ void guardarTabla(){
 		fprintf(arch, "\n");
 	}
 	fclose(arch);
+}
+
+void agregarCteStringATabla(char* nombre){
+	if(fin_tabla >= TAMANIO_TABLA - 1){
+		printf("Error: me quede sin espacio en la tabla de simbolos. Sori, gordi.\n");
+		system("Pause");
+		exit(2);
+	}
+
+	//Si no hay otra variable con el mismo nombre...
+	if(buscarEnTabla(nombre) == -1){
+		//Agregar nombre a tabla
+		fin_tabla++;
+		tabla_simbolo[fin_tabla].nombre = (char*) malloc((strlen(nombre)+1)*sizeof(char));
+		strcpy(tabla_simbolo[fin_tabla].nombre, nombre);
+
+		//Agregar tipo de dato
+		tabla_simbolo[fin_tabla].tipo_dato = CteString;
+
+		//Agregar valor a la tabla
+		tabla_simbolo[fin_tabla].valor_s = (char*) malloc((strlen(nombre))*sizeof(char));
+		strcpy(tabla_simbolo[fin_tabla].valor_s, nombre+1);
+
+		//Agregar longitud
+		tabla_simbolo[fin_tabla].longitud = strlen(nombre) - 1;
+	}
 }

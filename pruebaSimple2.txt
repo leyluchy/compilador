@@ -1,4 +1,4 @@
-﻿estimada_cajita_magica
+estimada_cajita_magica
 	necesito:
 		posta n;
 		enterito a,b,i;

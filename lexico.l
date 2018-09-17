@@ -113,13 +113,13 @@ ESPACIO     " "
 							}
 {CTE_STRING}				{
 								if(strlen(yytext)<=30){
-									yylval.string_val = yytext;
 
-									int length = strlen(yytext) + 2;
+									int length = strlen(yytext);
 									char nombre_cte[length];
 									strcpy(nombre_cte, "_");
-									strcat(nombre_cte, yytext);
-									yylval.string_val = nombre_cte;
+									strcat(nombre_cte, yytext+1);
+									strcpy(nombre_cte + strlen(nombre_cte) - 1, "\0");
+									strcpy(yylval.string_val, nombre_cte);
 
 									return CTE_STRING;
 								}
