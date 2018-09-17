@@ -4,13 +4,13 @@
 	#include <conio.h>
 	#include <string.h>
 	#include "y.tab.h"
-	
+
 	int cota_error(char* mensaje);
-	
+
 	FILE  *yyin;
 %}
 
-%option noyywrap  
+%option noyywrap
 %option yylineno
 
 DIGITO 	[0-9]
@@ -21,6 +21,7 @@ CTE_FLOAT	{DIGITO}+"."{DIGITO}*|{DIGITO}*"."{DIGITO}+
 WHATEVER	{LETRA}|{DIGITO}|.
 CTE_STRING	\"{WHATEVER}*\"
 COMENTARIO	\-\/.*\/\-
+ESPACIO     " "
 
 %%
  /* Inicio y fin de programa */
@@ -78,53 +79,56 @@ COMENTARIO	\-\/.*\/\-
 "lta?"						{ return INLIST;}
 
  /* Identificadores y constantes */
-{ID}						{ 
+{ID}						{
 								if(strlen(yytext) <= 30){
 									yylval.string_val = yytext;
 									return ID;
 								}
 								cota_error("intenta limitar tus nombres de variables a 30 caracteres. Dale, soy generoso.");
 							}
-{CTE_INT}					{ 
+{CTE_INT}					{
 								if(atoll(yytext)<=2147483647){
 									yylval.int_val = atoi(yytext);
-									
+
 									int length = strlen(yytext) + 2;
 									char nombre_cte[length];
 									strcpy(nombre_cte, "_");
 									strcat(nombre_cte, yytext);
 									yylval.string_val = nombre_cte;
-									
+
 									return CTE_INT;
 								}
 								cota_error("superaste el tamanio maximo para numeros enteros. Realmente necesitas un numero tan grande?");
 							}
-{CTE_FLOAT}					{ 	
+{CTE_FLOAT}					{
 								yylval.float_val = atof(yytext);
-								
+
 								int length = strlen(yytext) + 2;
 								char nombre_cte[length];
 								strcpy(nombre_cte, "_");
 								strcat(nombre_cte, yytext);
 								yylval.string_val = nombre_cte;
-									
+
 								return CTE_FLOAT;
 							}
-{CTE_STRING}				{ 	
+{CTE_STRING}				{
 								if(strlen(yytext)<=30){
 									yylval.string_val = yytext;
-									
+
 									int length = strlen(yytext) + 2;
 									char nombre_cte[length];
 									strcpy(nombre_cte, "_");
 									strcat(nombre_cte, yytext);
 									yylval.string_val = nombre_cte;
-									
+
 									return CTE_STRING;
 								}
 								cota_error("intenta limitar tus jeroglificos a 30 caracteres.");
 							}
-{COMENTARIO}				
+{COMENTARIO}
+{ESPACIO}
+\n
+\t
 
 %%
 

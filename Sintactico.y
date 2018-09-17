@@ -4,14 +4,14 @@
 	#include <conio.h>
 	#include <string.h>
 	#include "y.tab.h"
-	
+
     #define Int 1
 	#define Float 2
 	#define String 3
 	#define CteInt 4
 	#define CteFloat 5
 	#define CteString 6
-	
+
 	#define TAMANIO_TABLA 300
 
 	int yyerror(char* mensaje);
@@ -76,124 +76,127 @@
 %%
 
 programa:
-	START seccion_declaracion bloque END 	{printf("\nCOMPILACION EXITOSA\n");};
+	START seccion_declaracion bloque END 	            {printf("\nCOMPILACION EXITOSA\n");};
 
  /* Declaracion de variables */
+
 seccion_declaracion:
-	DECVAR bloque_dec ENDDEC 				{printf("Regla 1: Seccion declaracion es DECVAR bloque_dec ENDEC\n");};
+	DECVAR bloque_dec ENDDEC 				            {printf("Regla 1: Seccion declaracion es DECVAR bloque_dec ENDEC\n");};
 
 bloque_dec:
-	bloque_dec declaracion					{printf("Regla 2: bloque_dec es bloque_dec declaracion\n");}
-	| declaracion							{printf("Regla 3: bloque_dec es declaracion\n");};
+	bloque_dec declaracion					            {printf("Regla 2: bloque_dec es bloque_dec declaracion\n");}
+	| declaracion							            {printf("Regla 3: bloque_dec es declaracion\n");};
 
 declaracion:
-	t_dato lista_id PUNTO_COMA				{printf("Regla 4: declaracion es t_dato lista_id PUNTO_COMA\n");};
+	t_dato lista_id PUNTO_COMA				            {printf("Regla 4: declaracion es t_dato lista_id PUNTO_COMA\n");};
 
 t_dato:
-	FLOAT		{printf("Regla 5: t_dato es FLOAT\n");}
-	| INT		{printf("Regla 6: t_dato es INT\n");}
-	| STRING	{printf("Regla 7: t_dato es STRING\n");};
+	FLOAT		                                        {printf("Regla 5: t_dato es FLOAT\n");}
+	| INT		                                        {printf("Regla 6: t_dato es INT\n");}
+	| STRING	                                        {printf("Regla 7: t_dato es STRING\n");};
 
 lista_id:
-	lista_id COMA ID	{
-							printf("Regla 8: lista_id es lista_id COMA ID | ID: %s\n", yylval.string_val);
-							agregarVarATabla(yylval.string_val);
-						}
-	| ID				{	
-							printf("Regla 9: lista_id es ID | ID: %s\n", yylval.string_val);
-							agregarVarATabla(yylval.string_val);
-						};
+	lista_id COMA ID	                                {
+                                                        printf("Regla 8: lista_id es lista_id COMA ID | ID: %s\n", yylval.string_val);
+                                                        agregarVarATabla(yylval.string_val);
+                                                        }
+	| ID				                                {
+                                                        printf("Regla 9: lista_id es ID | ID: %s\n", yylval.string_val);
+                                                        agregarVarATabla(yylval.string_val);
+                                                        };
+
+ /* Fin de Declaracion de variables */
 
  /* Seccion de codigo */
-bloque:
-	bloque sentencia	{printf("Regla 10: bloque es bloque sentencia\n");}
-	| sentencia			{printf("Regla 11: bloque es sentencia\n");};
+
+bloque:                                                 /* No existen bloques sin sentencias */
+	bloque sentencia	                                {printf("Regla 10: bloque es bloque sentencia\n");}
+	| sentencia			                                {printf("Regla 11: bloque es sentencia\n");};
 
 sentencia:
-	asignacion PUNTO_COMA			{printf("Regla 12: sentencia es asignacion PUNTO_COMA\n");};
-	| bloque_if 
-	| bloque_while 
-	| lectura PUNTO_COMA 
-	| escritura PUNTO_COMA 
-	| expresion_aritmetica PUNTO_COMA;
-	/* puede no haber sentencias? lo mismo para if y while, la expresion_aritmetica est� porque si */
+	asignacion PUNTO_COMA			                    {printf("Regla 12: sentencia es asignacion PUNTO_COMA\n");}
+	| bloque_if                                         {printf("Regla 13: sentencia es bloque_if\n");}
+	| bloque_while                                      {printf("Regla 14: sentencia es bloque_while\n");}
+	| lectura PUNTO_COMA                                {printf("Regla 15: sentencia es lectura PUNTO_COMA\n");}
+	| escritura PUNTO_COMA                              {printf("Regla 16: sentencia es escritura PUNTO_COMA\n");}
+	| expresion_aritmetica PUNTO_COMA                   {printf("Regla 17: sentencia es expresion_aritmetica PUNTO_COMA\n");};
 
 bloque_if:
-    IF expresion_logica THEN bloque ENDIF{printf("\nBloque if completado");};
+    IF expresion_logica THEN bloque ENDIF               {printf("Regla 18: bloque_if es IF expresion_logica THEN bloque ENDIF\n");};
 
 bloque_if:
-    IF expresion_logica THEN bloque ELSE bloque ENDIF{printf("\nBloque if completado");};
+    IF expresion_logica THEN bloque ELSE bloque ENDIF   {printf("Regla 19: bloque_if es IF expresion_logica THEN bloque ELSE bloque ENDIF\n");};
 
 bloque_while:
-    WHILE expresion_logica bloque ENDWHILE{printf("\nBloque while completado");};
+    WHILE expresion_logica bloque ENDWHILE              {printf("Regla 20: bloque_while es WHILE expresion_logica bloque ENDWHILE\n");};
 
 asignacion:
-	ID ASIG expresion	{printf("\nRegla 13");}; /* terminar de desarrollar, puede ser una exp aritmetica, o una cadena, as� que es una expresion */
+	ID ASIG expresion	                                {printf("Regla 21: asignacion es ID ASIG expresion\n");};
 
 expresion:
-	expresion_cadena				{printf("Regla 14\n");}
-	| expresion_aritmetica			{printf("Regla 15\n");};
+	expresion_cadena				                    {printf("Regla 22: expresion es expresion_cadena\n");}
+	| expresion_aritmetica			                    {printf("Regla 23: expresion es expresion_aritmetica\n");};
 
 expresion_cadena:
-	CTE_STRING						{printf("Regla 16\n");};
+	CTE_STRING						                    {printf("Regla 24: expresion_cadena es CTE_STRING\n");};
 
 expresion_aritmetica:
-	expresion_aritmetica MAS termino 		{printf("Regla 17\n");}
-	| expresion_aritmetica MENOS termino 	{printf("Regla 18\n");}
-	| termino								{printf("Regla 19\n");};
+	expresion_aritmetica MAS termino 		            {printf("Regla 25: expresion_aritmetica es expresion_aritmetica MAS termino\n");}
+	| expresion_aritmetica MENOS termino 	            {printf("Regla 26: expresion_aritmetica es expresion_aritmetica MENOS termino\n");}
+	| termino								            {printf("Regla 27: expresion_aritmetica es termino\n");};
 
 termino:
-	termino POR factor 			{printf("Regla 20\n");}
-	| termino DIVIDIDO factor 	{printf("Regla 21\n");}
-	| factor					{printf("Regla 22\n");};
+	termino POR factor 			                        {printf("Regla 28: termino es termino POR factor\n");}
+	| termino DIVIDIDO factor 	                        {printf("Regla 29: termino es termino DIVIDIDO factor\n");}
+	| factor					                        {printf("Regla 30: termino es factor\n");};
 
 factor:
-	PA expresion_aritmetica PC	{printf("\nRegla 23");} /* puedo multiplicar por una string? ya no xD */
-    | average;
+	PA expresion_aritmetica PC	                        {printf("Regla 31: factor es PA expresion_aritmetica PC\n");}
+    | average                                           {printf("Regla 32:factor es average\n");};
 
 factor:
-	ID			{printf("Regla 24\n");};
-	| CTE_FLOAT	{printf("Regla 25\n");}
-	| CTE_INT	{printf("Regla 26\n");}; /* de aca para atras esta mas o menos listo */
+	ID			                                        {printf("Regla 33: factor es ID\n");}
+	| CTE_FLOAT	                                        {printf("Regla 34: factor es CTE_FLOAT\n");}
+	| CTE_INT	                                        {printf("Regla 35: factor es CTE_INT\n");};
 
-expresion_logica:                             /* (algo) && (algo) O (algo) || (algo) O (algo), por si no queda claro */
-    expresion_logica AND termino_logico{printf("\nExpresion logica encontrada");}
-    | expresion_logica OR termino_logico{printf("\nExpresion logica encontrada");}
-    | termino_logico{printf("\nExpresion logica encontrada");}
-    | NOT termino_logico{printf("\nExpresion logica encontrada");};
+expresion_logica:
+    termino_logico AND termino_logico                   {printf("Regla 36: expresion_logica es termino_logico AND termino_logico\n");}
+    | termino_logico OR termino_logico                  {printf("Regla 37: expresion_logica es termino_logico OR termino_logico\n");}
+    | termino_logico                                    {printf("Regla 38: expresion_logica es termino_logico\n");}
+    | NOT termino_logico                                {printf("Regla 39: expresion_logica es NOT termino_logico\n");};
 
 termino_logico:
-    expresion_aritmetica comp_bool expresion_aritmetica{printf("\nTermino logico encontrada");}
-    | inlist;
+    expresion_aritmetica comp_bool expresion_aritmetica {printf("Regla 40: termino_logico es expresion_aritmetica comp_bool expresion_aritmetica\n");}
+    | inlist                                            {printf("Regla 41: termino logico es inlist\n");};
 
 comp_bool:
-    MENOR{printf("\nComparador booleano hallado");}
-    |MAYOR{printf("\nComparador booleano hallado");}
-    |MENOR_IGUAL{printf("\nComparador booleano hallado");}
-    |MAYOR_IGUAL{printf("\nComparador booleano hallado");}
-    |IGUAL{printf("\nComparador booleano hallado");}
-    |DISTINTO{printf("\nComparador booleano hallado");};
+    MENOR                                               {printf("Regla 42: comp_bool es MENOR\n");}
+    |MAYOR                                              {printf("Regla 43: comp_bool es MAYOR\n");}
+    |MENOR_IGUAL                                        {printf("Regla 44: comp_bool es MENOR_IGUAL\n");}
+    |MAYOR_IGUAL                                        {printf("Regla 45: comp_bool es MAYOR_IGUAL\n");}
+    |IGUAL                                              {printf("Regla 46: comp_bool es IGUAL\n");}
+    |DISTINTO                                           {printf("Regla 47: comp_bool es DISTINTO\n");};
 
 average:
-    AVG PA CA lista_exp_coma CC PC;
+    AVG PA CA lista_exp_coma CC PC                      {printf("Regla 48: average es AVG PA CA lista_exp_coma CC PC\n");};
 
 inlist:
-    INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC;
+    INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC       {printf("Regla 49: inlist es INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC\n");};
 
 lista_exp_coma:
-    lista_exp_coma COMA expresion_aritmetica
-    | expresion_aritmetica;
+    lista_exp_coma COMA expresion_aritmetica            {printf("Regla 50: lista_exp_coma es lista_exp_coma COMA expresion_aritmetica\n");}
+    | expresion_aritmetica                              {printf("Regla 51: lista_exp_coma es expresion_aritmetica\n");};
 
 lista_exp_pc:
-    lista_exp_pc PUNTO_COMA expresion_aritmetica
-    | expresion_aritmetica;
+    lista_exp_pc PUNTO_COMA expresion_aritmetica        {printf("Regla 52: lista_exp_pc es lista_exp_pc PUNTO_COMA expresion_aritmetica\n");}
+    | expresion_aritmetica                              {printf("Regla 53: lista_exp_pc es expresion_aritmetica\n");};
 
 lectura:
-    READ ID;
+    READ ID                                             {printf("Regla 54: lectura es READ ID\n");};
 
 escritura:
-    WRITE ID
-    | WRITE CTE_STRING;
+    WRITE ID                                            {printf("Regla 55: escritura es WRITE ID\n");}
+    | WRITE CTE_STRING                                  {printf("Regla 56: escritura es WRITE CTE_STRING\n");};
 
 %%
 
@@ -235,9 +238,9 @@ int yyerror(char* mensaje)
 		 strcpy(tabla_simbolo[fin_tabla].nombre, nombre);
 	 }
 	 else yyerror("Encontre dos declaraciones de variables con el mismo nombre. Decidite."); //Error, ya existe esa variable
-		 
+
  }
- 
+
  /* Devuleve la posici�n en la que se encuentra el elemento buscado, -1 si no encontr� el elemento */
 
  int buscarEnTabla(char * name){
