@@ -392,12 +392,12 @@ void agregarCteStringATabla(char* nombre){
 	if(buscarEnTabla(nombre) == -1){
 		//Agregar nombre a tabla
 		fin_tabla++;
-		printf("** 1 %d **\n", strlen(nombre));
-		tabla_simbolo[fin_tabla].nombre = (char*) malloc( ( strlen(nombre) + 1 ) );
+		printf("** 1 %d %s **\n", strlen(nombre), nombre);
+		tabla_simbolo[fin_tabla].nombre = (char*) malloc((strlen(nombre)+1)*sizeof(char));
 		printf("** 2 **\n");
 
 		tabla_simbolo[fin_tabla].nombre == NULL ? printf("!!!!! Drama con malloc !!!!!!\n"): printf("OK\n") ;
-
+		printf("** %s **\n", tabla_simbolo[fin_tabla].nombre);
 		strcpy(tabla_simbolo[fin_tabla].nombre, nombre);
 
 		//Agregar tipo de dato
