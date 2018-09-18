@@ -187,11 +187,19 @@ factor:
     | average                                           {printf("Regla 32: factor es average\n");};
 
 factor:
-	ID			                                        {printf("Regla 33: factor es ID\n");} /* TODO: Chequear que exista en tabla de simbolos */
+	ID			                                        {
+															if(buscarEnTabla(yylval.string_val)!=-1)
+																printf("Regla 33: factor es ID | ID: %s\n", yylval.string_val);
+															else{
+																char msg[100];
+																sprintf(msg,"%s?, %s",yylval.string_val,"no man, tenes que declarar las variables arriba, esto no es un viva la pepa como java...");
+																yyerror(msg);
+															}
+														}
 	| CTE_FLOAT	                                        {
 															printf("Regla 34: factor es CTE_FLOAT\n");
 															agregarCteFloatATabla(yylval.float_val);
-														;} /* TODO: Guardar nombre y valor en tabla de simbolos */
+														}
 	| CTE_INT	                                        {
 															printf("Regla 35: factor es CTE_INT\n");
 															agregarCteIntATabla(yylval.int_val);
@@ -222,7 +230,7 @@ average:
     AVG PA CA lista_exp_coma CC PC                      {printf("Regla 48: average es AVG PA CA lista_exp_coma CC PC\n\n");};
 
 inlist:
-    INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC       {printf("Regla 49: inlist es INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC\n\n");}; /*TODO: Chequear que exista ID en tabla de simbolos*/
+	INLIST PA id PUNTO_COMA CA lista_exp_pc CC PC   	{printf("Regla 49: inlist es INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC\n\n");};
 
 lista_exp_coma:
     lista_exp_coma COMA expresion_aritmetica            {printf("Regla 50: lista_exp_coma es lista_exp_coma COMA expresion_aritmetica\n");}
@@ -233,14 +241,22 @@ lista_exp_pc:
     | expresion_aritmetica                              {printf("Regla 53: lista_exp_pc es expresion_aritmetica\n");};
 
 lectura:
-    READ ID                                             {printf("Regla 54: lectura es READ ID\n\n");}; /*TODO: Chequear que exista ID en tabla de simbolos*/
+    READ id												{printf("Regla 54: lectura es READ ID\n");};
 
 escritura:
-    WRITE ID                                            {printf("Regla 55: escritura es WRITE ID\n\n");} /*TODO: Chequear que exista ID en tabla de simbolos*/
+    WRITE id                                            {printf("Regla 55: escritura es WRITE ID\n");};
     | WRITE CTE_STRING                                  {
 															printf("Regla 56: escritura es WRITE CTE_STRING\n\n");
 															agregarCteStringATabla(yylval.string_val);
 														};
+														
+id:
+	ID														{if(buscarEnTabla(yylval.string_val)==-1){
+																char msg[100];
+																sprintf(msg,"%s?, %s",yylval.string_val,"no man, tenes que declarar las variables arriba, esto no es un viva la pepa como java...");
+																yyerror(msg);
+																}
+															};
 
 %%
 
