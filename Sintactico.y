@@ -60,7 +60,7 @@
 
 %token AND OR NOT
 
-%token ASIG
+%token <string_val>ASIG
 %token MAS MENOS
 %token POR DIVIDIDO
 
@@ -158,7 +158,15 @@ bloque_while:
     WHILE expresion_logica bloque ENDWHILE              {printf("Regla 20: bloque_while es WHILE expresion_logica bloque ENDWHILE\n\n");};
 
 asignacion:
-	ID ASIG expresion	                                {printf("Regla 21: asignacion es ID ASIG expresion\n\n");};
+	ID ASIG expresion	                                {
+															printf("Regla 21: asignacion es ID ASIG expresion\n\n");
+															printf("** Asignacion de %s **\n", $1);
+															if(buscarEnTabla($1)==-1){
+																char msg[100];
+																sprintf(msg,"%s?, %s",$1,"no man, tenes que declarar las variables arriba, esto no es un viva la pepa como java...");
+																yyerror(msg);
+															}
+														};
 
 /* Expresiones aritmeticas y otras */
 
@@ -249,12 +257,14 @@ escritura:
 															printf("Regla 56: escritura es WRITE CTE_STRING\n\n");
 															agregarCteStringATabla(yylval.string_val);
 														};
-														
+
 id:
-	ID														{if(buscarEnTabla(yylval.string_val)==-1){
-																char msg[100];
-																sprintf(msg,"%s?, %s",yylval.string_val,"no man, tenes que declarar las variables arriba, esto no es un viva la pepa como java...");
-																yyerror(msg);
+	ID														{
+																printf("** SINT reconocio la ID %s **\n", yylval.string_val);
+																if(buscarEnTabla(yylval.string_val)==-1){
+																	char msg[100];
+																	sprintf(msg,"%s?, %s",yylval.string_val,"no man, tenes que declarar las variables arriba, esto no es un viva la pepa como java...");
+																	yyerror(msg);
 																}
 															};
 
@@ -402,15 +412,15 @@ void agregarCteFloatATabla(float valor){
 		fin_tabla++;
 		tabla_simbolo[fin_tabla].nombre = (char*) malloc((strlen(nombre)+1)*sizeof(char));
 		strcpy(tabla_simbolo[fin_tabla].nombre, nombre);
-		
+
 		//Agregar tipo de dato
 		tabla_simbolo[fin_tabla].tipo_dato = CteFloat;
-		
+
 		//Agregar valor a la tabla
 		tabla_simbolo[fin_tabla].valor_f = valor;
 	}
 }
-	
+
 void agregarCteIntATabla(int valor){
 	if(fin_tabla >= TAMANIO_TABLA - 1){
 		printf("Error: me quede sin espacio en la tabla de simbolos. Sori, gordi.\n");
@@ -425,10 +435,10 @@ void agregarCteIntATabla(int valor){
 		fin_tabla++;
 		tabla_simbolo[fin_tabla].nombre = (char*) malloc((strlen(nombre)+1)*sizeof(char));
 		strcpy(tabla_simbolo[fin_tabla].nombre, nombre);
-		
+
 		//Agregar tipo de dato
 		tabla_simbolo[fin_tabla].tipo_dato = CteInt;
-		
+
 		//Agregar valor a la tabla
 		printf("Sintactico: %d",valor);
 		tabla_simbolo[fin_tabla].valor_i = valor;

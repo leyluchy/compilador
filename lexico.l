@@ -81,7 +81,9 @@ ESPACIO     " "
  /* Identificadores y constantes */
 {ID}						{
 								if(strlen(yytext) <= 30){
-									yylval.string_val = yytext;
+									//yylval.string_val = yytext;
+									yylval.string_val = strdup(yytext);
+									printf("\n** LEX leyo la ID %s **\n", yylval.string_val);
 									return ID;
 								}
 								cota_error("intenta limitar tus nombres de variables a 30 caracteres. Dale, soy generoso.");
@@ -94,6 +96,7 @@ ESPACIO     " "
 								cota_error("superaste el tamanio maximo para numeros enteros. Realmente necesitas un numero tan grande?");
 							}
 {CTE_FLOAT}					{
+
 								yylval.float_val = atof(yytext);
 								return CTE_FLOAT;
 							}
