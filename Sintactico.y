@@ -18,6 +18,8 @@
 	void agregarVarATabla(char* nombre);
 	void agregarTiposDatosATabla(void);
 	void agregarCteStringATabla(char* nombre);
+	void agregarCteIntATabla(int valor);
+	void agregarCteFloatATabla(float valor);
 	int buscarEnTabla(char * name);
 	void guardarTabla(void);
 
@@ -76,8 +78,8 @@
 %token INLIST
 
 %token <string_val>ID
-%token <float>CTE_FLOAT
-%token <int>CTE_INT
+%token <float_val>CTE_FLOAT
+%token <int_val>CTE_INT
 %token <string_val>CTE_STRING
 
 %%
@@ -168,7 +170,7 @@ expresion_cadena:
 	CTE_STRING						                    {
 															printf("Regla 24: expresion_cadena es CTE_STRING\n");
 															agregarCteStringATabla(yylval.string_val);
-														}; /*TODO: Guardar nombre, valor y longitud en tabla de simbolos*/
+														}; /* TODO: Guardar nombre, valor y longitud en tabla de simbolos */
 
 expresion_aritmetica:
 	expresion_aritmetica MAS termino 		            {printf("Regla 25: expresion_aritmetica es expresion_aritmetica MAS termino\n");}
@@ -185,10 +187,15 @@ factor:
     | average                                           {printf("Regla 32: factor es average\n");};
 
 factor:
-	ID			                                        {printf("Regla 33: factor es ID\n");} /*TODO: Chequear que exista en tabla de simbolos*/
-	| CTE_FLOAT	                                        {printf("Regla 34: factor es CTE_FLOAT\n");} /*TODO: Guardar nombre y valor en tabla de simbolos*/
-	| CTE_INT	                                        {printf("Regla 35: factor es CTE_INT\n");}; /*TODO: Guardar nombre y valor en tabla de simbolos*/
-
+	ID			                                        {printf("Regla 33: factor es ID\n");} /* TODO: Chequear que exista en tabla de simbolos */
+	| CTE_FLOAT	                                        {
+															printf("Regla 34: factor es CTE_FLOAT\n");
+															agregarCteFloatATabla(yylval.float_val);
+														;} /* TODO: Guardar nombre y valor en tabla de simbolos */
+	| CTE_INT	                                        {
+															printf("Regla 35: factor es CTE_INT\n");
+															agregarCteIntATabla(yylval.int_val);
+														};
 /* Expresiones logicas */
 
 expresion_logica:
@@ -337,6 +344,8 @@ void guardarTabla(){
 	fclose(arch);
 }
 
+/* Calculo que estas 3 funciones se podrían juntar en una sola */
+
 void agregarCteStringATabla(char* nombre){
 	if(fin_tabla >= TAMANIO_TABLA - 1){
 		printf("Error: me quede sin espacio en la tabla de simbolos. Sori, gordi.\n");
@@ -360,5 +369,52 @@ void agregarCteStringATabla(char* nombre){
 
 		//Agregar longitud
 		tabla_simbolo[fin_tabla].longitud = strlen(nombre) - 1;
+	}
+}
+
+void agregarCteFloatATabla(float valor){
+	if(fin_tabla >= TAMANIO_TABLA - 1){
+		printf("Error: me quede sin espacio en la tabla de simbolos. Sori, gordi.\n");
+		system("Pause");
+		exit(2);
+	}
+	char nombre[12];
+	sprintf(nombre, "%f", valor);
+	//Si no hay otra variable con el mismo nombre...
+	if(buscarEnTabla(nombre) == -1){
+		//Agregar nombre a tabla
+		fin_tabla++;
+		tabla_simbolo[fin_tabla].nombre = (char*) malloc((strlen(nombre)+1)*sizeof(char));
+		strcpy(tabla_simbolo[fin_tabla].nombre, nombre);
+		
+		//Agregar tipo de dato
+		tabla_simbolo[fin_tabla].tipo_dato = CteFloat;
+		
+		//Agregar valor a la tabla
+		tabla_simbolo[fin_tabla].valor_f = valor;
+	}
+}
+	
+void agregarCteIntATabla(int valor){
+	if(fin_tabla >= TAMANIO_TABLA - 1){
+		printf("Error: me quede sin espacio en la tabla de simbolos. Sori, gordi.\n");
+		system("Pause");
+		exit(2);
+	}
+	char nombre[30];
+	sprintf(nombre, "%d", valor);
+	//Si no hay otra variable con el mismo nombre...
+	if(buscarEnTabla(nombre) == -1){
+		//Agregar nombre a tabla
+		fin_tabla++;
+		tabla_simbolo[fin_tabla].nombre = (char*) malloc((strlen(nombre)+1)*sizeof(char));
+		strcpy(tabla_simbolo[fin_tabla].nombre, nombre);
+		
+		//Agregar tipo de dato
+		tabla_simbolo[fin_tabla].tipo_dato = CteInt;
+		
+		//Agregar valor a la tabla
+		printf("Sintactico: %d",valor);
+		tabla_simbolo[fin_tabla].valor_i = valor;
 	}
 }

@@ -89,26 +89,12 @@ ESPACIO     " "
 {CTE_INT}					{
 								if(atoll(yytext)<=2147483647){
 									yylval.int_val = atoi(yytext);
-
-									int length = strlen(yytext) + 2;
-									char nombre_cte[length];
-									strcpy(nombre_cte, "_");
-									strcat(nombre_cte, yytext);
-									yylval.string_val = nombre_cte;
-
 									return CTE_INT;
 								}
 								cota_error("superaste el tamanio maximo para numeros enteros. Realmente necesitas un numero tan grande?");
 							}
 {CTE_FLOAT}					{
 								yylval.float_val = atof(yytext);
-
-								int length = strlen(yytext) + 2;
-								char nombre_cte[length];
-								strcpy(nombre_cte, "_");
-								strcat(nombre_cte, yytext);
-								yylval.string_val = nombre_cte;
-
 								return CTE_FLOAT;
 							}
 {CTE_STRING}				{

@@ -19,4 +19,5 @@ estimada_cajita_magica
 		goto_mientras
 		a <- 5;
 	gracias
+	4.5+1234.5432*12345.54343+.23-32.;
 salu2
