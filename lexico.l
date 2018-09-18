@@ -94,8 +94,13 @@ ESPACIO     " "
 								cota_error("superaste el tamanio maximo para numeros enteros. Realmente necesitas un numero tan grande?");
 							}
 {CTE_FLOAT}					{
-								yylval.float_val = atof(yytext);
-								return CTE_FLOAT;
+								if(atof(yytext)<=3.40282347e+38F){	
+									yylval.float_val = atof(yytext);
+									return CTE_FLOAT;
+								}
+								cota_error("superaste el tamanio maximo para numeros posta. Realmente necesitas un numero tan grande?");
+								//yylval.float_val = atof(yytext);
+								//return CTE_FLOAT;
 							}
 {CTE_STRING}				{
 								if(strlen(yytext)<=30){

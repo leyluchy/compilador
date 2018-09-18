@@ -257,7 +257,7 @@ escritura:
     WRITE ID                                            {
 															chequearVarEnTabla($2);
 															printf("Regla 55: escritura es WRITE ID\n");
-														};
+														}
     | WRITE CTE_STRING                                  {
 															printf("Regla 56: escritura es WRITE CTE_STRING\n\n");
 															printf("** Writing $2 %s **\n", $2); //TODO: borrar esto

@@ -5,5 +5,5 @@ pause
 c:\MinGW\bin\gcc.exe lex.yy.c y.tab.c -o lexico.exe
 pause
 
-lexico.exe pruebaSimple.txt
+lexico.exe pruebaSimple2.txt
 pause

@@ -1,5 +1,4 @@
 ﻿estimada_cajita_magica
-
 	necesito:
 		posta n;
 		enterito a,b,i;
@@ -10,6 +9,10 @@
 	leeme a;
 	mostrame "hola mundo";
 	mostrame a;
+
+	n <- 4.5;
+	s <- "cadenacadenacadenacadena";
+
 	a<- (4/4*(4+4)-3/4)*(4*5.4+4/5)-4+3;
 	cadeña <- "hey baby";
 	
