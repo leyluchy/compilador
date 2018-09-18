@@ -5,6 +5,7 @@
 	#include <string.h>
 	#include "y.tab.h"
 
+	/* Tipos de datos para la tabla de simbolos */
   	#define Int 1
 	#define Float 2
 	#define String 3
@@ -14,18 +15,21 @@
 
 	#define TAMANIO_TABLA 300
 
+	/* Funciones necesarias */
 	int yyerror(char* mensaje);
 	void agregarVarATabla(char* nombre);
 	void agregarTiposDatosATabla(void);
 	void agregarCteStringATabla(char* nombre);
 	void agregarCteIntATabla(int valor);
 	void agregarCteFloatATabla(float valor);
+	void chequearVarEnTabla(char* nombre);
 	int buscarEnTabla(char * name);
 	void guardarTabla(void);
 
 	int yystopparser=0;
 	FILE  *yyin;
 
+	/* Cosas de tabla de simbolos */
 	typedef struct {
 		char* nombre;
 		int tipo_dato;
@@ -38,6 +42,7 @@
 	simbolo tabla_simbolo[TAMANIO_TABLA];
 	int fin_tabla = -1;
 
+	/* Cosas para la declaracion de variables y la tabla de simbolos */
 	int varADeclarar1 = 0;
 	int cantVarsADeclarar = 0;
 	int tipoDatoADeclarar;
@@ -159,13 +164,9 @@ bloque_while:
 
 asignacion:
 	ID ASIG expresion	                                {
+															chequearVarEnTabla($1);
 															printf("Regla 21: asignacion es ID ASIG expresion\n\n");
 															printf("** Asignacion de %s **\n", $1);
-															if(buscarEnTabla($1)==-1){
-																char msg[100];
-																sprintf(msg,"%s?, %s",$1,"no man, tenes que declarar las variables arriba, esto no es un viva la pepa como java...");
-																yyerror(msg);
-															}
 														};
 
 /* Expresiones aritmeticas y otras */
@@ -196,13 +197,8 @@ factor:
 
 factor:
 	ID			                                        {
-															if(buscarEnTabla(yylval.string_val)!=-1)
-																printf("Regla 33: factor es ID | ID: %s\n", yylval.string_val);
-															else{
-																char msg[100];
-																sprintf(msg,"%s?, %s",yylval.string_val,"no man, tenes que declarar las variables arriba, esto no es un viva la pepa como java...");
-																yyerror(msg);
-															}
+															chequearVarEnTabla(yylval.string_val);
+															printf("Regla 33: factor es ID | ID: %s\n", yylval.string_val);
 														}
 	| CTE_FLOAT	                                        {
 															printf("Regla 34: factor es CTE_FLOAT\n");
@@ -238,7 +234,10 @@ average:
     AVG PA CA lista_exp_coma CC PC                      {printf("Regla 48: average es AVG PA CA lista_exp_coma CC PC\n\n");};
 
 inlist:
-	INLIST PA id PUNTO_COMA CA lista_exp_pc CC PC   	{printf("Regla 49: inlist es INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC\n\n");};
+	INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC   	{
+															chequearVarEnTabla($3); //TODO: testear
+															printf("Regla 49: inlist es INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC\n\n");
+														};
 
 lista_exp_coma:
     lista_exp_coma COMA expresion_aritmetica            {printf("Regla 50: lista_exp_coma es lista_exp_coma COMA expresion_aritmetica\n");}
@@ -249,25 +248,32 @@ lista_exp_pc:
     | expresion_aritmetica                              {printf("Regla 53: lista_exp_pc es expresion_aritmetica\n");};
 
 lectura:
-    READ id												{printf("Regla 54: lectura es READ ID\n");};
+    READ ID												{
+															chequearVarEnTabla($2);
+															printf("Regla 54: lectura es READ ID\n");
+														};
 
 escritura:
-    WRITE id                                            {printf("Regla 55: escritura es WRITE ID\n");};
+    WRITE ID                                            {
+															chequearVarEnTabla($2);
+															printf("Regla 55: escritura es WRITE ID\n");
+														};
     | WRITE CTE_STRING                                  {
 															printf("Regla 56: escritura es WRITE CTE_STRING\n\n");
+															printf("** Writing $2 %s **\n", $2); //TODO: borrar esto
 															agregarCteStringATabla(yylval.string_val);
 														};
 
-id:
-	ID														{
-																printf("** SINT reconocio la ID %s **\n", yylval.string_val);
-																if(buscarEnTabla(yylval.string_val)==-1){
-																	char msg[100];
-																	sprintf(msg,"%s?, %s",yylval.string_val,"no man, tenes que declarar las variables arriba, esto no es un viva la pepa como java...");
-																	yyerror(msg);
-																}
-															};
-
+/*id:
+	ID													{
+															printf("** SINT reconocio la ID %s **\n", yylval.string_val);
+															if(buscarEnTabla(yylval.string_val)==-1){
+																char msg[100];
+																sprintf(msg,"%s?, %s",yylval.string_val,"no man, tenes que declarar las variables arriba, esto no es un viva la pepa como java...");
+																yyerror(msg);
+															}
+														};
+*/
 %%
 
 int main(int argc,char *argv[])
@@ -314,13 +320,16 @@ int yyerror(char* mensaje)
  /* Devuleve la posici�n en la que se encuentra el elemento buscado, -1 si no encontr� el elemento */
 
  int buscarEnTabla(char * name){
+	 printf("** Buscando %s **", name);
     int i=0;
     while(i<=fin_tabla){
         if(strcmp(tabla_simbolo[i].nombre,name) == 0){
+			printf("Sep %s\n", tabla_simbolo[i].nombre);
 			return i;
         }
         i++;
     }
+	printf("Nop\n");
     return -1;
  }
 
@@ -383,7 +392,12 @@ void agregarCteStringATabla(char* nombre){
 	if(buscarEnTabla(nombre) == -1){
 		//Agregar nombre a tabla
 		fin_tabla++;
-		tabla_simbolo[fin_tabla].nombre = (char*) malloc((strlen(nombre)+1)*sizeof(char));
+		printf("** 1 %d **\n", strlen(nombre));
+		tabla_simbolo[fin_tabla].nombre = (char*) malloc( ( strlen(nombre) + 1 ) );
+		printf("** 2 **\n");
+
+		tabla_simbolo[fin_tabla].nombre == NULL ? printf("!!!!! Drama con malloc !!!!!!\n"): printf("OK\n") ;
+
 		strcpy(tabla_simbolo[fin_tabla].nombre, nombre);
 
 		//Agregar tipo de dato
@@ -440,7 +454,18 @@ void agregarCteIntATabla(int valor){
 		tabla_simbolo[fin_tabla].tipo_dato = CteInt;
 
 		//Agregar valor a la tabla
-		printf("Sintactico: %d",valor);
+		//TODO: borrar esto: printf("Sintactico: %d",valor);
 		tabla_simbolo[fin_tabla].valor_i = valor;
 	}
+}
+
+void chequearVarEnTabla(char* nombre){
+	//Si no existe en la tabla, error
+	printf("++ Chequeando %s ++\n", nombre); //TODO: borrar esto
+	if( buscarEnTabla(nombre) == -1){
+		char msg[100];
+		sprintf(msg,"%s? No, man, tenes que declarar las variables arriba. Esto no es un viva la pepa como java...", nombre);
+		yyerror(msg);
+	}
+	//Si existe en la tabla, dejo que la compilacion siga
 }
