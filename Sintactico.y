@@ -126,12 +126,12 @@ t_dato:
 
 lista_id:
 	lista_id COMA ID	                                {
-	                                                        printf("Regla 8: lista_id es lista_id COMA ID | ID: %s\n", yylval.string_val);
+	                                                        printf("Regla 8: lista_id es lista_id COMA ID\n");
 	                                                        agregarVarATabla(yylval.string_val);
 															cantVarsADeclarar++;
                                                         }
 	| ID				                                {
-	                                                        printf("Regla 9: lista_id es ID | ID: %s\n", yylval.string_val);
+	                                                        printf("Regla 9: lista_id es ID\n");
 	                                                        agregarVarATabla(yylval.string_val);
 															varADeclarar1 = fin_tabla; /* Guardo posicion de primer variable de esta lista de declaracion. */
 															cantVarsADeclarar = 1;
@@ -166,7 +166,6 @@ asignacion:
 	ID ASIG expresion	                                {
 															chequearVarEnTabla($1);
 															printf("Regla 21: asignacion es ID ASIG expresion\n\n");
-															printf("** Asignacion de %s **\n", $1);
 														};
 
 /* Expresiones aritmeticas y otras */
@@ -179,7 +178,7 @@ expresion_cadena:
 	CTE_STRING						                    {
 															printf("Regla 24: expresion_cadena es CTE_STRING\n");
 															agregarCteStringATabla(yylval.string_val);
-														}; /* TODO: Guardar nombre, valor y longitud en tabla de simbolos */
+														};
 
 expresion_aritmetica:
 	expresion_aritmetica MAS termino 		            {printf("Regla 25: expresion_aritmetica es expresion_aritmetica MAS termino\n");}
@@ -198,7 +197,7 @@ factor:
 factor:
 	ID			                                        {
 															chequearVarEnTabla(yylval.string_val);
-															printf("Regla 33: factor es ID | ID: %s\n", yylval.string_val);
+															printf("Regla 33: factor es ID\n");
 														}
 	| CTE_FLOAT	                                        {
 															printf("Regla 34: factor es CTE_FLOAT\n");
@@ -235,7 +234,7 @@ average:
 
 inlist:
 	INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC   	{
-															chequearVarEnTabla($3); //TODO: testear
+															chequearVarEnTabla($3);
 															printf("Regla 49: inlist es INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC\n\n");
 														};
 
@@ -260,20 +259,8 @@ escritura:
 														}
     | WRITE CTE_STRING                                  {
 															printf("Regla 56: escritura es WRITE CTE_STRING\n\n");
-															printf("** Writing $2 %s **\n", $2); //TODO: borrar esto
 															agregarCteStringATabla(yylval.string_val);
 														};
-
-/*id:
-	ID													{
-															printf("** SINT reconocio la ID %s **\n", yylval.string_val);
-															if(buscarEnTabla(yylval.string_val)==-1){
-																char msg[100];
-																sprintf(msg,"%s?, %s",yylval.string_val,"no man, tenes que declarar las variables arriba, esto no es un viva la pepa como java...");
-																yyerror(msg);
-															}
-														};
-*/
 %%
 
 int main(int argc,char *argv[])
@@ -310,7 +297,13 @@ int yyerror(char* mensaje)
 	 if(buscarEnTabla(nombre) == -1){
 		 //Agregar a tabla
 		 fin_tabla++;
-		 tabla_simbolo[fin_tabla].nombre = (char*) malloc((strlen(nombre)+1)*sizeof(char));
+		 char* aux = (char*) malloc((strlen(nombre)+1)*sizeof(char));
+		 if(aux == NULL){
+			 printf("Error al asignar memoria para agregar una variable la tabla de simbolos.\n");
+			 system("Pause");
+			 exit(2);
+		 }
+		 tabla_simbolo[fin_tabla].nombre = aux;
 		 strcpy(tabla_simbolo[fin_tabla].nombre, nombre);
 	 }
 	 else yyerror("Encontre dos declaraciones de variables con el mismo nombre. Decidite."); //Error, ya existe esa variable
@@ -320,16 +313,13 @@ int yyerror(char* mensaje)
  /* Devuleve la posici�n en la que se encuentra el elemento buscado, -1 si no encontr� el elemento */
 
  int buscarEnTabla(char * name){
-	 printf("** Buscando %s **", name);
     int i=0;
     while(i<=fin_tabla){
         if(strcmp(tabla_simbolo[i].nombre,name) == 0){
-			printf("Sep %s\n", tabla_simbolo[i].nombre);
 			return i;
         }
         i++;
     }
-	printf("Nop\n");
     return -1;
  }
 
@@ -392,19 +382,26 @@ void agregarCteStringATabla(char* nombre){
 	if(buscarEnTabla(nombre) == -1){
 		//Agregar nombre a tabla
 		fin_tabla++;
-		printf("** 1 %d %s **\n", strlen(nombre), nombre);
-		tabla_simbolo[fin_tabla].nombre = (char*) malloc((strlen(nombre)+1)*sizeof(char));
-		printf("** 2 **\n");
-
-		tabla_simbolo[fin_tabla].nombre == NULL ? printf("!!!!! Drama con malloc !!!!!!\n"): printf("OK\n") ;
-		printf("** %s **\n", tabla_simbolo[fin_tabla].nombre);
+		char* aux = (char*) malloc((strlen(nombre)+1)*sizeof(char));
+		if(aux == NULL){
+			printf("Error al asignar memoria para agregar una constante string la tabla de simbolos.\n");
+			system("Pause");
+			exit(2);
+		}
+		tabla_simbolo[fin_tabla].nombre = aux;
 		strcpy(tabla_simbolo[fin_tabla].nombre, nombre);
 
 		//Agregar tipo de dato
 		tabla_simbolo[fin_tabla].tipo_dato = CteString;
 
 		//Agregar valor a la tabla
-		tabla_simbolo[fin_tabla].valor_s = (char*) malloc((strlen(nombre))*sizeof(char));
+		aux = (char*) malloc((strlen(nombre))*sizeof(char));
+		if(aux == NULL){
+			printf("Error al asignar memoria para agregar una constante string la tabla de simbolos.\n");
+			system("Pause");
+			exit(2);
+		}
+		tabla_simbolo[fin_tabla].valor_s = aux;
 		strcpy(tabla_simbolo[fin_tabla].valor_s, nombre+1);
 
 		//Agregar longitud
@@ -424,7 +421,13 @@ void agregarCteFloatATabla(float valor){
 	if(buscarEnTabla(nombre) == -1){
 		//Agregar nombre a tabla
 		fin_tabla++;
-		tabla_simbolo[fin_tabla].nombre = (char*) malloc((strlen(nombre)+1)*sizeof(char));
+		char* aux = (char*) malloc((strlen(nombre)+1)*sizeof(char));
+		if(aux == NULL){
+			printf("Error al asignar memoria para agregar una constante float la tabla de simbolos.\n");
+			system("Pause");
+			exit(2);
+		}
+		tabla_simbolo[fin_tabla].nombre = aux;
 		strcpy(tabla_simbolo[fin_tabla].nombre, nombre);
 
 		//Agregar tipo de dato
@@ -447,21 +450,25 @@ void agregarCteIntATabla(int valor){
 	if(buscarEnTabla(nombre) == -1){
 		//Agregar nombre a tabla
 		fin_tabla++;
-		tabla_simbolo[fin_tabla].nombre = (char*) malloc((strlen(nombre)+1)*sizeof(char));
+		char* aux = (char*) malloc((strlen(nombre)+1)*sizeof(char));
+		if(aux == NULL){
+			printf("Error al asignar memoria para agregar una constante int la tabla de simbolos.\n");
+			system("Pause");
+			exit(2);
+		}
+		tabla_simbolo[fin_tabla].nombre = aux;
 		strcpy(tabla_simbolo[fin_tabla].nombre, nombre);
 
 		//Agregar tipo de dato
 		tabla_simbolo[fin_tabla].tipo_dato = CteInt;
 
 		//Agregar valor a la tabla
-		//TODO: borrar esto: printf("Sintactico: %d",valor);
 		tabla_simbolo[fin_tabla].valor_i = valor;
 	}
 }
 
 void chequearVarEnTabla(char* nombre){
 	//Si no existe en la tabla, error
-	printf("++ Chequeando %s ++\n", nombre); //TODO: borrar esto
 	if( buscarEnTabla(nombre) == -1){
 		char msg[100];
 		sprintf(msg,"%s? No, man, tenes que declarar las variables arriba. Esto no es un viva la pepa como java...", nombre);
