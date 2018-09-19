@@ -1,27 +1,13 @@
 ﻿estimada_cajita_magica
 	necesito:
-		posta n;
-		enterito a,b,i;
-		discretito c,d;
-		jeroglifico cadeña, s;
+		enterito a,b;
+		discretito c;
+		posta f;
+		jeroglifico s, cadeña;
 	para
-	
-	leeme a;
-	mostrame "hola mundo";
-	mostrame a;
 
-	n <- 4.5;
-	s <- "cadenacadenacadenacadena";
-
-	a<- (4/4*(4+4)-3/4)*(4*5.4+4/5)-4+3;
-	cadeña <- "hey baby";
-	
-	si 4*8-(56+9) < 4-1 y lta?(a;[4*8-(56+9);4;a;b*1]) 
-	por_favor
-		mientras no a+a == a
-			a <- a*avast([avast([1,2,3]), d, d]);
-		goto_mientras
-		a <- 5;
-	gracias
-	4.5+1234.5432*12345.54343+.23-32.;
+	a <- 2;
+	a <- 3;
+	f <- 23.2;
+	s <- "Hola mundo";
 salu2
