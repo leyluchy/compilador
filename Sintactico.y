@@ -14,6 +14,7 @@
 	#define CteString 6
 
 	#define TAMANIO_TABLA 300
+	#define TAM_NOMBRE 32
 
 	/* Funciones necesarias */
 	int yyerror(char* mensaje);
@@ -24,6 +25,7 @@
 	void agregarCteFloatATabla(float valor);
 	void chequearVarEnTabla(char* nombre);
 	int buscarEnTabla(char * name);
+	void escribirNombreEnTabla(char* nombre, int pos);
 	void guardarTabla(void);
 
 	int yystopparser=0;
@@ -31,9 +33,9 @@
 
 	/* Cosas de tabla de simbolos */
 	typedef struct {
-		char* nombre;
+		char nombre[TAM_NOMBRE];
 		int tipo_dato;
-		char* valor_s;
+		char valor_s[TAM_NOMBRE];
 		float valor_f;
 		int valor_i;
 		int longitud;
@@ -65,7 +67,7 @@
 
 %token AND OR NOT
 
-%token <string_val>ASIG
+%token ASIG
 %token MAS MENOS
 %token POR DIVIDIDO
 
@@ -285,6 +287,25 @@ int yyerror(char* mensaje)
 	exit (1);
  }
 
+/* Funciones de la tabla de simbolos */
+
+/* Devuleve la posici�n en la que se encuentra el elemento buscado, -1 si no encontr� el elemento */
+int buscarEnTabla(char * name){
+   int i=0;
+   while(i<=fin_tabla){
+	   if(strcmp(tabla_simbolo[i].nombre,name) == 0){
+		   return i;
+	   }
+	   i++;
+   }
+   return -1;
+}
+
+/** Escribe el nombre de una variable o constante en la posición indicada */
+void escribirNombreEnTabla(char* nombre, int pos){
+	strcpy(tabla_simbolo[pos].nombre, nombre);
+}
+
  /** Agrega un nuevo nombre de variable a la tabla **/
  void agregarVarATabla(char* nombre){
 	 //Si se llena, error
@@ -297,38 +318,20 @@ int yyerror(char* mensaje)
 	 if(buscarEnTabla(nombre) == -1){
 		 //Agregar a tabla
 		 fin_tabla++;
-		 char* aux = (char*) malloc((strlen(nombre)+1)*sizeof(char));
-		 if(aux == NULL){
-			 printf("Error al asignar memoria para agregar una variable la tabla de simbolos.\n");
-			 system("Pause");
-			 exit(2);
-		 }
-		 tabla_simbolo[fin_tabla].nombre = aux;
-		 strcpy(tabla_simbolo[fin_tabla].nombre, nombre);
+		 escribirNombreEnTabla(nombre, fin_tabla);
 	 }
 	 else yyerror("Encontre dos declaraciones de variables con el mismo nombre. Decidite."); //Error, ya existe esa variable
 
  }
 
- /* Devuleve la posici�n en la que se encuentra el elemento buscado, -1 si no encontr� el elemento */
-
- int buscarEnTabla(char * name){
-    int i=0;
-    while(i<=fin_tabla){
-        if(strcmp(tabla_simbolo[i].nombre,name) == 0){
-			return i;
-        }
-        i++;
-    }
-    return -1;
- }
-
+/** Agrega los tipos de datos a las variables declaradas. Usa las variables globales varADeclarar1, cantVarsADeclarar y tipoDatoADeclarar */
 void agregarTiposDatosATabla(){
 	for(int i = 0; i < cantVarsADeclarar; i++){
 		tabla_simbolo[varADeclarar1 + i].tipo_dato = tipoDatoADeclarar;
 	}
 }
 
+/** Guarda la tabla de simbolos en un archivo de texto */
 void guardarTabla(){
 	if(fin_tabla == -1)
 		yyerror("No encontre la tabla de simbolos");
@@ -340,8 +343,7 @@ void guardarTabla(){
 	}
 
 	for(int i = 0; i <= fin_tabla; i++){
-
-		fprintf(arch, "%s\t", tabla_simbolo[i].nombre);
+		fprintf(arch, "%s\t", &(tabla_simbolo[i].nombre) );
 
 		switch (tabla_simbolo[i].tipo_dato){
 		case Float:
@@ -360,7 +362,7 @@ void guardarTabla(){
 			fprintf(arch, "CTE_INT\t%d", tabla_simbolo[i].valor_i);
 			break;
 		case CteString:
-			fprintf(arch, "CTE_STRING\t%s\t%d", tabla_simbolo[i].valor_s, tabla_simbolo[i].longitud);
+			fprintf(arch, "CTE_STRING\t%s\t%d", &(tabla_simbolo[i].valor_s), tabla_simbolo[i].longitud);
 			break;
 		}
 
@@ -371,6 +373,7 @@ void guardarTabla(){
 
 /* Calculo que estas 3 funciones se podrían juntar en una sola */
 
+/** Agrega una constante string a la tabla de simbolos */
 void agregarCteStringATabla(char* nombre){
 	if(fin_tabla >= TAMANIO_TABLA - 1){
 		printf("Error: me quede sin espacio en la tabla de simbolos. Sori, gordi.\n");
@@ -382,53 +385,36 @@ void agregarCteStringATabla(char* nombre){
 	if(buscarEnTabla(nombre) == -1){
 		//Agregar nombre a tabla
 		fin_tabla++;
-		char* aux = (char*) malloc((strlen(nombre)+1)*sizeof(char));
-		if(aux == NULL){
-			printf("Error al asignar memoria para agregar una constante string la tabla de simbolos.\n");
-			system("Pause");
-			exit(2);
-		}
-		tabla_simbolo[fin_tabla].nombre = aux;
-		strcpy(tabla_simbolo[fin_tabla].nombre, nombre);
+		escribirNombreEnTabla(nombre, fin_tabla);
 
 		//Agregar tipo de dato
 		tabla_simbolo[fin_tabla].tipo_dato = CteString;
 
 		//Agregar valor a la tabla
-		aux = (char*) malloc((strlen(nombre))*sizeof(char));
-		if(aux == NULL){
-			printf("Error al asignar memoria para agregar una constante string la tabla de simbolos.\n");
-			system("Pause");
-			exit(2);
-		}
-		tabla_simbolo[fin_tabla].valor_s = aux;
-		strcpy(tabla_simbolo[fin_tabla].valor_s, nombre+1);
+		strcpy(tabla_simbolo[fin_tabla].valor_s, nombre+1); //nombre+1 es para no copiar el _ del principio
 
 		//Agregar longitud
 		tabla_simbolo[fin_tabla].longitud = strlen(nombre) - 1;
 	}
 }
 
+/** Agrega una constante real a la tabla de simbolos */
 void agregarCteFloatATabla(float valor){
 	if(fin_tabla >= TAMANIO_TABLA - 1){
 		printf("Error: me quede sin espacio en la tabla de simbolos. Sori, gordi.\n");
 		system("Pause");
 		exit(2);
 	}
+
+	//Genero el nombre
 	char nombre[12];
 	sprintf(nombre, "%f", valor);
+
 	//Si no hay otra variable con el mismo nombre...
 	if(buscarEnTabla(nombre) == -1){
 		//Agregar nombre a tabla
 		fin_tabla++;
-		char* aux = (char*) malloc((strlen(nombre)+1)*sizeof(char));
-		if(aux == NULL){
-			printf("Error al asignar memoria para agregar una constante float la tabla de simbolos.\n");
-			system("Pause");
-			exit(2);
-		}
-		tabla_simbolo[fin_tabla].nombre = aux;
-		strcpy(tabla_simbolo[fin_tabla].nombre, nombre);
+		escribirNombreEnTabla(nombre, fin_tabla);
 
 		//Agregar tipo de dato
 		tabla_simbolo[fin_tabla].tipo_dato = CteFloat;
@@ -438,26 +424,23 @@ void agregarCteFloatATabla(float valor){
 	}
 }
 
+/** Agrega una constante entera a la tabla de simbolos */
 void agregarCteIntATabla(int valor){
 	if(fin_tabla >= TAMANIO_TABLA - 1){
 		printf("Error: me quede sin espacio en la tabla de simbolos. Sori, gordi.\n");
 		system("Pause");
 		exit(2);
 	}
+
+	//Genero el nombre
 	char nombre[30];
 	sprintf(nombre, "%d", valor);
+
 	//Si no hay otra variable con el mismo nombre...
 	if(buscarEnTabla(nombre) == -1){
 		//Agregar nombre a tabla
 		fin_tabla++;
-		char* aux = (char*) malloc((strlen(nombre)+1)*sizeof(char));
-		if(aux == NULL){
-			printf("Error al asignar memoria para agregar una constante int la tabla de simbolos.\n");
-			system("Pause");
-			exit(2);
-		}
-		tabla_simbolo[fin_tabla].nombre = aux;
-		strcpy(tabla_simbolo[fin_tabla].nombre, nombre);
+		escribirNombreEnTabla(nombre, fin_tabla);
 
 		//Agregar tipo de dato
 		tabla_simbolo[fin_tabla].tipo_dato = CteInt;
@@ -467,6 +450,7 @@ void agregarCteIntATabla(int valor){
 	}
 }
 
+/** Se fija si ya existe una entrada con ese nombre en la tabla de simbolos. Si no existe, muestra un error de variable sin declarar y aborta la compilacion. */
 void chequearVarEnTabla(char* nombre){
 	//Si no existe en la tabla, error
 	if( buscarEnTabla(nombre) == -1){
