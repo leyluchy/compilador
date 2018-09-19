@@ -1,0 +1,28 @@
+Bienvenido al lexico extendido del lenguaje Ñ.
+
+Lexema		Token
+avast		AVG o funcion promedio
+discretito	INT o numero entero
+enterito	INT o numero entero
+estimada_cajita_magica	START
+goto_mientras	ENDWHILE
+gracias		ENDIF
+jeroglifico	STRING
+leeme		READ
+lta?		INLIST
+mientras	WHILE
+mostrame	WRITE
+necesito	DECVAR
+no		NOT
+o		OR
+para		ENDDEC
+por_favor	THEN
+posta		FLOAT o numero real
+salu2		END
+si		IF
+sino		ELSE
+y		AND
+
+Formatos:
+Las variables se pueden nombrar con caracteres alfanuméricos. Esto implica cualquier letra, incluyendo la Ñ (sería irónico que el lenguaje no aceptara su propio nombre), en mayúsculas y minúsculas, y números. Los nombres deben comenzar con una letra y diferencian entre mayúsculas y minúsculas.
+Los números decimales deben usar el . decimal, no la coma.
