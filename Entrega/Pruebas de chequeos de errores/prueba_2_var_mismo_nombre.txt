@@ -1,0 +1,8 @@
+estimada_cajita_magica
+	necesito:
+		enterito a;
+		posta a;
+	para
+	
+	a<-3;
+salu2

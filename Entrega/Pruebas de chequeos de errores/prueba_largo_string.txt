@@ -1,0 +1,7 @@
+estimada_cajita_magica
+	necesito:
+		enterito a;
+	para
+	
+	mostrame "Yo quería copiar el lorem ipsum para esta prueba pero no me dejaron.";
+salu2

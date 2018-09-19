@@ -99,8 +99,6 @@ ESPACIO     " "
 									return CTE_FLOAT;
 								}
 								cota_error("superaste el tamanio maximo para numeros posta. Realmente necesitas un numero tan grande?");
-								//yylval.float_val = atof(yytext);
-								//return CTE_FLOAT;
 							}
 {CTE_STRING}				{
 								if(strlen(yytext)<=30){

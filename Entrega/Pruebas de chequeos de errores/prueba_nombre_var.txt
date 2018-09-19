@@ -1,0 +1,7 @@
+estimada_cajita_magica
+	necesito:
+		enterito abcdefghijklmnñopqrstuvwxyz1234567890;
+	para
+	
+	mostrame "Hola mundo";
+salu2
