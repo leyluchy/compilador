@@ -173,7 +173,7 @@ asignacion:
 /* Expresiones aritmeticas y otras */
 
 expresion:
-	expresion_cadena				                    {printf("Regla 22: expresion es expresion_cadena\n");} /*Se podria poner CTE STRING directamente?*/
+	expresion_cadena				                    {printf("Regla 22: expresion es expresion_cadena\n");}
 	| expresion_aritmetica			                    {printf("Regla 23: expresion es expresion_aritmetica\n");};
 
 expresion_cadena:
