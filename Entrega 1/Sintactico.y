@@ -408,7 +408,7 @@ void agregarCteFloatATabla(float valor){
 
 	//Genero el nombre
 	char nombre[12];
-	sprintf(nombre, "%f", valor);
+	sprintf(nombre, "_%f", valor);
 
 	//Si no hay otra variable con el mismo nombre...
 	if(buscarEnTabla(nombre) == -1){
@@ -434,7 +434,7 @@ void agregarCteIntATabla(int valor){
 
 	//Genero el nombre
 	char nombre[30];
-	sprintf(nombre, "%d", valor);
+	sprintf(nombre, "_%d", valor);
 
 	//Si no hay otra variable con el mismo nombre...
 	if(buscarEnTabla(nombre) == -1){

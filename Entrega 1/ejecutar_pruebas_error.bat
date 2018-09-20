@@ -1,0 +1,10 @@
+Primera.exe Pruebas_de_chequeos_de_errores\prueba_2_var_mismo_nombre.txt
+pause
+Primera.exe Pruebas_de_chequeos_de_errores\prueba_largo_string.txt
+pause
+Primera.exe Pruebas_de_chequeos_de_errores\prueba_nombre_var.txt
+pause
+Primera.exe Pruebas_de_chequeos_de_errores\prueba_rango_entero.txt
+pause
+Primera.exe Pruebas_de_chequeos_de_errores\prueba_var_no_declarada.txt
+pause
