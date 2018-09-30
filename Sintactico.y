@@ -26,7 +26,7 @@
 	void agregarCteStringATabla(char* nombre);
 	void agregarCteIntATabla(int valor);
 	void agregarCteFloatATabla(float valor);
-	
+
 	void chequearVarEnTabla(char* nombre);
 	int buscarEnTabla(char * name);
 	void escribirNombreEnTabla(char* nombre, int pos);
@@ -163,10 +163,12 @@ bloque_if:
     IF expresion_logica THEN bloque ENDIF               {printf("Regla 18: bloque_if es IF expresion_logica THEN bloque ENDIF\n\n");};
 
 bloque_if:
-    IF expresion_logica THEN bloque ELSE bloque ENDIF   {printf("Regla 19: bloque_if es IF expresion_logica THEN bloque ELSE bloque ENDIF\n\n");};
+    IF expresion_logica THEN bloque ELSE bloque ENDIF   {printf("Regla 19.1: bloque_if es IF expresion_logica THEN bloque ELSE bloque ENDIF\n\n");}
+	| IF expresion_logica THEN ENDIF					{printf("Regla 19.2: bloque_if es IF expresion_logica THEN ENDIF\n\n");};
 
 bloque_while:
-    WHILE expresion_logica bloque ENDWHILE              {printf("Regla 20: bloque_while es WHILE expresion_logica bloque ENDWHILE\n\n");};
+    WHILE expresion_logica bloque ENDWHILE              {printf("Regla 20.1: bloque_while es WHILE expresion_logica bloque ENDWHILE\n\n");}
+	| WHILE expresion_logica ENDWHILE					{printf("Regla 20.2: bloque_while es WHILE expresion_logica ENDWHILE\n\n");};
 
 asignacion:
 	ID ASIG expresion	                                {
