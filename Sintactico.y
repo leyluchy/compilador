@@ -153,7 +153,7 @@ sentencia:
 	| bloque_while                                      {printf("Regla 14: sentencia es bloque_while\n");}
 	| lectura PUNTO_COMA                                {printf("Regla 15: sentencia es lectura PUNTO_COMA\n");}
 	| escritura PUNTO_COMA                              {printf("Regla 16: sentencia es escritura PUNTO_COMA\n");}
-	| expresion_aritmetica PUNTO_COMA                   {printf("Regla 17: sentencia es expresion_aritmetica PUNTO_COMA\n");};
+	| expresion PUNTO_COMA                   			{printf("Regla 17: sentencia es expresion PUNTO_COMA\n");};
 
 bloque_if:
     IF expresion_logica THEN bloque ENDIF               {printf("Regla 18: bloque_if es IF expresion_logica THEN bloque ENDIF\n\n");};
@@ -174,7 +174,8 @@ asignacion:
 
 expresion:
 	expresion_cadena				                    {printf("Regla 22: expresion es expresion_cadena\n");}
-	| expresion_aritmetica			                    {printf("Regla 23: expresion es expresion_aritmetica\n");};
+	| expresion_entera			                   		{printf("Regla 23.1: expresion es expresion_entera\n");}
+	| expresion_real			                    	{printf("Regla 23.2: expresion es expresion_real\n");};
 
 expresion_cadena:
 	CTE_STRING						                    {
@@ -182,33 +183,58 @@ expresion_cadena:
 															agregarCteStringATabla(yylval.string_val);
 														};
 
-expresion_aritmetica:
-	expresion_aritmetica MAS termino 		            {printf("Regla 25: expresion_aritmetica es expresion_aritmetica MAS termino\n");}
-	| expresion_aritmetica MENOS termino 	            {printf("Regla 26: expresion_aritmetica es expresion_aritmetica MENOS termino\n");}
-	| termino								            {printf("Regla 27: expresion_aritmetica es termino\n");};
+/* Expresiones con numeros enteros */
+expresion_entera:
+	expresion_entera MAS termino_e 		            	{printf("Regla 25.1: expresion_entera es expresion_entera MAS termino_e\n");}
+	| expresion_entera MENOS termino_e 	            	{printf("Regla 26.1: expresion_entera es expresion_entera MENOS termino_e\n");}
+	| termino_e								            {printf("Regla 27.1: expresion_entera es termino_e\n");};
 
-termino:
-	termino POR factor 			                        {printf("Regla 28: termino es termino POR factor\n");}
-	| termino DIVIDIDO factor 	                        {printf("Regla 29: termino es termino DIVIDIDO factor\n");}
-	| factor					                        {printf("Regla 30: termino es factor\n");};
+termino_e:
+	termino_e POR factor_e 			                    {printf("Regla 28.1: termino_e es termino_e POR factor_e\n");}
+	| termino_e DIVIDIDO factor_e 	                    {printf("Regla 29.1: termino_e es termino_e DIVIDIDO factor_e\n");}
+	| factor_e					                        {printf("Regla 30.1: termino_e es factor_e\n");};
 
-factor:
-	PA expresion_aritmetica PC	                        {printf("Regla 31: factor es PA expresion_aritmetica PC\n");}
-    | average                                           {printf("Regla 32: factor es average\n");};
+factor_e:
+	PA expresion_entera PC	                        	{printf("Regla 31.1: factor_e es PA expresion_entera PC\n");}
+    | average                                           {printf("Regla 32: factor es average\n");}; //TODO que hacemos aca?
 
-factor:
+factor_e:
 	ID			                                        {
 															chequearVarEnTabla(yylval.string_val);
-															printf("Regla 33: factor es ID\n");
-														}
-	| CTE_FLOAT	                                        {
-															printf("Regla 34: factor es CTE_FLOAT\n");
-															agregarCteFloatATabla(yylval.float_val);
+															//TODO chequear tipo entero
+															printf("Regla 33.1: factor_e es ID\n");
 														}
 	| CTE_INT	                                        {
-															printf("Regla 35: factor es CTE_INT\n");
+															printf("Regla 35: factor_e es CTE_INT\n");
 															agregarCteIntATabla(yylval.int_val);
 														};
+
+/* Expresiones con numeros reales */
+expresion_real:
+	expresion_real MAS termino_r 		            	{printf("Regla 25.2: expresion_real es expresion_real MAS termino_r\n");}
+	| expresion_real MENOS termino_r 	            	{printf("Regla 26.2: expresion_real es expresion_real MENOS termino_r\n");}
+	| termino_r								            {printf("Regla 27.2: expresion_real es termino_r\n");};
+
+termino_r:
+	termino_r POR factor_r 			                    {printf("Regla 28.2: termino_r es termino_r POR factor_r\n");}
+	| termino_r DIVIDIDO factor_r 	                    {printf("Regla 29.2: termino_r es termino_r DIVIDIDO factor_r\n");}
+	| factor_r					                        {printf("Regla 30.2: termino_r es factor_r\n");};
+
+factor_r:
+	PA expresion_real PC	                        	{printf("Regla 31.2: factor_r es PA expresion_real PC\n");}
+    | average                                           {printf("Regla 32: factor_r es average\n");};
+
+factor_r:
+	ID			                                        {
+															chequearVarEnTabla(yylval.string_val);
+															//TODO chequear tipo dato
+															printf("Regla 33: factor_r es ID\n");
+														}
+	| CTE_FLOAT	                                        {
+															printf("Regla 34: factor_r es CTE_FLOAT\n");
+															agregarCteFloatATabla(yylval.float_val);
+														};
+														
 /* Expresiones logicas */
 
 expresion_logica:
@@ -218,8 +244,8 @@ expresion_logica:
     | NOT termino_logico                                {printf("Regla 39: expresion_logica es NOT termino_logico\n");};
 
 termino_logico:
-    expresion_aritmetica comp_bool expresion_aritmetica {printf("Regla 40: termino_logico es expresion_aritmetica comp_bool expresion_aritmetica\n");}
-    | inlist                                            {printf("Regla 41: termino logico es inlist\n");};
+    expresion_aritmetica comp_bool expresion_aritmetica {printf("Regla 40: termino_logico es expresion_aritmetica comp_bool expresion_aritmetica\n");} //TODO que hacemos aca?
+    | inlist                                            {printf("Regla 41: termino_logico es inlist\n");};
 
 comp_bool:
     MENOR                                               {printf("Regla 42: comp_bool es MENOR\n");}
