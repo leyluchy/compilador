@@ -195,8 +195,7 @@ termino_e:
 	| factor_e					                        {printf("Regla 30.1: termino_e es factor_e\n");};
 
 factor_e:
-	PA expresion_entera PC	                        	{printf("Regla 31.1: factor_e es PA expresion_entera PC\n");}
-    | average                                           {printf("Regla 32: factor es average\n");}; //TODO que hacemos aca?
+	PA expresion_entera PC	                        	{printf("Regla 31.1: factor_e es PA expresion_entera PC\n");};
 
 factor_e:
 	ID			                                        {
@@ -234,7 +233,7 @@ factor_r:
 															printf("Regla 34: factor_r es CTE_FLOAT\n");
 															agregarCteFloatATabla(yylval.float_val);
 														};
-														
+
 /* Expresiones logicas */
 
 expresion_logica:
