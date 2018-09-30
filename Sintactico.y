@@ -6,6 +6,7 @@
 	#include "y.tab.h"
 
 	/* Tipos de datos para la tabla de simbolos */
+	#define sinTipo 0
   	#define Int 1
 	#define Float 2
 	#define String 3
@@ -32,6 +33,9 @@
 	void escribirNombreEnTabla(char* nombre, int pos);
 	void guardarTabla(void);
 
+	void chequearTipoDato(int tipo);
+	void resetTipoDato();
+
 	int yystopparser=0;
 	FILE  *yyin;
 
@@ -52,6 +56,9 @@
 	int varADeclarar1 = 0;
 	int cantVarsADeclarar = 0;
 	int tipoDatoADeclarar;
+
+	/* Cosas para control de tipo de datos en expresiones aritméticas */
+	int tipoDatoActual = sinTipo;
 %}
 
 %union {
@@ -465,4 +472,20 @@ void chequearVarEnTabla(char* nombre){
 		yyerror(msg);
 	}
 	//Si existe en la tabla, dejo que la compilacion siga
+}
+
+/** Compara el tipo de dato pasado por parámetro contra el que se está trabajando actualmente en tipoDatoActual.
+Si es distinto, tira error. Si no hay tipo de dato actual, asigna el pasado por parámetro. */
+void chequearTipoDato(int tipo){
+	if(tipoDatoActual == sinTipo){
+		tipoDatoActual = tipo;
+		return;
+	}
+	if(tipoDatoActual != tipo)
+		yyerror("me estas mezclando numeros enteros con reales. Por que me odias tanto?");
+}
+
+/** Vuelve tipoDatoActual a sinTipo */
+void resetTipoDato(){
+	tipoDatoActual = sinTipo;
 }
