@@ -23,7 +23,7 @@
 	void agregarCteStringATabla(char* nombre);
 	void agregarCteIntATabla(int valor);
 	void agregarCteFloatATabla(float valor);
-	void chequearVarEnTabla(char* nombre);
+	int chequearVarEnTabla(char* nombre);
 	int buscarEnTabla(char * name);
 	void escribirNombreEnTabla(char* nombre, int pos);
 	void guardarTabla(void);
@@ -167,6 +167,7 @@ bloque_while:
 asignacion:
 	ID ASIG expresion	                                {
 															chequearVarEnTabla($1);
+															//TODO chequear tipo de dato
 															printf("Regla 21: asignacion es ID ASIG expresion\n\n");
 														};
 
@@ -243,7 +244,8 @@ expresion_logica:
     | NOT termino_logico                                {printf("Regla 39: expresion_logica es NOT termino_logico\n");};
 
 termino_logico:
-    expresion_aritmetica comp_bool expresion_aritmetica {printf("Regla 40: termino_logico es expresion_aritmetica comp_bool expresion_aritmetica\n");} //TODO que hacemos aca?
+    expresion_entera comp_bool expresion_entera 		{printf("Regla 40.1: termino_logico es expresion_entera comp_bool expresion_entera\n");}
+	| expresion_real comp_bool expresion_real 			{printf("Regla 40: termino_logico es expresion_real comp_bool expresion_real\n");}
     | inlist                                            {printf("Regla 41: termino_logico es inlist\n");};
 
 comp_bool:
@@ -262,6 +264,7 @@ average:
 inlist:
 	INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC   	{
 															chequearVarEnTabla($3);
+															//TODO chequear tipo de dato, ejecuta distinto si es string
 															printf("Regla 49: inlist es INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC\n\n");
 														};
 
@@ -276,12 +279,14 @@ lista_exp_pc:
 lectura:
     READ ID												{
 															chequearVarEnTabla($2);
+															//TODO chequear tipo de dato
 															printf("Regla 54: lectura es READ ID\n");
 														};
 
 escritura:
     WRITE ID                                            {
 															chequearVarEnTabla($2);
+															//TODO saber que tipo de dato es
 															printf("Regla 55: escritura es WRITE ID\n");
 														}
     | WRITE CTE_STRING                                  {
@@ -475,13 +480,17 @@ void agregarCteIntATabla(int valor){
 	}
 }
 
-/** Se fija si ya existe una entrada con ese nombre en la tabla de simbolos. Si no existe, muestra un error de variable sin declarar y aborta la compilacion. */
-void chequearVarEnTabla(char* nombre){
+/** Se fija si ya existe una entrada con ese nombre en la tabla de simbolos.
+Si no existe, muestra un error de variable sin declarar y aborta la compilacion.
+Si existe, devuelve el tipo de dato */
+int chequearVarEnTabla(char* nombre){
 	//Si no existe en la tabla, error
-	if( buscarEnTabla(nombre) == -1){
+	int pos;
+	if(pos = buscarEnTabla(nombre) == -1){
 		char msg[100];
 		sprintf(msg,"%s? No, man, tenes que declarar las variables arriba. Esto no es un viva la pepa como java...", nombre);
 		yyerror(msg);
 	}
 	//Si existe en la tabla, dejo que la compilacion siga
+	return tabla_simbolo[pos].tipo_dato;
 }
