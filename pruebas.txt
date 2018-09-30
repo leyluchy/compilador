@@ -11,13 +11,21 @@ estimada_cajita_magica
 	f <- 23.2;
 	s <- "Hola mundo";
 
-	-/ Esto es un comentario simple/-
+	-/ Esto es un / / / comentari
+	
+	o simple/-
 
 	leeme c;
 	mientras c < a
 		mostrame c;
 		
-		-/ Soy un comentario -/ Y yo soy un comentario dentro de otro comentario/- /-
+		-/ Soy / un come -
+		ntario -
+		-/ Y yo soy 
+		un com /entario dentro de - otro 
+		comentario/- 
+		xD
+		asd/-
 		
 		si f > 10.5 y f < 50.1
 		por_favor

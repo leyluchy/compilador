@@ -12,6 +12,8 @@
 
 %option noyywrap
 %option yylineno
+%x comment
+%x inner_comment
 
 DIGITO 	[0-9]
 LETRA 	[a-zA-ZñÑ]
@@ -20,7 +22,6 @@ CTE_INT		{DIGITO}+
 CTE_FLOAT	{DIGITO}+"."{DIGITO}*|{DIGITO}*"."{DIGITO}+
 WHATEVER	{LETRA}|{DIGITO}|.
 CTE_STRING	\"{WHATEVER}*\"
-COMENTARIO	\-\/.*\/\-
 ESPACIO     " "
 
 %%
@@ -116,7 +117,18 @@ ESPACIO     " "
 								}
 								cota_error("intenta limitar tus jeroglificos a 30 caracteres.");
 							}
-{COMENTARIO}
+"-/"        				BEGIN(comment);
+
+<comment>[^-/\n]*       	/* como todo lo que no sea un '/' */
+<comment>"-"+[^-/\n]*		/* como todos los "-" que no esten seguidos por "/" */
+<comment>"/"+[^-/\n]*   	/* como los '/' que no esten seguidos por '-' */
+<comment>\n             	/* como los saltos de linea, puedo contar*/
+<comment>"-/"				BEGIN(inner_comment);
+<inner_comment>[^/\n]*      /* como todo lo que no sea un '/' */ {printf("---vacioIN---");}
+<inner_comment>"/"+[^-/\n]* /* como los '/' que no esten seguidos por '-' */ 
+<inner_comment>\n       	/* como los saltos de linea, puedo contar*/
+<inner_comment>"/"+"-"  	BEGIN(comment);
+<comment>"/"+"-"       		BEGIN(INITIAL);
 {ESPACIO}
 \n
 \t
