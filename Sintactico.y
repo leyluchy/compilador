@@ -18,11 +18,15 @@
 
 	/* Funciones necesarias */
 	int yyerror(char* mensaje);
+	int yyerror();
+	int yylex();
+
 	void agregarVarATabla(char* nombre);
 	void agregarTiposDatosATabla(void);
 	void agregarCteStringATabla(char* nombre);
 	void agregarCteIntATabla(int valor);
 	void agregarCteFloatATabla(float valor);
+	
 	void chequearVarEnTabla(char* nombre);
 	int buscarEnTabla(char * name);
 	void escribirNombreEnTabla(char* nombre, int pos);
