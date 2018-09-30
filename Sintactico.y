@@ -264,23 +264,34 @@ average:
 	| AVG PA CA lista_exp_r_coma CC PC                    {printf("Regla 48.2: average es AVG PA CA lista_exp_r_coma CC PC\n\n");};
 
 inlist:
-	INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC   	{
+	INLIST PA ID PUNTO_COMA CA lista_exp_e_pc CC PC   	{
 															chequearVarEnTabla($3);
-															//TODO chequear tipo de dato, ejecuta distinto si es string
-															printf("Regla 49: inlist es INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC\n\n");
+															//TODO chequear tipo de dato entero
+															printf("Regla 49.1: inlist es INLIST PA ID PUNTO_COMA CA lista_exp_e_pc CC PC\n\n");
+														}
+	INLIST PA ID PUNTO_COMA CA lista_exp_r_pc CC PC   	{
+															chequearVarEnTabla($3);
+															//TODO chequear tipo de dato real
+															printf("Regla 49.2: inlist es INLIST PA ID PUNTO_COMA CA lista_exp_r_pc CC PC\n\n");
 														};
 
+/* Listas con coma para average */
 lista_exp_e_coma:
     lista_exp_e_coma COMA expresion_entera            	{printf("Regla 50.1: lista_exp_e_coma es lista_exp_e_coma COMA expresion_entera\n");}
     | expresion_entera                              	{printf("Regla 51.1: lista_exp_e_coma es expresion_entera\n");};
 
 lista_exp_r_coma:
-    lista_exp_r_coma COMA expresion_real            	{printf("Regla 50.2: lista_exp_r_coma es lista_exp_coma COMA expresion_real\n");}
+    lista_exp_r_coma COMA expresion_real            	{printf("Regla 50.2: lista_exp_r_coma es lista_exp_r_coma COMA expresion_real\n");}
     | expresion_real                              		{printf("Regla 51.2: lista_exp_r_coma es expresion_real\n");};
 
-lista_exp_pc:
-    lista_exp_pc PUNTO_COMA expresion_aritmetica        {printf("Regla 52: lista_exp_pc es lista_exp_pc PUNTO_COMA expresion_aritmetica\n");}
-    | expresion_aritmetica                              {printf("Regla 53: lista_exp_pc es expresion_aritmetica\n");};
+/* Listas con punto y coma para inlist */
+lista_exp_e_pc:
+    lista_exp_e_pc PUNTO_COMA expresion_entera        	{printf("Regla 52.1: lista_exp_e_pc es lista_exp_e_pc PUNTO_COMA expresion_entera\n");}
+    | expresion_entera                              	{printf("Regla 53.1: lista_exp_e_pc es expresion_entera\n");};
+
+lista_exp_r_pc:
+    lista_exp_r_pc PUNTO_COMA expresion_real        	{printf("Regla 52.2: lista_exp_r_pc es lista_exp_r_pc PUNTO_COMA expresion_real\n");}
+    | expresion_real                              		{printf("Regla 53.2: lista_exp_r_pc es expresion_real\n");};
 
 lectura:
     READ ID												{
