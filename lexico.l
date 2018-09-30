@@ -101,13 +101,15 @@ ESPACIO     " "
 								cota_error("superaste el tamanio maximo para numeros posta. Realmente necesitas un numero tan grande?");
 							}
 {CTE_STRING}				{
-								if(strlen(yytext)<=30){
-
+								if( strlen(yytext) <= 30 + 2){ //Aceptamos hasta 30 caracteres. yytext incluye las comillas, esos son dos caracteres más que vamos a sacar
+									/* yytext tiene 2 caracteres más que lo que queremos guardar.
+									Pero nosotros ademas queremos anteponerle un _.
+									_ mas \0 dan justo los dos caracteres extra*/
 									int length = strlen(yytext);
 									char nombre_cte[length];
-									strcpy(nombre_cte, "_");
-									strcat(nombre_cte, yytext+1);
-									strcpy(nombre_cte + strlen(nombre_cte) - 1, "\0");
+									strcpy(nombre_cte, "_"); //Pongo el _
+									strcat(nombre_cte, yytext+1); //Copio salteando la primer comilla
+									strcpy(nombre_cte + strlen(nombre_cte) - 1, "\0"); //Sobrescribo la ultima comilla con \0
 									strcpy(yylval.string_val, nombre_cte);
 
 									return CTE_STRING;
