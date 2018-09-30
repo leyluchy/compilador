@@ -245,9 +245,10 @@ expresion_logica:
 
 termino_logico:
     expresion_entera comp_bool expresion_entera 		{printf("Regla 40.1: termino_logico es expresion_entera comp_bool expresion_entera\n");}
-	| expresion_real comp_bool expresion_real 			{printf("Regla 40: termino_logico es expresion_real comp_bool expresion_real\n");}
+	| expresion_real comp_bool expresion_real 			{printf("Regla 40.2: termino_logico es expresion_real comp_bool expresion_real\n");}
     | inlist                                            {printf("Regla 41: termino_logico es inlist\n");};
 
+/* TODO creo que tenemos que retornar un valor para reconocer que comparador fue en el termino logico. */
 comp_bool:
     MENOR                                               {printf("Regla 42: comp_bool es MENOR\n");}
     |MAYOR                                              {printf("Regla 43: comp_bool es MAYOR\n");}
@@ -259,7 +260,8 @@ comp_bool:
 /* Funciones nativas */
 
 average:
-    AVG PA CA lista_exp_coma CC PC                      {printf("Regla 48: average es AVG PA CA lista_exp_coma CC PC\n\n");};
+    AVG PA CA lista_exp_e_coma CC PC                      {printf("Regla 48.1: average es AVG PA CA lista_exp_e_coma CC PC\n\n");}
+	| AVG PA CA lista_exp_r_coma CC PC                    {printf("Regla 48.2: average es AVG PA CA lista_exp_r_coma CC PC\n\n");};
 
 inlist:
 	INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC   	{
@@ -268,9 +270,13 @@ inlist:
 															printf("Regla 49: inlist es INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC\n\n");
 														};
 
-lista_exp_coma:
-    lista_exp_coma COMA expresion_aritmetica            {printf("Regla 50: lista_exp_coma es lista_exp_coma COMA expresion_aritmetica\n");}
-    | expresion_aritmetica                              {printf("Regla 51: lista_exp_coma es expresion_aritmetica\n");};
+lista_exp_e_coma:
+    lista_exp_e_coma COMA expresion_entera            	{printf("Regla 50.1: lista_exp_e_coma es lista_exp_e_coma COMA expresion_entera\n");}
+    | expresion_entera                              	{printf("Regla 51.1: lista_exp_e_coma es expresion_entera\n");};
+
+lista_exp_r_coma:
+    lista_exp_r_coma COMA expresion_real            	{printf("Regla 50.2: lista_exp_r_coma es lista_exp_coma COMA expresion_real\n");}
+    | expresion_real                              		{printf("Regla 51.2: lista_exp_r_coma es expresion_real\n");};
 
 lista_exp_pc:
     lista_exp_pc PUNTO_COMA expresion_aritmetica        {printf("Regla 52: lista_exp_pc es lista_exp_pc PUNTO_COMA expresion_aritmetica\n");}
