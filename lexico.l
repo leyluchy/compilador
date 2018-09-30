@@ -120,6 +120,8 @@ ESPACIO     " "
 {ESPACIO}
 \n
 \t
+\r\n
+.							{ cota_error("Que es este caracter? No lo conozco.");}
 
 %%
 
