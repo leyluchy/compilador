@@ -63,6 +63,9 @@ y\.tab\.h
 
 ts\.txt
 
+<<<<<<< HEAD
 pruebas\.txt
 
+=======
+>>>>>>> master
 compilar\.bat
