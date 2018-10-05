@@ -1,51 +1,9 @@
 estimada_cajita_magica
 	necesito:
-		enterito a,b;
-		discretito c;
-		posta f;
-		jeroglifico s, cadeña;
+		enterito a;
 	para
 
 	a <- 2;
-	a <- 3;
-	f <- 23.2;
-	s <- "Hola mundo";
-
-	-/ Esto es un / / / comentari
-	
-	o simple/-
-
-	leeme c;
-	mientras c < a
-		mostrame c;
-		
-		-/ Soy / un come -
-		ntario -
-		-/ Y yo soy 
-		un com /entario dentro de - otro 
-		comentario/- 
-		xD
-		asd/-
-		
-		si f > 10.5 y f < 50.1
-		por_favor
-			mostrame f;
-		sino
-			mostrame "Hola! ¿Cómo estás?";
-		gracias
-		
-		leeme c;
-	goto_mientras
-	
-	si lta?(c; [5; 7+1; 8; 10000]) o a <= 0
-	por_favor
-		f <- avast([5+7/1, 5*(0/2-7), c, a]);
-	gracias
-		
-	mientras no a >= 10
-		a<-a+1;
-		mostrame s;
-		
-	goto_mientras
-	
+	a <- -2-(6);
+	a <- -2+(-6);
 salu2

@@ -72,7 +72,7 @@
 %token AND OR NOT
 
 %token ASIG
-%token MAS MENOS
+%left MAS MENOS
 %token POR DIVIDIDO
 
 %token MENOR  MAYOR MENOR_IGUAL MAYOR_IGUAL
@@ -189,14 +189,22 @@ expresion_cadena:
 														};
 
 expresion_aritmetica:
-	expresion_aritmetica MAS termino 		            {printf("Regla 25: expresion_aritmetica es expresion_aritmetica MAS termino\n");}
-	| expresion_aritmetica MENOS termino 	            {printf("Regla 26: expresion_aritmetica es expresion_aritmetica MENOS termino\n");}
+	expresion_aritmetica MAS termino_r 		            {printf("Regla 25: expresion_aritmetica es expresion_aritmetica MAS termino_r\n");}
+	| expresion_aritmetica MENOS termino_r 	            {printf("Regla 26: expresion_aritmetica es expresion_aritmetica MENOS termino_r\n");}
 	| termino								            {printf("Regla 27: expresion_aritmetica es termino\n");};
 
+termino_r:
+	termino POR factor 			                        {printf("Regla 28: termino_r es termino POR factor\n");}
+	| termino DIVIDIDO factor 	                        {printf("Regla 29: termino_r es termino DIVIDIDO factor\n");}
+	| factor					                        {printf("Regla 30: termino_r es factor\n");};
+
 termino:
-	termino POR factor 			                        {printf("Regla 28: termino es termino POR factor\n");}
-	| termino DIVIDIDO factor 	                        {printf("Regla 29: termino es termino DIVIDIDO factor\n");}
-	| factor					                        {printf("Regla 30: termino es factor\n");};
+	termino_r											{printf("Regla 30.1: termino es temrino_r\n");}
+	| pre												{printf("Regla 30.2: termino es pre\n");};
+
+pre:
+	MAS factor										{printf("Regla 30.2: pre es MAS factor\n");}
+	| MENOS factor									{printf("Regla 30.3: pre es MENOS factor\n");};
 
 factor:
 	PA expresion_aritmetica PC	                        {printf("Regla 31: factor es PA expresion_aritmetica PC\n");}
