@@ -28,7 +28,7 @@
 	void agregarCteIntATabla(int valor);
 	void agregarCteFloatATabla(float valor);
 
-	void chequearVarEnTabla(char* nombre);
+	int chequearVarEnTabla(char* nombre);
 	int buscarEnTabla(char * name);
 	void escribirNombreEnTabla(char* nombre, int pos);
 	void guardarTabla(void);
@@ -164,7 +164,10 @@ sentencia:
 	| bloque_while                                      {printf("Regla 14: sentencia es bloque_while\n");}
 	| lectura PUNTO_COMA                                {printf("Regla 15: sentencia es lectura PUNTO_COMA\n");}
 	| escritura PUNTO_COMA                              {printf("Regla 16: sentencia es escritura PUNTO_COMA\n");}
-	| expresion_aritmetica PUNTO_COMA                   {printf("Regla 17: sentencia es expresion_aritmetica PUNTO_COMA\n");};
+	| expresion_aritmetica PUNTO_COMA                   {
+															resetTipoDato();
+															printf("Regla 17: sentencia es expresion_aritmetica PUNTO_COMA\n");
+														};
 
 bloque_if:
     IF expresion_logica THEN bloque ENDIF               {printf("Regla 18: bloque_if es IF expresion_logica THEN bloque ENDIF\n\n");};
@@ -179,7 +182,9 @@ bloque_while:
 
 asignacion:
 	ID ASIG expresion	                                {
-															chequearVarEnTabla($1);
+															int tipo = chequearVarEnTabla($1);
+															chequearTipoDato(tipo);
+															resetTipoDato();
 															printf("Regla 21: asignacion es ID ASIG expresion\n\n");
 														};
 
@@ -211,14 +216,17 @@ factor:
 
 factor:
 	ID			                                        {
-															chequearVarEnTabla(yylval.string_val);
+															int tipo = chequearVarEnTabla(yylval.string_val);
+															chequearTipoDato(tipo);
 															printf("Regla 33: factor es ID\n");
 														}
 	| CTE_FLOAT	                                        {
+															chequearTipoDato(Float);
 															printf("Regla 34: factor es CTE_FLOAT\n");
 															agregarCteFloatATabla(yylval.float_val);
 														}
 	| CTE_INT	                                        {
+															chequearTipoDato(Int);
 															printf("Regla 35: factor es CTE_INT\n");
 															agregarCteIntATabla(yylval.int_val);
 														};
@@ -231,7 +239,10 @@ expresion_logica:
     | NOT termino_logico                                {printf("Regla 39: expresion_logica es NOT termino_logico\n");};
 
 termino_logico:
-    expresion_aritmetica comp_bool expresion_aritmetica {printf("Regla 40: termino_logico es expresion_aritmetica comp_bool expresion_aritmetica\n");}
+    expresion_aritmetica comp_bool expresion_aritmetica {
+															resetTipoDato();
+															printf("Regla 40: termino_logico es expresion_aritmetica comp_bool expresion_aritmetica\n");
+														}
     | inlist                                            {printf("Regla 41: termino logico es inlist\n");};
 
 comp_bool:
@@ -463,15 +474,19 @@ void agregarCteIntATabla(int valor){
 	}
 }
 
-/** Se fija si ya existe una entrada con ese nombre en la tabla de simbolos. Si no existe, muestra un error de variable sin declarar y aborta la compilacion. */
-void chequearVarEnTabla(char* nombre){
+/** Se fija si ya existe una entrada con ese nombre en la tabla de simbolos.
+Si no existe, muestra un error de variable sin declarar y aborta la compilacion.
+Si existe, devuelve el tipo de dato de esa variable. */
+int chequearVarEnTabla(char* nombre){
+	int pos = buscarEnTabla(nombre);
 	//Si no existe en la tabla, error
-	if( buscarEnTabla(nombre) == -1){
+	if( pos == -1){
 		char msg[100];
 		sprintf(msg,"%s? No, man, tenes que declarar las variables arriba. Esto no es un viva la pepa como java...", nombre);
 		yyerror(msg);
 	}
-	//Si existe en la tabla, dejo que la compilacion siga
+	//Si existe en la tabla, devuelvo el tipo de dato
+	return tabla_simbolo[pos].tipo_dato;
 }
 
 /** Compara el tipo de dato pasado por parámetro contra el que se está trabajando actualmente en tipoDatoActual.
