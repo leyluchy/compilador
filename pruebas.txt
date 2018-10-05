@@ -31,7 +31,7 @@ estimada_cajita_magica
 	
 	si lta?(c; [5; 7+1; 8; 10000]) o a <= 0
 	por_favor
-		f <- avast([5+7/1, 5*(0/2-7), c, a]);
+		b <- avast([5+7/1, 5*(0/2-7), c, a]);
 	gracias
 		
 	mientras no a >= 10
