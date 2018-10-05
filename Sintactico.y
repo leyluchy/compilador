@@ -260,7 +260,9 @@ average:
 
 inlist:
 	INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC   	{
-															chequearVarEnTabla($3);
+															int tipo = chequearVarEnTabla($3);
+															chequearTipoDato(tipo);
+															resetTipoDato();
 															printf("Regla 49: inlist es INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC\n\n");
 														};
 
