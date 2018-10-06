@@ -346,23 +346,33 @@ lista_exp_coma:
     | expresion_aritmetica                              {printf("Regla 51: lista_exp_coma es expresion_aritmetica\n");};
 
 lista_exp_pc:
-    lista_exp_pc PUNTO_COMA expresion_aritmetica        {printf("Regla 52: lista_exp_pc es lista_exp_pc PUNTO_COMA expresion_aritmetica\n");}
-    | expresion_aritmetica                              {printf("Regla 53: lista_exp_pc es expresion_aritmetica\n");};
+    lista_exp_pc PUNTO_COMA expresion_aritmetica        {
+															printf("Regla 52: lista_exp_pc es lista_exp_pc PUNTO_COMA expresion_aritmetica\n");
+														}
+    | expresion_aritmetica                              {	
+															printf("Regla 53: lista_exp_pc es expresion_aritmetica\n");
+														};
 
 lectura:
     READ ID												{
 															printf("Regla 54: lectura es READ ID(%s)\n", $2);
 															chequearVarEnTabla($2);
+															
+															ind_lectura = crear_terceto(READ, $2, NOOP);
 														};
 
 escritura:
     WRITE ID                                            {
 															printf("Regla 55: escritura es WRITE ID(%s)\n", $2);
 															chequearVarEnTabla($2);
+															
+															ind_escritura = crear_terceto(WRITE, $2, NOOP);
 														}
     | WRITE CTE_STRING                                  {
 															printf("Regla 56: escritura es WRITE CTE_STRING(%s)\n\n", $2);
 															agregarCteStringATabla(yylval.string_val);
+															
+															ind_escritura = crear_terceto(WRITE, $2, NOOP);
 														};
 %%
 
