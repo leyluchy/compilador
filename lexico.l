@@ -5,7 +5,7 @@
 	#include <string.h>
 	#include "y.tab.h"
 
-	int cota_error(char* mensaje);
+	int error(char* mensaje);
 
 	FILE  *yyin;
 %}
@@ -85,21 +85,21 @@ ESPACIO     " "
 									yylval.string_val = strdup(yytext);
 									return ID;
 								}
-								cota_error("intenta limitar tus nombres de variables a 30 caracteres. Dale, soy generoso.");
+								error("intenta limitar tus nombres de variables a 30 caracteres. Dale, soy generoso.");
 							}
 {CTE_INT}					{
 								if(atoll(yytext)<=2147483647){
 									yylval.int_val = atoi(yytext);
 									return CTE_INT;
 								}
-								cota_error("superaste el tamanio maximo para numeros enteros. Realmente necesitas un numero tan grande?");
+								error("superaste el tamanio maximo para numeros enteros. Realmente necesitas un numero tan grande?");
 							}
 {CTE_FLOAT}					{
 								if(atof(yytext)<=3.40282347e+38F){
 									yylval.float_val = atof(yytext);
 									return CTE_FLOAT;
 								}
-								cota_error("superaste el tamanio maximo para numeros posta. Realmente necesitas un numero tan grande?");
+								error("superaste el tamanio maximo para numeros posta. Realmente necesitas un numero tan grande?");
 							}
 {CTE_STRING}				{
 								if( strlen(yytext) <= 30 + 2){ //Aceptamos hasta 30 caracteres. yytext incluye las comillas, esos son dos caracteres más que vamos a sacar
@@ -115,7 +115,7 @@ ESPACIO     " "
 
 									return CTE_STRING;
 								}
-								cota_error("intenta limitar tus jeroglificos a 30 caracteres.");
+								error("intenta limitar tus jeroglificos a 30 caracteres.");
 							}
 "-/"        				BEGIN(comment);
 
@@ -124,8 +124,8 @@ ESPACIO     " "
 <comment>"/"+[^-/\n]*   	/* como los '/' que no esten seguidos por '-' */
 <comment>\n             	/* como los saltos de linea, puedo contar*/
 <comment>"-/"				BEGIN(inner_comment);
-<inner_comment>[^/\n]*      /* como todo lo que no sea un '/' */ {printf("---vacioIN---");}
-<inner_comment>"/"+[^-/\n]* /* como los '/' que no esten seguidos por '-' */ 
+<inner_comment>[^/\n]*      /* como todo lo que no sea un '/' */
+<inner_comment>"/"+[^-/\n]* /* como los '/' que no esten seguidos por '-' */
 <inner_comment>\n       	/* como los saltos de linea, puedo contar*/
 <inner_comment>"/"+"-"  	BEGIN(comment);
 <comment>"/"+"-"       		BEGIN(INITIAL);
@@ -133,11 +133,11 @@ ESPACIO     " "
 \n
 \t
 \r\n
-.							{ cota_error("Que es este caracter? No lo conozco.");}
+.							{ error("Que es este caracter? No lo conozco.");}
 
 %%
 
-int cota_error(char* mensaje)
+int error(char* mensaje)
 {
 	printf("Error lexico: %s\n", mensaje);
 	system ("Pause");
