@@ -57,6 +57,8 @@
 	int cantVarsADeclarar = 0;
 	int tipoDatoADeclarar;
 
+	/* Cosas para las asignaciones */
+	char idAsignar[TAM_NOMBRE];
 	/* Cosas para control de tipo de datos en expresiones aritméticas */
 	int tipoDatoActual = sinTipo;
 %}
@@ -181,9 +183,9 @@ bloque_while:
 	| WHILE expresion_logica ENDWHILE					{printf("Regla 20.2: bloque_while es WHILE expresion_logica ENDWHILE\n\n");};
 
 asignacion:
-	ID ASIG expresion	                                {
-															printf("Regla 21: asignacion es ID(%s) ASIG expresion\n\n", $1);
-															int tipo = chequearVarEnTabla($1);
+	ID ASIG {strcpy(idAsignar, $1);} expresion	        {
+															printf("Regla 21: asignacion es ID(%s) ASIG expresion\n\n", idAsignar);
+															int tipo = chequearVarEnTabla(idAsignar);
 															chequearTipoDato(tipo);
 															resetTipoDato();
 														};
@@ -353,7 +355,6 @@ void escribirNombreEnTabla(char* nombre, int pos){
 		 escribirNombreEnTabla(nombre, fin_tabla);
 	 }
 	 else yyerror("Encontre dos declaraciones de variables con el mismo nombre. Decidite."); //Error, ya existe esa variable
-
  }
 
 /** Agrega los tipos de datos a las variables declaradas. Usa las variables globales varADeclarar1, cantVarsADeclarar y tipoDatoADeclarar */
@@ -413,17 +414,20 @@ void agregarCteStringATabla(char* nombre){
 		exit(2);
 	}
 
-	//Si no hay otra variable con el mismo nombre...
-	if(buscarEnTabla(nombre) == -1){
+	//Preparo el nombre. Nuestras constantes empiezan con _ en la tabla de simbolos
+	char nuevoNombre[strlen(nombre)+2]; //+2 para agregarle el _ al inicio y el \0 al final
+	sprintf(nuevoNombre, "_%s", nombre);
+	//Si no hay otra constante string con el mismo nombre...
+	if(buscarEnTabla(nuevoNombre) == -1){
 		//Agregar nombre a tabla
 		fin_tabla++;
-		escribirNombreEnTabla(nombre, fin_tabla);
+		escribirNombreEnTabla(nuevoNombre, fin_tabla);
 
 		//Agregar tipo de dato
 		tabla_simbolo[fin_tabla].tipo_dato = CteString;
 
 		//Agregar valor a la tabla
-		strcpy(tabla_simbolo[fin_tabla].valor_s, nombre+1); //nombre+1 es para no copiar el _ del principio
+		strcpy(tabla_simbolo[fin_tabla].valor_s, nombre);
 
 		//Agregar longitud
 		tabla_simbolo[fin_tabla].longitud = strlen(nombre) - 1;
