@@ -75,6 +75,34 @@
 	} terceto;
 	terceto lista_terceto[MAX_TERCETOS];
 	int ultimo_terceto = OFFSET;
+
+	int ind_program;
+	int ind_sdec;
+	int ind_bdec;
+	int ind_dec;
+	int ind_tdato;
+	int ind_list_id;
+	int ind_bloque;
+	int ind_sent;
+	int ind_bif;
+	int ind_bwhile;
+	int ind_asig;
+	int ind_xp;
+	int ind_xpcad;
+	int ind_expr; //Expresion aritmetica
+	int ind_rterm;
+	int ind_term;
+	int ind_pre;
+	int ind_factor;
+	int ind_xplogic;
+	int ind_tlogic;
+	int ind_compbool;
+	int ind_avg;
+	int ind_inlist;
+	int ind_lec; //Lista expresion coma
+	int ind_lepc; //Lista expresion punto y coma
+	int ind_lectura;
+	int ind_escritura;
 %}
 
 %union {
