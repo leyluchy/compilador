@@ -8,6 +8,8 @@ estimada_cajita_magica
 
 	-/ Esto es un comentario simple/-
 
+	cadeña <- "Yo era un infeliz.";
+
 	leeme c;
 	mientras c < a
 	por_favor

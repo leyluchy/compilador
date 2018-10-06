@@ -139,12 +139,12 @@ t_dato:
 
 lista_id:
 	lista_id COMA ID	                                {
-	                                                        printf("Regla 8: lista_id es lista_id COMA ID\n");
+	                                                        printf("Regla 8: lista_id es lista_id COMA ID(%s)\n", $3);
 	                                                        agregarVarATabla(yylval.string_val);
 															cantVarsADeclarar++;
                                                         }
 	| ID				                                {
-	                                                        printf("Regla 9: lista_id es ID\n");
+	                                                        printf("Regla 9: lista_id es ID(%s)\n", $1);
 	                                                        agregarVarATabla(yylval.string_val);
 															varADeclarar1 = fin_tabla; /* Guardo posicion de primer variable de esta lista de declaracion. */
 															cantVarsADeclarar = 1;
@@ -165,8 +165,8 @@ sentencia:
 	| lectura PUNTO_COMA                                {printf("Regla 15: sentencia es lectura PUNTO_COMA\n");}
 	| escritura PUNTO_COMA                              {printf("Regla 16: sentencia es escritura PUNTO_COMA\n");}
 	| expresion_aritmetica PUNTO_COMA                   {
-															resetTipoDato();
 															printf("Regla 17: sentencia es expresion_aritmetica PUNTO_COMA\n");
+															resetTipoDato();
 														};
 
 bloque_if:
@@ -182,10 +182,10 @@ bloque_while:
 
 asignacion:
 	ID ASIG expresion	                                {
+															printf("Regla 21: asignacion es ID(%s) ASIG expresion\n\n", $1);
 															int tipo = chequearVarEnTabla($1);
 															chequearTipoDato(tipo);
 															resetTipoDato();
-															printf("Regla 21: asignacion es ID ASIG expresion\n\n");
 														};
 
 /* Expresiones aritmeticas y otras */
@@ -196,7 +196,7 @@ expresion:
 
 expresion_cadena:
 	CTE_STRING						                    {
-															printf("Regla 24: expresion_cadena es CTE_STRING\n");
+															printf("Regla 24: expresion_cadena es CTE_STRING(%s)\n", $1);
 															agregarCteStringATabla(yylval.string_val);
 														};
 
@@ -215,27 +215,25 @@ termino:
 	| pre												{printf("Regla 30.2: termino es pre\n");};
 
 pre:
-	MAS factor										{printf("Regla 30.2: pre es MAS factor\n");}
-	| MENOS factor									{printf("Regla 30.3: pre es MENOS factor\n");};
+	MAS factor											{printf("Regla 30.2: pre es MAS factor\n");}
+	| MENOS factor										{printf("Regla 30.3: pre es MENOS factor\n");};
 
 factor:
 	PA expresion_aritmetica PC	                        {printf("Regla 31: factor es PA expresion_aritmetica PC\n");}
-    | average                                           {printf("Regla 32: factor es average\n");};
-
-factor:
-	ID			                                        {
+    | average                                           {printf("Regla 32: factor es average\n");}
+	| ID			                                    {
+															printf("Regla 33: factor es ID(%s)\n", $1);
 															int tipo = chequearVarEnTabla(yylval.string_val);
 															chequearTipoDato(tipo);
-															printf("Regla 33: factor es ID\n");
 														}
 	| CTE_FLOAT	                                        {
+															printf("Regla 34: factor es CTE_FLOAT(%f)\n", $1);
 															chequearTipoDato(Float);
-															printf("Regla 34: factor es CTE_FLOAT\n");
 															agregarCteFloatATabla(yylval.float_val);
 														}
 	| CTE_INT	                                        {
+															printf("Regla 35: factor es CTE_INT(%d)\n", $1);
 															chequearTipoDato(Int);
-															printf("Regla 35: factor es CTE_INT\n");
 															agregarCteIntATabla(yylval.int_val);
 														};
 /* Expresiones logicas */
@@ -248,8 +246,8 @@ expresion_logica:
 
 termino_logico:
     expresion_aritmetica comp_bool expresion_aritmetica {
-															resetTipoDato();
 															printf("Regla 40: termino_logico es expresion_aritmetica comp_bool expresion_aritmetica\n");
+															resetTipoDato();
 														}
     | inlist                                            {printf("Regla 41: termino logico es inlist\n");};
 
@@ -268,10 +266,10 @@ average:
 
 inlist:
 	INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC   	{
+															printf("Regla 49: inlist es INLIST PA ID(%s) PUNTO_COMA CA lista_exp_pc CC PC\n\n", $3);
 															int tipo = chequearVarEnTabla($3);
 															chequearTipoDato(tipo);
 															resetTipoDato();
-															printf("Regla 49: inlist es INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC\n\n");
 														};
 
 lista_exp_coma:
@@ -284,17 +282,17 @@ lista_exp_pc:
 
 lectura:
     READ ID												{
+															printf("Regla 54: lectura es READ ID(%s)\n", $2);
 															chequearVarEnTabla($2);
-															printf("Regla 54: lectura es READ ID\n");
 														};
 
 escritura:
     WRITE ID                                            {
+															printf("Regla 55: escritura es WRITE ID(%s)\n", $2);
 															chequearVarEnTabla($2);
-															printf("Regla 55: escritura es WRITE ID\n");
 														}
     | WRITE CTE_STRING                                  {
-															printf("Regla 56: escritura es WRITE CTE_STRING\n\n");
+															printf("Regla 56: escritura es WRITE CTE_STRING(%s)\n\n", $2);
 															agregarCteStringATabla(yylval.string_val);
 														};
 %%
