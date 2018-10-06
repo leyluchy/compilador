@@ -64,6 +64,8 @@
 
 	/* Cosas para las asignaciones */
 	char idAsignar[TAM_NOMBRE];
+	/* Cosas para comparadores booleanos */
+	int comp_bool_actual;
 	/* Cosas para control de tipo de datos en expresiones aritméticas */
 	int tipoDatoActual = sinTipo;
 
@@ -96,6 +98,7 @@
 	int ind_factor;
 	int ind_xplogic;
 	int ind_tlogic;
+	int ind_expr_izq;
 	int ind_compbool;
 	int ind_avg;
 	int ind_inlist;
@@ -314,19 +317,45 @@ expresion_logica:
     | NOT termino_logico                                {printf("Regla 39: expresion_logica es NOT termino_logico\n");};
 
 termino_logico:
-    expresion_aritmetica comp_bool expresion_aritmetica {
-															printf("Regla 40: termino_logico es expresion_aritmetica comp_bool expresion_aritmetica\n");
+    expr_aritmetica_izquierda comp_bool expresion_aritmetica {
+															printf("Regla 40: termino_logico es expr_aritmetica_izquierda comp_bool expresion_aritmetica\n");
 															resetTipoDato();
+
+															ind_tlogic = crear_terceto(comp_bool_actual, ind_expr_izq, ind_expr);
 														}
     | inlist                                            {printf("Regla 41: termino logico es inlist\n");};
 
+expr_aritmetica_izquierda:
+	expresion_aritmetica								{
+															printf("Regla 41.1: expr_aritmetica_izquierda es expresion_aritmetica\n");
+															ind_expr_izq = ind_expr;
+														}
+
 comp_bool:
-    MENOR                                               {printf("Regla 42: comp_bool es MENOR\n");}
-    |MAYOR                                              {printf("Regla 43: comp_bool es MAYOR\n");}
-    |MENOR_IGUAL                                        {printf("Regla 44: comp_bool es MENOR_IGUAL\n");}
-    |MAYOR_IGUAL                                        {printf("Regla 45: comp_bool es MAYOR_IGUAL\n");}
-    |IGUAL                                              {printf("Regla 46: comp_bool es IGUAL\n");}
-    |DISTINTO                                           {printf("Regla 47: comp_bool es DISTINTO\n");};
+    MENOR                                               {
+															printf("Regla 42: comp_bool es MENOR\n");
+															comp_bool_actual = MENOR;
+														}
+    |MAYOR                                              {
+															printf("Regla 43: comp_bool es MAYOR\n");
+															comp_bool_actual = MAYOR;
+														}
+    |MENOR_IGUAL                                        {
+															printf("Regla 44: comp_bool es MENOR_IGUAL\n");
+															comp_bool_actual = MENOR_IGUAL;
+														}
+    |MAYOR_IGUAL                                        {
+															printf("Regla 45: comp_bool es MAYOR_IGUAL\n");
+															comp_bool_actual = MAYOR_IGUAL;
+														}
+    |IGUAL                                              {
+															printf("Regla 46: comp_bool es IGUAL\n");
+															comp_bool_actual = IGUAL;
+														}
+    |DISTINTO                                           {
+															printf("Regla 47: comp_bool es DISTINTO\n");
+															comp_bool_actual = DISTINTO;
+														};
 
 /* Funciones nativas */
 
