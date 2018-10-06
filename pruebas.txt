@@ -3,7 +3,11 @@ estimada_cajita_magica
 		enterito a;
 	para
 
-	a <- 2;
-	a <- -2-(6);
-	a <- -2+(-6);
+	mientras a > -5
+	por_favor
+		a <- 2;
+		a <- -2-(6);
+		a <- -2+(-6);
+	goto_mientras
+	
 salu2

@@ -167,7 +167,7 @@ bloque_if:
 	| IF expresion_logica THEN ENDIF					{printf("Regla 19.2: bloque_if es IF expresion_logica THEN ENDIF\n\n");};
 
 bloque_while:
-    WHILE expresion_logica bloque ENDWHILE              {printf("Regla 20.1: bloque_while es WHILE expresion_logica bloque ENDWHILE\n\n");}
+    WHILE expresion_logica THEN bloque ENDWHILE         {printf("Regla 20.1: bloque_while es WHILE expresion_logica THEN bloque ENDWHILE\n\n");}
 	| WHILE expresion_logica ENDWHILE					{printf("Regla 20.2: bloque_while es WHILE expresion_logica ENDWHILE\n\n");};
 
 asignacion:
