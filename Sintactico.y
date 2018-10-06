@@ -27,9 +27,9 @@
 
 	void agregarVarATabla(char* nombre);
 	void agregarTiposDatosATabla(void);
-	void agregarCteStringATabla(char* nombre);
-	void agregarCteIntATabla(int valor);
-	void agregarCteFloatATabla(float valor);
+	int agregarCteStringATabla(char* nombre);
+	int agregarCteIntATabla(int valor);
+	int agregarCteFloatATabla(float valor);
 
 	int chequearVarEnTabla(char* nombre);
 	int buscarEnTabla(char * name);
@@ -255,30 +255,55 @@ termino_r:
 	| factor					                        {printf("Regla 30: termino_r es factor\n");};
 
 termino:
-	termino_r											{printf("Regla 30.1: termino es temrino_r\n");}
-	| pre												{printf("Regla 30.2: termino es pre\n");};
+	termino_r											{
+															printf("Regla 30.1: termino es temrino_r\n");
+															ind_term = ind_rterm;
+														}
+	| pre												{
+															printf("Regla 30.2: termino es pre\n");
+															ind_term = ind_pre;
+														};
 
 pre:
-	MAS factor											{printf("Regla 30.2: pre es MAS factor\n");}
-	| MENOS factor										{printf("Regla 30.3: pre es MENOS factor\n");};
+	MAS factor											{
+															printf("Regla 30.2: pre es MAS factor\n");
+															ind_pre = ind_factor;
+														}
+	| MENOS factor										{
+															printf("Regla 30.3: pre es MENOS factor\n");
+															ind_pre = crear_terceto(MENOS, ind_factor, NOOP);
+														};
 
 factor:
-	PA expresion_aritmetica PC	                        {printf("Regla 31: factor es PA expresion_aritmetica PC\n");}
-    | average                                           {printf("Regla 32: factor es average\n");}
+	PA expresion_aritmetica PC	                        {
+															printf("Regla 31: factor es PA expresion_aritmetica PC\n");
+															//TODO tercetos
+														}
+    | average                                           {
+															printf("Regla 32: factor es average\n");
+															//TODO tercetos
+														}
 	| ID			                                    {
 															printf("Regla 33: factor es ID(%s)\n", $1);
 															int tipo = chequearVarEnTabla(yylval.string_val);
 															chequearTipoDato(tipo);
+
+															int pos = buscarEnTabla($1);
+															ind_factor = crear_terceto(NOOP, pos, NOOP);
 														}
 	| CTE_FLOAT	                                        {
 															printf("Regla 34: factor es CTE_FLOAT(%f)\n", $1);
 															chequearTipoDato(Float);
-															agregarCteFloatATabla(yylval.float_val);
+															int pos = agregarCteFloatATabla(yylval.float_val);
+
+															ind_factor = crear_terceto(NOOP, pos, NOOP);
 														}
 	| CTE_INT	                                        {
 															printf("Regla 35: factor es CTE_INT(%d)\n", $1);
 															chequearTipoDato(Int);
-															agregarCteIntATabla(yylval.int_val);
+															int pos = agregarCteIntATabla(yylval.int_val);
+
+															ind_factor = crear_terceto(NOOP, pos, NOOP);
 														};
 /* Expresiones logicas */
 
@@ -449,7 +474,7 @@ void guardarTabla(){
 /* Calculo que estas 3 funciones se podrían juntar en una sola */
 
 /** Agrega una constante string a la tabla de simbolos */
-void agregarCteStringATabla(char* nombre){
+int agregarCteStringATabla(char* nombre){
 	if(fin_tabla >= TAMANIO_TABLA - 1){
 		printf("Error: me quede sin espacio en la tabla de simbolos. Sori, gordi.\n");
 		system("Pause");
@@ -459,8 +484,10 @@ void agregarCteStringATabla(char* nombre){
 	//Preparo el nombre. Nuestras constantes empiezan con _ en la tabla de simbolos
 	char nuevoNombre[strlen(nombre)+2]; //+2 para agregarle el _ al inicio y el \0 al final
 	sprintf(nuevoNombre, "_%s", nombre);
+
+	int pos=buscarEnTabla(nuevoNombre);
 	//Si no hay otra constante string con el mismo nombre...
-	if(buscarEnTabla(nuevoNombre) == -1){
+	if(pos == -1){
 		//Agregar nombre a tabla
 		fin_tabla++;
 		escribirNombreEnTabla(nuevoNombre, fin_tabla);
@@ -473,11 +500,14 @@ void agregarCteStringATabla(char* nombre){
 
 		//Agregar longitud
 		tabla_simbolo[fin_tabla].longitud = strlen(nombre) - 1;
+
+		pos=fin_tabla;
 	}
+	return pos;
 }
 
 /** Agrega una constante real a la tabla de simbolos */
-void agregarCteFloatATabla(float valor){
+int agregarCteFloatATabla(float valor){
 	if(fin_tabla >= TAMANIO_TABLA - 1){
 		printf("Error: me quede sin espacio en la tabla de simbolos. Sori, gordi.\n");
 		system("Pause");
@@ -487,9 +517,9 @@ void agregarCteFloatATabla(float valor){
 	//Genero el nombre
 	char nombre[12];
 	sprintf(nombre, "_%f", valor);
-
+	int pos=buscarEnTabla(nombre);
 	//Si no hay otra variable con el mismo nombre...
-	if(buscarEnTabla(nombre) == -1){
+	if(pos == -1){
 		//Agregar nombre a tabla
 		fin_tabla++;
 		escribirNombreEnTabla(nombre, fin_tabla);
@@ -499,11 +529,13 @@ void agregarCteFloatATabla(float valor){
 
 		//Agregar valor a la tabla
 		tabla_simbolo[fin_tabla].valor_f = valor;
+		pos = fin_tabla;
 	}
+	return pos;
 }
 
 /** Agrega una constante entera a la tabla de simbolos */
-void agregarCteIntATabla(int valor){
+int agregarCteIntATabla(int valor){
 	if(fin_tabla >= TAMANIO_TABLA - 1){
 		printf("Error: me quede sin espacio en la tabla de simbolos. Sori, gordi.\n");
 		system("Pause");
@@ -513,9 +545,10 @@ void agregarCteIntATabla(int valor){
 	//Genero el nombre
 	char nombre[30];
 	sprintf(nombre, "_%d", valor);
+	int pos=buscarEnTabla(nombre);
 
 	//Si no hay otra variable con el mismo nombre...
-	if(buscarEnTabla(nombre) == -1){
+	if(pos == -1){
 		//Agregar nombre a tabla
 		fin_tabla++;
 		escribirNombreEnTabla(nombre, fin_tabla);
@@ -525,7 +558,9 @@ void agregarCteIntATabla(int valor){
 
 		//Agregar valor a la tabla
 		tabla_simbolo[fin_tabla].valor_i = valor;
+		pos = fin_tabla;
 	}
+	return pos;
 }
 
 /** Se fija si ya existe una entrada con ese nombre en la tabla de simbolos.
@@ -560,7 +595,8 @@ void resetTipoDato(){
 }
 
 /** Agrega un terceto a la lista de tercetos. Si se quiere guardar solo una constante o variable, mandar NOOP en
-el campo de operador y op2 */
+el campo de operador y op2. Para los operadores pasar el token literal, para los operandos pasar la posicion en
+tabla de simbolos o el indice de otro terceto. */
 int crear_terceto(int operador, int op1, int op2){
 	ultimo_terceto++;
 	if(ultimo_terceto >= OFFSET+MAX_TERCETOS){
