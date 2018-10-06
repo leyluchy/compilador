@@ -1,42 +1,47 @@
 estimada_cajita_magica
 	necesito:
-		enterito a;
+		enterito a, b;
+		discretito c;
+		posta f;
+		jeroglifico s, cadeña;
 	para
-  
+
 	-/ Esto es un comentario simple/-
 
 	leeme c;
 	mientras c < a
+	por_favor
 		mostrame c;
-		
+
 		-/ Soy un comentario -/ Y yo soy un comentario dentro de otro comentario/- /-
-		
+
 		si f > 10.5 y f < 50.1
 		por_favor
 			mostrame f;
 		sino
 			mostrame "Hola! ¿Cómo estás?";
 		gracias
-		
+
 		leeme c;
 	goto_mientras
-	
+
 	si lta?(c; [5; 7+1; 8; 10000]) o a <= 0
 	por_favor
 		b <- avast([5+7/1, 5*(0/2-7), c, a]);
 	gracias
-		
+
 	mientras no a >= 10
+	por_favor
 		a<-a+1;
 		mostrame s;
-		
+
 	goto_mientras
-	
+
 	-(a*1);
 	-1-1;
 	1-(-1);
 	1-(1+2);
 	1-1*1;
 	1-1*(1);
-  
+
 salu2
