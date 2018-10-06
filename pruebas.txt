@@ -1,16 +1,8 @@
 estimada_cajita_magica
 	necesito:
-		enterito a,b;
-		discretito c;
-		posta f;
-		jeroglifico s, cadeña;
+		enterito a;
 	para
-
-	a <- 2;
-	a <- 3;
-	f <- 23.2;
-	s <- "Hola mundo";
-
+  
 	-/ Esto es un comentario simple/-
 
 	leeme c;
@@ -40,4 +32,11 @@ estimada_cajita_magica
 		
 	goto_mientras
 	
+	-(a*1);
+	-1-1;
+	1-(-1);
+	1-(1+2);
+	1-1*1;
+	1-1*(1);
+  
 salu2
