@@ -287,7 +287,7 @@ termino_r:
 	| termino DIVIDIDO factor 	                        {
 															printf("Regla 29: termino_r es termino DIVIDIDO factor\n");
 															
-															ind_rterm = crear_terceto(DIVIDO, ind_term, ind_factor);
+															ind_rterm = crear_terceto(DIVIDIDO, ind_term, ind_factor);
 														}
 	| factor					                        {
 															printf("Regla 30: termino_r es factor\n");
@@ -440,7 +440,8 @@ inlist:
 															chequearTipoDato(tipo);
 															resetTipoDato();
 															
-															ind_inlist = crear_terceto(INLIST, $3, ind_lepc);
+															int pos=chequearVarEnTabla($3);
+															ind_inlist = crear_terceto(INLIST, pos, ind_lepc);
 														};
 
 lista_exp_coma:
