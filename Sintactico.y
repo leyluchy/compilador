@@ -16,6 +16,8 @@
 
 	#define TAMANIO_TABLA 300
 	#define TAM_NOMBRE 32
+	#define OFFSET TAMANIO_TABLA;
+	#define MAX_TERCETOS 333;
 
 	/* Funciones necesarias */
 	int yyerror(char* mensaje);
@@ -61,6 +63,15 @@
 	char idAsignar[TAM_NOMBRE];
 	/* Cosas para control de tipo de datos en expresiones aritméticas */
 	int tipoDatoActual = sinTipo;
+
+	/* Cosas para tercetos */
+	typedef struct{
+		int operador;
+		int op1;
+		int op2;
+	} terceto;
+	terceto lista_terceto[MAX_TERCETOS];
+
 %}
 
 %union {
