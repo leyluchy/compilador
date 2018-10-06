@@ -55,7 +55,7 @@
 	} simbolo;
 
 	simbolo tabla_simbolo[TAMANIO_TABLA];
-	int fin_tabla = -1;
+	int fin_tabla = -1; /* Apunta al ultimo registro en la tabla de simbolos. Incrementarlo para guardar el siguiente. */
 
 	/* Cosas para la declaracion de variables y la tabla de simbolos */
 	int varADeclarar1 = 0;
@@ -74,7 +74,7 @@
 		int op2;
 	} terceto;
 	terceto lista_terceto[MAX_TERCETOS];
-	int ultimo_terceto = OFFSET;
+	int ultimo_terceto = OFFSET-1; /* Apunta al ultimo terceto escrito. Incrementarlo para guardar el siguiente. */
 
 	int ind_program;
 	int ind_sdec;
@@ -382,22 +382,22 @@ void escribirNombreEnTabla(char* nombre, int pos){
 	strcpy(tabla_simbolo[pos].nombre, nombre);
 }
 
- /** Agrega un nuevo nombre de variable a la tabla **/
- void agregarVarATabla(char* nombre){
-	 //Si se llena, error
-	 if(fin_tabla >= TAMANIO_TABLA - 1){
-		 printf("Error: me quede sin espacio en la tabla de simbolos. Sori, gordi.\n");
-		 system("Pause");
-		 exit(2);
-	 }
-	 //Si no hay otra variable con el mismo nombre...
-	 if(buscarEnTabla(nombre) == -1){
-		 //Agregar a tabla
-		 fin_tabla++;
-		 escribirNombreEnTabla(nombre, fin_tabla);
-	 }
-	 else yyerror("Encontre dos declaraciones de variables con el mismo nombre. Decidite."); //Error, ya existe esa variable
+/** Agrega un nuevo nombre de variable a la tabla **/
+void agregarVarATabla(char* nombre){
+ //Si se llena, error
+ if(fin_tabla >= TAMANIO_TABLA - 1){
+	 printf("Error: me quede sin espacio en la tabla de simbolos. Sori, gordi.\n");
+	 system("Pause");
+	 exit(2);
  }
+ //Si no hay otra variable con el mismo nombre...
+ if(buscarEnTabla(nombre) == -1){
+	 //Agregar a tabla
+	 fin_tabla++;
+	 escribirNombreEnTabla(nombre, fin_tabla);
+ }
+ else yyerror("Encontre dos declaraciones de variables con el mismo nombre. Decidite."); //Error, ya existe esa variable
+}
 
 /** Agrega los tipos de datos a las variables declaradas. Usa las variables globales varADeclarar1, cantVarsADeclarar y tipoDatoADeclarar */
 void agregarTiposDatosATabla(){
@@ -559,6 +559,18 @@ void resetTipoDato(){
 	tipoDatoActual = sinTipo;
 }
 
+/** Agrega un terceto a la lista de tercetos. Si se quiere guardar solo una constante o variable, mandar NOOP en
+el campo de operador y op2 */
 int crear_terceto(int operador, int op1, int op2){
-	return 0;
+	ultimo_terceto++;
+	if(ultimo_terceto >= OFFSET+MAX_TERCETOS){
+		printf("Error: me quede sin espacio en para los tercetos. Optimiza tu codigo.\n");
+		system("Pause");
+		exit(3);
+	}
+
+	lista_terceto[ultimo_terceto].operador = operador;
+	lista_terceto[ultimo_terceto].op1 = op1;
+	lista_terceto[ultimo_terceto].op2 = op2;
+	return ultimo_terceto;
 }
