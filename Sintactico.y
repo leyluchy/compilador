@@ -14,10 +14,11 @@
 	#define CteFloat 5
 	#define CteString 6
 
-	#define TAMANIO_TABLA 300
+	#define TAMANIO_TABLA 256
 	#define TAM_NOMBRE 32
-	#define OFFSET TAMANIO_TABLA;
-	#define MAX_TERCETOS 333;
+	#define OFFSET TAMANIO_TABLA
+	#define MAX_TERCETOS 512
+	#define NOOP -1 /* Sin operador */
 
 	/* Funciones necesarias */
 	int yyerror(char* mensaje);
@@ -37,6 +38,8 @@
 
 	void chequearTipoDato(int tipo);
 	void resetTipoDato();
+
+	int crear_terceto(int operador, int op1, int op2);
 
 	int yystopparser=0;
 	FILE  *yyin;
@@ -71,7 +74,7 @@
 		int op2;
 	} terceto;
 	terceto lista_terceto[MAX_TERCETOS];
-
+	int ultimo_terceto = OFFSET;
 %}
 
 %union {
@@ -526,4 +529,8 @@ void chequearTipoDato(int tipo){
 /** Vuelve tipoDatoActual a sinTipo */
 void resetTipoDato(){
 	tipoDatoActual = sinTipo;
+}
+
+int crear_terceto(int operador, int op1, int op2){
+	return 0;
 }
