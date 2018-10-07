@@ -43,6 +43,7 @@
 	void resetTipoDato();
 
 	int crear_terceto(int operador, int op1, int op2);
+	void guardarTercetos();
 
 	int yystopparser=0;
 	FILE  *yyin;
@@ -160,6 +161,7 @@ programa:
 															guardarTabla();
 
 															ind_program = crear_terceto(START, ind_sdec, ind_bloque);
+															guardarTercetos();
 														};
 /*
 programa:
@@ -769,4 +771,81 @@ int crear_terceto(int operador, int op1, int op2){
 	lista_terceto[ultimo_terceto].op1 = op1;
 	lista_terceto[ultimo_terceto].op2 = op2;
 	return ultimo_terceto;
+}
+
+/* Guarda los tercetos generados en un archivo */
+void guardarTercetos(){
+	if(ultimo_terceto == OFFSET -1)
+		yyerror("No encontre los tercetos");
+
+	FILE* arch = fopen("intermedia.txt", "w+");
+	if(!arch){
+		printf("No pude crear el archivo intermedia.txt\n");
+		return;
+	}
+
+	for(int i = 0; i <= ultimo_terceto - OFFSET; i++){
+		//La forma es [i] (operador, op1, op2)
+		//Escribo indice
+		fprintf(arch, "[%d] (", i + OFFSET);
+
+		//escribo operador
+		switch(lista_terceto[i].operador){
+
+		}
+
+		fprintf(arch, ", ");
+		//Escribo op1
+		int op = lista_terceto[i].op1;
+
+		if(op == NOOP)
+			fprintf(arch, "-");
+		else if(op < TAMANIO_TABLA){
+			//Es una entrada a tabla de simbolos
+			fprintf(arch, "%s", &(tabla_simbolo[op].nombre) );
+		}
+		else //Es el indice de otro terceto
+			fprintf(arch, "[%d]", op);
+
+		fprintf(arch, ", ");
+		//Escribo op2
+		op = lista_terceto[i].op2;
+		if(op == NOOP)
+			fprintf(arch, "-");
+		else if(op < TAMANIO_TABLA){
+			//Es una entrada a tabla de simbolos
+			fprintf(arch, "%s", &(tabla_simbolo[op].nombre) );
+		}
+		else //Es el indice de otro terceto
+			fprintf(arch, "[%d]", op);
+
+		fprintf(arch, ")\n");
+		/*
+		fprintf(arch, "%s\t", &(tabla_simbolo[i].nombre) );
+
+		switch (tabla_simbolo[i].tipo_dato){
+		case Float:
+			fprintf(arch, "FLOAT");
+			break;
+		case Int:
+			fprintf(arch, "INT");
+			break;
+		case String:
+			fprintf(arch, "STRING");
+			break;
+		case CteFloat:
+			fprintf(arch, "CTE_FLOAT\t%f", tabla_simbolo[i].valor_f);
+			break;
+		case CteInt:
+			fprintf(arch, "CTE_INT\t%d", tabla_simbolo[i].valor_i);
+			break;
+		case CteString:
+			fprintf(arch, "CTE_STRING\t%s\t%d", &(tabla_simbolo[i].valor_s), tabla_simbolo[i].longitud);
+			break;
+		}
+
+		fprintf(arch, "\n");
+		*/
+	}
+	fclose(arch);
 }
