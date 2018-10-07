@@ -16,9 +16,12 @@
 
 	#define TAMANIO_TABLA 256
 	#define TAM_NOMBRE 32
+
+	/* Constantes para tercetos */
 	#define OFFSET TAMANIO_TABLA
 	#define MAX_TERCETOS 512
 	#define NOOP -1 /* Sin operador */
+	#define BLOQ 7; /* Operador que indica el orden de las sentencias */
 
 	/* Funciones necesarias */
 	int yyerror(char* mensaje);
@@ -88,6 +91,7 @@
 	int ind_sent;
 	int ind_bif;
 	int ind_bwhile;
+	int ind_btrue;
 	int ind_asig;
 	int ind_xp;
 	int ind_xpcad;
@@ -154,12 +158,17 @@ programa:
 	START seccion_declaracion bloque END 	            {
 															printf("\nCOMPILACION EXITOSA\n");
 															guardarTabla();
+
+															ind_program = crear_terceto(START, ind_sdec, ind_bloque);
 														};
 
  /* Declaracion de variables */
 
 seccion_declaracion:
-	DECVAR bloque_dec ENDDEC 				            {printf("Regla 1: Seccion declaracion es DECVAR bloque_dec ENDEC\n\n");};
+	DECVAR bloque_dec ENDDEC 				            {
+															printf("Regla 1: Seccion declaracion es DECVAR bloque_dec ENDEC\n\n");
+															ind_sdec = ind_list_id;
+														};
 
 bloque_dec:
 	bloque_dec declaracion					            {printf("Regla 2: bloque_dec es bloque_dec declaracion\n");}
@@ -190,12 +199,16 @@ lista_id:
 	                                                        printf("Regla 8: lista_id es lista_id COMA ID(%s)\n", $3);
 	                                                        agregarVarATabla(yylval.string_val);
 															cantVarsADeclarar++;
+
+															ind_list_id = crear_terceto(ID, fin_tabla, ind_list_id);
                                                         }
 	| ID				                                {
 	                                                        printf("Regla 9: lista_id es ID(%s)\n", $1);
 	                                                        agregarVarATabla(yylval.string_val);
 															varADeclarar1 = fin_tabla; /* Guardo posicion de primer variable de esta lista de declaracion. */
 															cantVarsADeclarar = 1;
+
+															ind_list_id = crear_terceto(ID, fin_tabla, NOOP); /* ID es para crear el espacio de memoria para la variable */
                                                         };
 
  /* Fin de Declaracion de variables */
@@ -203,8 +216,14 @@ lista_id:
  /* Seccion de codigo */
 
 bloque:                                                 /* No existen bloques sin sentencias */
-	bloque sentencia	                                {printf("Regla 10: bloque es bloque sentencia\n");}
-	| sentencia			                                {printf("Regla 11: bloque es sentencia\n");};
+	bloque sentencia	                                {
+															printf("Regla 10: bloque es bloque sentencia\n");
+															ind_bloque = crear_terceto(BLOQ, ind_bloque, ind_sent);
+														}
+	| sentencia			                                {
+															printf("Regla 11: bloque es sentencia\n");
+															ind_bloque = ind_sent;
+														};
 
 sentencia:
 	asignacion PUNTO_COMA			                    {printf("Regla 12: sentencia es asignacion PUNTO_COMA\n");}
@@ -215,14 +234,25 @@ sentencia:
 	| expresion_aritmetica PUNTO_COMA                   {
 															printf("Regla 17: sentencia es expresion_aritmetica PUNTO_COMA\n");
 															resetTipoDato();
+															ind_sent = ind_expr;
 														};
 
 bloque_if:
-    IF expresion_logica THEN bloque ENDIF               {printf("Regla 18: bloque_if es IF expresion_logica THEN bloque ENDIF\n\n");};
+    IF expresion_logica THEN bloque ENDIF               {
+															printf("Regla 18: bloque_if es IF expresion_logica THEN bloque ENDIF\n\n");
+															ind_bif = crear_terceto(IF, ind_xplogic, ind_bloque);
+														};
 
 bloque_if:
-    IF expresion_logica THEN bloque ELSE bloque ENDIF   {printf("Regla 19.1: bloque_if es IF expresion_logica THEN bloque ELSE bloque ENDIF\n\n");}
-	| IF expresion_logica THEN ENDIF					{printf("Regla 19.2: bloque_if es IF expresion_logica THEN ENDIF\n\n");};
+    IF expresion_logica THEN bloque_true ELSE bloque ENDIF   {
+															printf("Regla 19.1: bloque_if es IF expresion_logica THEN bloque ELSE bloque ENDIF\n\n");
+															int ind = crear_terceto(THEN, ind_btrue, ind_bloque);
+															ind_bif = crear_terceto(IF, ind_xplogic, ind);
+														}
+	| IF expresion_logica THEN ENDIF					{
+															printf("Regla 19.2: bloque_if es IF expresion_logica THEN ENDIF\n\n");
+															ind_bif = crear_terceto(IF, ind_xplogic);
+														};
 
 bloque_while:
     WHILE expresion_logica THEN bloque ENDWHILE         {printf("Regla 20.1: bloque_while es WHILE expresion_logica THEN bloque ENDWHILE\n\n");}
@@ -235,8 +265,14 @@ asignacion:
 															chequearTipoDato(tipo);
 															resetTipoDato();
 															int pos=buscarEnTabla(idAsignar);
-															
+
 															ind_asig = crear_terceto(ASIG, pos, ind_xp);
+														};
+
+bloque_true:
+	bloque												{
+															printf("Regla 21.1: bloque_true es bloque\n");
+															ind_btrue = ind_bloque;
 														};
 
 /* Expresiones aritmeticas y otras */
@@ -244,12 +280,12 @@ asignacion:
 expresion:
 	expresion_cadena				                    {
 															printf("Regla 22: expresion es expresion_cadena\n");
-															
+
 															ind_xp = ind_xpcad;
 														}
 	| expresion_aritmetica			                    {
 															printf("Regla 23: expresion es expresion_aritmetica\n");
-														
+
 															ind_xp = ind_expr;
 														};
 
@@ -257,41 +293,41 @@ expresion_cadena:
 	CTE_STRING						                    {
 															printf("Regla 24: expresion_cadena es CTE_STRING(%s)\n", $1);
 															int pos=agregarCteStringATabla(yylval.string_val);
-															
+
 															ind_xpcad = crear_terceto(NOOP,pos,NOOP);
 														};
 
 expresion_aritmetica:
 	expresion_aritmetica MAS termino_r 		            {
 															printf("Regla 25: expresion_aritmetica es expresion_aritmetica MAS termino_r\n");
-															
+
 															ind_expr = crear_terceto(MAS, ind_expr, ind_rterm);
 														}
 	| expresion_aritmetica MENOS termino_r 	            {
 															printf("Regla 26: expresion_aritmetica es expresion_aritmetica MENOS termino_r\n");
-															
+
 															ind_expr = crear_terceto(MENOS, ind_expr, ind_rterm);
 														}
 	| termino								            {
 															printf("Regla 27: expresion_aritmetica es termino\n");
-															
+
 															ind_expr = ind_term;
 														};
 
 termino_r:
 	termino POR factor 			                        {
 															printf("Regla 28: termino_r es termino POR factor\n");
-															
+
 															ind_rterm = crear_terceto(POR, ind_term, ind_factor);
 														}
 	| termino DIVIDIDO factor 	                        {
 															printf("Regla 29: termino_r es termino DIVIDIDO factor\n");
-															
+
 															ind_rterm = crear_terceto(DIVIDIDO, ind_term, ind_factor);
 														}
 	| factor					                        {
 															printf("Regla 30: termino_r es factor\n");
-															
+
 															ind_rterm = ind_factor;
 														};
 
@@ -318,12 +354,12 @@ pre:
 factor:
 	PA expresion_aritmetica PC	                        {
 															printf("Regla 31: factor es PA expresion_aritmetica PC\n");
-															
+
 															ind_factor = ind_expr;
 														}
     | average                                           {
 															printf("Regla 32: factor es average\n");
-															
+
 															ind_factor = ind_avg;
 														}
 	| ID			                                    {
@@ -353,29 +389,29 @@ factor:
 expresion_logica:
     termino_logico_izq AND termino_logico               {
 															printf("Regla 36: expresion_logica es termino_logico AND termino_logico\n");
-															
+
 															ind_xplogic = crear_terceto(AND, ind_tlogic_izq, ind_tlogic);
 														}
     | termino_logico_izq OR termino_logico              {
 															printf("Regla 37: expresion_logica es termino_logico OR termino_logico\n");
-															
+
 															ind_xplogic = crear_terceto(OR, ind_tlogic_izq, ind_tlogic);
 														}
     | termino_logico                                    {
 															printf("Regla 38: expresion_logica es termino_logico\n");
-															
+
 															ind_xplogic = ind_tlogic;
 														}
     | NOT termino_logico                                {
 															printf("Regla 39: expresion_logica es NOT termino_logico\n");
-														
+
 															ind_xplogic = crear_terceto(NOT, ind_tlogic, NOOP);
 														};
 
 termino_logico_izq:
 		termino_logico									{
 															printf("Regla 39.1: termino_logico_izq es termino_logico\n");
-															
+
 															ind_tlogic_izq = ind_tlogic;
 														};
 
@@ -388,7 +424,7 @@ termino_logico:
 														}
     | inlist                                            {
 															printf("Regla 41: termino logico es inlist\n");
-															
+
 															ind_tlogic = ind_inlist;
 														};
 
@@ -429,7 +465,7 @@ comp_bool:
 average:
     AVG PA CA lista_exp_coma CC PC                      {
 															printf("Regla 48: average es AVG PA CA lista_exp_coma CC PC\n\n");
-															
+
 															ind_avg = crear_terceto(AVG, ind_lec, NOOP);
 														};
 
@@ -439,7 +475,7 @@ inlist:
 															int tipo = chequearVarEnTabla($3);
 															chequearTipoDato(tipo);
 															resetTipoDato();
-															
+
 															int pos=chequearVarEnTabla($3);
 															ind_inlist = crear_terceto(INLIST, pos, ind_lepc);
 														};
@@ -447,24 +483,24 @@ inlist:
 lista_exp_coma:
     lista_exp_coma COMA expresion_aritmetica            {
 															printf("Regla 50: lista_exp_coma es lista_exp_coma COMA expresion_aritmetica\n");
-														
+
 															ind_lec = crear_terceto(COMA, ind_lec, ind_expr);
 														}
     | expresion_aritmetica                              {
 															printf("Regla 51: lista_exp_coma es expresion_aritmetica\n");
-															
+
 															ind_lec = ind_expr;
 														};
 
 lista_exp_pc:
     lista_exp_pc PUNTO_COMA expresion_aritmetica        {
 															printf("Regla 52: lista_exp_pc es lista_exp_pc PUNTO_COMA expresion_aritmetica\n");
-															
+
 															ind_lepc = crear_terceto(PUNTO_COMA, ind_lepc, ind_expr);
 														}
-    | expresion_aritmetica                              {	
+    | expresion_aritmetica                              {
 															printf("Regla 53: lista_exp_pc es expresion_aritmetica\n");
-															
+
 															ind_lepc = ind_expr;
 														};
 
@@ -472,7 +508,7 @@ lectura:
     READ ID												{
 															printf("Regla 54: lectura es READ ID(%s)\n", $2);
 															int pos=chequearVarEnTabla($2);
-															
+
 															ind_lectura = crear_terceto(READ, pos, NOOP);
 														};
 
@@ -480,13 +516,13 @@ escritura:
     WRITE ID                                            {
 															printf("Regla 55: escritura es WRITE ID(%s)\n", $2);
 															int pos=chequearVarEnTabla($2);
-															
+
 															ind_escritura = crear_terceto(WRITE, pos, NOOP);
 														}
     | WRITE CTE_STRING                                  {
 															printf("Regla 56: escritura es WRITE CTE_STRING(%s)\n\n", $2);
 															int pos = agregarCteStringATabla(yylval.string_val);
-															
+
 															ind_escritura = crear_terceto(WRITE, pos, NOOP);
 														};
 %%
