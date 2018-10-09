@@ -10,3 +10,11 @@ La compilación la hacemos mediante un archivo .bat. Este archivo asume que Flex
 ## Lenguaje Ñ
 En este proyecto estamos creando un compilador para el lenguaje Ñ, que es un lenguaje inventado por nosotros para la materua Lenguajes y Compiladores de la carrera de Ingeniería en Informática en la UNLaM.
 En el archivo LEL.txt se detalla qué palabra reservada corresponde a qué token.
+
+# Implementar chequeo de tipo de datos
+Chequear tipo de dato por asignacion, cuando leemos cte int, cte float e id.
+Cosas que requieren el mismo tipo de dato internamente pero son independiente de lo de afuera:
+- Asignacion
+- Termino logico
+- Average?
+- Sentencia es expresion_aritmetica PUNTO_COMA
