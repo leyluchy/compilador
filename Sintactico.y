@@ -80,7 +80,7 @@
 		int op2;
 	} terceto;
 	terceto lista_terceto[MAX_TERCETOS];
-	int ultimo_terceto = OFFSET-1; /* Apunta al ultimo terceto escrito. Incrementarlo para guardar el siguiente. */
+	int ultimo_terceto = -1; /* Apunta al ultimo terceto escrito. Incrementarlo para guardar el siguiente. */
 
 	int ind_program;
 	int ind_sdec;
@@ -327,7 +327,6 @@ expresion_cadena:
 expresion_aritmetica:
 	expresion_aritmetica MAS termino_r 		            {
 															printf("Regla 25: expresion_aritmetica es expresion_aritmetica MAS termino_r\n");
-															printf("*** terceto %d %d %d ***\n", MAS, ind_expr, ind_rterm); //TODO sacar esto
 															ind_expr = crear_terceto(MAS, ind_expr, ind_rterm);
 														}
 	| expresion_aritmetica MENOS termino_r 	            {
@@ -389,7 +388,6 @@ factor:
 															chequearTipoDato(tipo);
 
 															int pos = buscarEnTabla($1);
-															printf("*** terceto %d %d %d ***\n", NOOP, pos, NOOP);
 															ind_factor = crear_terceto(NOOP, pos, NOOP);
 														}
 	| CTE_FLOAT	                                        {
@@ -764,7 +762,7 @@ el campo de operador y op2. Para los operadores pasar el token literal, para los
 tabla de simbolos o el indice de otro terceto. */
 int crear_terceto(int operador, int op1, int op2){
 	ultimo_terceto++;
-	if(ultimo_terceto >= OFFSET+MAX_TERCETOS){
+	if(ultimo_terceto >= MAX_TERCETOS){
 		printf("Error: me quede sin espacio en para los tercetos. Optimiza tu codigo.\n");
 		system("Pause");
 		exit(3);
@@ -773,12 +771,12 @@ int crear_terceto(int operador, int op1, int op2){
 	lista_terceto[ultimo_terceto].operador = operador;
 	lista_terceto[ultimo_terceto].op1 = op1;
 	lista_terceto[ultimo_terceto].op2 = op2;
-	return ultimo_terceto;
+	return ultimo_terceto + OFFSET;
 }
 
 /* Guarda los tercetos generados en un archivo */
 void guardarTercetos(){
-	if(ultimo_terceto == OFFSET -1)
+	if(ultimo_terceto == -1)
 		yyerror("No encontre los tercetos");
 
 	FILE* arch = fopen("intermedia.txt", "w+");
@@ -787,9 +785,8 @@ void guardarTercetos(){
 		return;
 	}
 
-	for(int i = 0; i <= ultimo_terceto - OFFSET; i++){
+	for(int i = 0; i <= ultimo_terceto; i++){
 		//La forma es [i] (operador, op1, op2)
-		fprintf(arch, "-- %d %d %d -- ", lista_terceto[i].operador, lista_terceto[i].op1, lista_terceto[i].op2);
 		//Escribo indice
 		fprintf(arch, "[%d] (", i + OFFSET);
 
