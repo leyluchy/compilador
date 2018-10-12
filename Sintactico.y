@@ -512,14 +512,16 @@ lista_exp_pc:
 lectura:
     READ ID												{
 															printf("Regla 54: lectura es READ ID(%s)\n", $2);
-															int pos=chequearVarEnTabla($2);
+															chequearVarEnTabla($2);
+															int pos = buscarEnTabla($2);
 															ind_lectura = crear_terceto(READ, pos, NOOP);
 														};
 
 escritura:
     WRITE ID                                            {
 															printf("Regla 55: escritura es WRITE ID(%s)\n", $2);
-															int pos=chequearVarEnTabla($2);
+															chequearVarEnTabla($2);
+															int pos = buscarEnTabla($2);
 															ind_escritura = crear_terceto(WRITE, pos, NOOP);
 														}
     | WRITE CTE_STRING                                  {
