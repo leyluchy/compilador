@@ -23,6 +23,9 @@
 	#define MAX_TERCETOS 512
 	#define NOOP -1 /* Sin operador */
 	#define BLOQ 7 /* Operador que indica el orden de las sentencias */
+	#define OP1 2
+	#define OP2 3
+	#define OPERADOR 1
 
 	/* Funciones necesarias */
 	int yyerror(char* mensaje);
@@ -45,6 +48,7 @@
 
 	int crear_terceto(int operador, int op1, int op2);
 	void guardarTercetos();
+	void modificarTerceto(int indice, int posicion, int valor);
 
 	void apilar_xplogic(int indice);
 	int desapilar_xplogic();
@@ -87,8 +91,10 @@
 	} terceto;
 	terceto lista_terceto[MAX_TERCETOS];
 	int ultimo_terceto = -1; /* Apunta al ultimo terceto escrito. Incrementarlo para guardar el siguiente. */
+
 	int pila_ind_xplogic[MAX_ANIDAMIENTOS];
 	int ultimo_pila_ind_xplogic=-1;
+	int ind_branch_pendiente;
 
 	int ind_program;
 	int ind_sdec;
@@ -789,6 +795,27 @@ int crear_terceto(int operador, int op1, int op2){
 	lista_terceto[ultimo_terceto].op1 = op1;
 	lista_terceto[ultimo_terceto].op2 = op2;
 	return ultimo_terceto + OFFSET;
+}
+
+/** Moidifica el terceto con el indice indicado en la posicion indicada. El indice debe ser sin el OFFSET
+y la posicion debe ser OP1, OP2 u OPERADOR. Si el terceto no existe, aborta la compilacion. */
+void modificarTerceto(int indice, int posicion, int valor){
+	if(indice > ultimo_terceto){
+		printf("Ups, algo fallo. Intente modificar un terceto que no existe. Mala mia.");
+		system ("Pause");
+		exit (4);
+	}
+	switch(posicion){
+	case OP1:
+		lista_terceto[indice].op1 = valor;
+		break;
+	case OP2:
+		lista_terceto[indice].op2 = valor;
+		break;
+	case OPERADOR:
+		lista_terceto[indice].operador = valor;
+		break;
+	}
 }
 
 /* Guarda los tercetos generados en un archivo */
