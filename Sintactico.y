@@ -76,6 +76,8 @@
 	int comp_bool_actual;
 	/* Cosas para control de tipo de datos en expresiones aritméticas */
 	int tipoDatoActual = sinTipo;
+	/* Cosas para average */
+	int cant;
 
 	/* Cosas para tercetos */
 	typedef struct{
@@ -486,7 +488,8 @@ comp_bool:
 average:
     AVG PA CA lista_exp_coma CC PC                      {
 															printf("Regla 48: average es AVG PA CA lista_exp_coma CC PC\n\n");
-															ind_avg = crear_terceto(AVG, ind_lec, NOOP);
+															int pos = agregarCteIntATabla(cant);
+															ind_avg = crear_terceto(DIVIDIDO, ind_lec, pos);
 														};
 
 inlist:
@@ -502,11 +505,13 @@ inlist:
 lista_exp_coma:
     lista_exp_coma COMA expresion_aritmetica            {
 															printf("Regla 50: lista_exp_coma es lista_exp_coma COMA expresion_aritmetica\n");
-															ind_lec = crear_terceto(COMA, ind_lec, ind_expr);
+															ind_lec = crear_terceto(MAS, ind_lec, ind_expr);
+															cant++;
 														}
     | expresion_aritmetica                              {
 															printf("Regla 51: lista_exp_coma es expresion_aritmetica\n");
 															ind_lec = ind_expr;
+															cant = 1;
 														};
 
 lista_exp_pc:
