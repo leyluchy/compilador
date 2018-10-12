@@ -281,33 +281,40 @@ sentencia:
 															ind_sent = ind_expr;
 														};
 
+rutina_if:
+													{ crear_terceto(IF, NOOP, NOOP);};
+
 bloque_if:
-    IF expresion_logica THEN bloque ENDIF               {
+    IF rutina_if expresion_logica THEN bloque ENDIF               {
 															printf("Regla 18: bloque_if es IF expresion_logica THEN bloque ENDIF\n\n");
 															ind_xplogic = desapilar_xplogic();
 															ind_bif = crear_terceto(IF, ind_xplogic, ind_bloque);
 														};
 
 bloque_if:
-    IF expresion_logica THEN bloque_true ELSE bloque ENDIF   {
+    IF rutina_if expresion_logica THEN bloque_true ELSE bloque ENDIF   {
 															printf("Regla 19.1: bloque_if es IF expresion_logica THEN bloque ELSE bloque ENDIF\n\n");
 															int ind = crear_terceto(THEN, ind_btrue, ind_bloque);
 															ind_xplogic = desapilar_xplogic();
 															ind_bif = crear_terceto(IF, ind_xplogic, ind);
 														}
-	| IF expresion_logica THEN ENDIF					{
+	| IF rutina_if expresion_logica THEN ENDIF					{
 															printf("Regla 19.2: bloque_if es IF expresion_logica THEN ENDIF\n\n");
 															ind_xplogic = desapilar_xplogic();
 															ind_bif = crear_terceto(IF, ind_xplogic, NOOP);
 														};
 
+rutina_while:
+														{ ind_bwhile = crear_terceto(WHILE, NOOP, NOOP);};
+
 bloque_while:
-    WHILE expresion_logica THEN bloque ENDWHILE         {
+    WHILE rutina_while expresion_logica THEN bloque ENDWHILE
+														{
 															printf("Regla 20.1: bloque_while es WHILE expresion_logica THEN bloque ENDWHILE\n\n");
 															ind_xplogic = desapilar_xplogic();
 															ind_bwhile = crear_terceto(WHILE, ind_xplogic, ind_bloque);
 														}
-	| WHILE expresion_logica ENDWHILE					{
+	| WHILE rutina_while expresion_logica ENDWHILE		{
 															printf("Regla 20.2: bloque_while es WHILE expresion_logica ENDWHILE\n\n");
 															ind_xplogic = desapilar_xplogic();
 															ind_bwhile = crear_terceto(WHILE, ind_xplogic, NOOP);
