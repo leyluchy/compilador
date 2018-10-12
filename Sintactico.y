@@ -183,7 +183,6 @@ programa:
 seccion_declaracion:
 	DECVAR bloque_dec ENDDEC 				            {
 															printf("Regla 1: Seccion declaracion es DECVAR bloque_dec ENDEC\n\n");
-															ind_sdec = ind_list_id;
 														};
 
 bloque_dec:
@@ -215,16 +214,12 @@ lista_id:
 	                                                        printf("Regla 8: lista_id es lista_id COMA ID(%s)\n", $3);
 	                                                        agregarVarATabla(yylval.string_val);
 															cantVarsADeclarar++;
-
-															ind_list_id = crear_terceto(ID, fin_tabla, ind_list_id);
                                                         }
 	| ID				                                {
 	                                                        printf("Regla 9: lista_id es ID(%s)\n", $1);
 	                                                        agregarVarATabla(yylval.string_val);
 															varADeclarar1 = fin_tabla; /* Guardo posicion de primer variable de esta lista de declaracion. */
 															cantVarsADeclarar = 1;
-
-															ind_list_id = crear_terceto(ID, fin_tabla, NOOP); /* ID es para crear el espacio de memoria para la variable */
                                                         };
 
  /* Fin de Declaracion de variables */
