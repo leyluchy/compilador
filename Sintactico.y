@@ -16,6 +16,7 @@
 
 	#define TAMANIO_TABLA 256
 	#define TAM_NOMBRE 32
+	#define MAX_ANIDAMIENTOS 10
 
 	/* Constantes para tercetos */
 	#define OFFSET TAMANIO_TABLA
@@ -44,6 +45,9 @@
 
 	int crear_terceto(int operador, int op1, int op2);
 	void guardarTercetos();
+
+	void apilar_xplogic(int indice);
+	int desapilar_xplogic();
 
 	int yystopparser=0;
 	FILE  *yyin;
@@ -81,6 +85,8 @@
 	} terceto;
 	terceto lista_terceto[MAX_TERCETOS];
 	int ultimo_terceto = -1; /* Apunta al ultimo terceto escrito. Incrementarlo para guardar el siguiente. */
+	int pila_ind_xplogic[MAX_ANIDAMIENTOS];
+	int ultimo_pila_ind_xplogic=-1;
 
 	int ind_program;
 	int ind_sdec;
@@ -265,6 +271,7 @@ sentencia:
 bloque_if:
     IF expresion_logica THEN bloque ENDIF               {
 															printf("Regla 18: bloque_if es IF expresion_logica THEN bloque ENDIF\n\n");
+															ind_xplogic = desapilar_xplogic();
 															ind_bif = crear_terceto(IF, ind_xplogic, ind_bloque);
 														};
 
@@ -272,20 +279,24 @@ bloque_if:
     IF expresion_logica THEN bloque_true ELSE bloque ENDIF   {
 															printf("Regla 19.1: bloque_if es IF expresion_logica THEN bloque ELSE bloque ENDIF\n\n");
 															int ind = crear_terceto(THEN, ind_btrue, ind_bloque);
+															ind_xplogic = desapilar_xplogic();
 															ind_bif = crear_terceto(IF, ind_xplogic, ind);
 														}
 	| IF expresion_logica THEN ENDIF					{
 															printf("Regla 19.2: bloque_if es IF expresion_logica THEN ENDIF\n\n");
+															ind_xplogic = desapilar_xplogic();
 															ind_bif = crear_terceto(IF, ind_xplogic, NOOP);
 														};
 
 bloque_while:
     WHILE expresion_logica THEN bloque ENDWHILE         {
 															printf("Regla 20.1: bloque_while es WHILE expresion_logica THEN bloque ENDWHILE\n\n");
+															ind_xplogic = desapilar_xplogic();
 															ind_bwhile = crear_terceto(WHILE, ind_xplogic, ind_bloque);
 														}
 	| WHILE expresion_logica ENDWHILE					{
 															printf("Regla 20.2: bloque_while es WHILE expresion_logica ENDWHILE\n\n");
+															ind_xplogic = desapilar_xplogic();
 															ind_bwhile = crear_terceto(WHILE, ind_xplogic, NOOP);
 														};
 
@@ -408,18 +419,22 @@ expresion_logica:
     termino_logico_izq AND termino_logico               {
 															printf("Regla 36: expresion_logica es termino_logico AND termino_logico\n");
 															ind_xplogic = crear_terceto(AND, ind_tlogic_izq, ind_tlogic);
+															apilar_xplogic(ind_xplogic);
 														}
     | termino_logico_izq OR termino_logico              {
 															printf("Regla 37: expresion_logica es termino_logico OR termino_logico\n");
 															ind_xplogic = crear_terceto(OR, ind_tlogic_izq, ind_tlogic);
+															apilar_xplogic(ind_xplogic);
 														}
     | termino_logico                                    {
 															printf("Regla 38: expresion_logica es termino_logico\n");
 															ind_xplogic = ind_tlogic;
+															apilar_xplogic(ind_xplogic);
 														}
     | NOT termino_logico                                {
 															printf("Regla 39: expresion_logica es NOT termino_logico\n");
 															ind_xplogic = crear_terceto(NOT, ind_tlogic, NOOP);
+															apilar_xplogic(ind_xplogic);
 														};
 
 termino_logico_izq:
@@ -908,4 +923,18 @@ void guardarTercetos(){
 		fprintf(arch, ")\n");
 	}
 	fclose(arch);
+}
+
+void apilar_xplogic(int indice){
+	ultimo_pila_ind_xplogic++;
+	if(ultimo_pila_ind_xplogic >= MAX_ANIDAMIENTOS)
+		yyerror("para un poco. Para que tantos anidamientos?");
+
+	pila_ind_xplogic[ultimo_pila_ind_xplogic] = indice;
+}
+
+int desapilar_xplogic(){
+	int aux = pila_ind_xplogic[ultimo_pila_ind_xplogic];
+	ultimo_pila_ind_xplogic--;
+	return aux;
 }
