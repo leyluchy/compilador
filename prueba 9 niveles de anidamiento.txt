@@ -1,0 +1,41 @@
+estimada_cajita_magica
+	necesito:
+		enterito a, b;
+	para
+
+	si a<1
+	por_favor
+		si a<1
+		por_favor
+			si a<1
+			por_favor
+				si a<1
+				por_favor
+					si a<1
+					por_favor
+						si a<1
+						por_favor
+							si a<1
+							por_favor
+								si a<1
+								por_favor
+									si a<1
+									por_favor
+										si a<1
+										por_favor
+											si a<1
+											por_favor
+
+											gracias
+										gracias
+									gracias
+								gracias
+							gracias
+						gracias
+					gracias
+				gracias
+			gracias
+		gracias
+	gracias
+
+salu2

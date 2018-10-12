@@ -928,7 +928,7 @@ void guardarTercetos(){
 void apilar_xplogic(int indice){
 	ultimo_pila_ind_xplogic++;
 	if(ultimo_pila_ind_xplogic >= MAX_ANIDAMIENTOS)
-		yyerror("para un poco. Para que tantos anidamientos?");
+		yyerror("para un poco. Para que tantos anidamientos? Hasta 9 me banco.");
 
 	pila_ind_xplogic[ultimo_pila_ind_xplogic] = indice;
 }
