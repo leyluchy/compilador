@@ -21,8 +21,17 @@
 	/* Constantes para tercetos */
 	#define OFFSET TAMANIO_TABLA
 	#define MAX_TERCETOS 512
+
 	#define NOOP -1 /* Sin operador */
 	#define BLOQ 7 /* Operador que indica el orden de las sentencias */
+	#define CMP 21 /* Comparador de assembler */
+	#define BNE 2 /* = */
+	#define BGE 4 /* < */
+	#define BLT 6 /* >= */
+	#define BLE 10 /* > */
+	#define BEQ 14 /* != */
+	#define BGT 8 /* <= */
+
 	#define OP1 2
 	#define OP2 3
 	#define OPERADOR 1
@@ -52,6 +61,7 @@
 
 	void apilar_xplogic(int indice);
 	int desapilar_xplogic();
+	int saltarFalse(int comp);
 
 	int yystopparser=0;
 	FILE  *yyin;
@@ -433,6 +443,7 @@ expresion_logica:
 															printf("Regla 38: expresion_logica es termino_logico\n");
 															ind_xplogic = ind_tlogic;
 															apilar_xplogic(ind_xplogic);
+															ind_branch_pendiente = crear_terceto(saltarFalse(comp_bool_actual), ind_tlogic, NOOP);
 														}
     | NOT termino_logico                                {
 															printf("Regla 39: expresion_logica es NOT termino_logico\n");
@@ -450,7 +461,7 @@ termino_logico:
     expr_aritmetica_izquierda comp_bool expresion_aritmetica {
 															printf("Regla 40: termino_logico es expr_aritmetica_izquierda comp_bool expresion_aritmetica\n");
 															resetTipoDato();
-															ind_tlogic = crear_terceto(comp_bool_actual, ind_expr_izq, ind_expr);
+															ind_tlogic = crear_terceto(CMP, ind_expr_izq, ind_expr);
 														}
     | inlist                                            {
 															printf("Regla 41: termino logico es inlist\n");
@@ -917,6 +928,27 @@ void guardarTercetos(){
 		case WRITE:
 			fprintf(arch, "mostrame");
 			break;
+		case CMP:
+			fprintf(arch, "CMP");
+			break;
+		case BNE:
+			fprintf(arch, "BNE");
+			break;
+		case BEQ:
+			fprintf(arch, "BEQ");
+			break;
+		case BGT:
+			fprintf(arch, "BGT");
+			break;
+		case BGE:
+			fprintf(arch, "BGE");
+			break;
+		case BLE:
+			fprintf(arch, "BLE");
+			break;
+		case BLT:
+			fprintf(arch, "BLT");
+			break;
 		default:
 			fprintf(arch, "algo esta mal");
 			break;
@@ -964,4 +996,22 @@ int desapilar_xplogic(){
 	int aux = pila_ind_xplogic[ultimo_pila_ind_xplogic];
 	ultimo_pila_ind_xplogic--;
 	return aux;
+}
+
+int saltarFalse(int comp){
+	switch(comp){
+	case MAYOR:
+		return BLE;
+	case MAYOR_IGUAL:
+		return BLT;
+	case MENOR:
+		return BGE;
+	case MENOR_IGUAL:
+		return BGT;
+	case IGUAL:
+		return BNE;
+	case DISTINTO:
+		return BEQ;
+	}
+	return NOOP;
 }
