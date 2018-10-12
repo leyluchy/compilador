@@ -282,11 +282,11 @@ bloque_if:
 bloque_while:
     WHILE expresion_logica THEN bloque ENDWHILE         {
 															printf("Regla 20.1: bloque_while es WHILE expresion_logica THEN bloque ENDWHILE\n\n");
-															ind_bwhile = crear_terceto(WHILE, ind_xplogic, ind_bloque);	
+															ind_bwhile = crear_terceto(WHILE, ind_xplogic, ind_bloque);
 														}
 	| WHILE expresion_logica ENDWHILE					{
 															printf("Regla 20.2: bloque_while es WHILE expresion_logica ENDWHILE\n\n");
-															ind_bwhile = crear_terceto(WHILE, ind_xplogic, NOOP);	
+															ind_bwhile = crear_terceto(WHILE, ind_xplogic, NOOP);
 														};
 
 asignacion:
@@ -327,6 +327,7 @@ expresion_cadena:
 expresion_aritmetica:
 	expresion_aritmetica MAS termino_r 		            {
 															printf("Regla 25: expresion_aritmetica es expresion_aritmetica MAS termino_r\n");
+															printf("*** terceto %d %d %d ***\n", MAS, ind_expr, ind_rterm); //TODO sacar esto
 															ind_expr = crear_terceto(MAS, ind_expr, ind_rterm);
 														}
 	| expresion_aritmetica MENOS termino_r 	            {
@@ -369,6 +370,7 @@ pre:
 														}
 	| MENOS factor										{
 															printf("Regla 30.3: pre es MENOS factor\n");
+
 															ind_pre = crear_terceto(MENOS, ind_factor, NOOP);
 														};
 
@@ -387,6 +389,7 @@ factor:
 															chequearTipoDato(tipo);
 
 															int pos = buscarEnTabla($1);
+															printf("*** terceto %d %d %d ***\n", NOOP, pos, NOOP);
 															ind_factor = crear_terceto(NOOP, pos, NOOP);
 														}
 	| CTE_FLOAT	                                        {
@@ -786,12 +789,96 @@ void guardarTercetos(){
 
 	for(int i = 0; i <= ultimo_terceto - OFFSET; i++){
 		//La forma es [i] (operador, op1, op2)
+		fprintf(arch, "-- %d %d %d -- ", lista_terceto[i].operador, lista_terceto[i].op1, lista_terceto[i].op2);
 		//Escribo indice
 		fprintf(arch, "[%d] (", i + OFFSET);
 
 		//escribo operador
 		switch(lista_terceto[i].operador){
-
+		case NOOP:
+			fprintf(arch, "---");
+			break;
+		case BLOQ:
+			fprintf(arch, "sentencia");
+			break;
+		case START:
+			fprintf(arch, "start");
+			break;
+		case ID:
+			fprintf(arch, "declaracion");
+			break;
+		case IF:
+			fprintf(arch, "if");
+			break;
+		case THEN:
+			fprintf(arch, "cuerpoIf");
+			break;
+		case WHILE:
+			fprintf(arch, "while");
+			break;
+		case ASIG:
+			fprintf(arch, "<-");
+			break;
+		case MAS:
+			fprintf(arch, "+");
+			break;
+		case MENOS:
+			fprintf(arch, "-");
+			break;
+		case POR:
+			fprintf(arch, "*");
+			break;
+		case DIVIDIDO:
+			fprintf(arch, "/");
+			break;
+		case AND:
+			fprintf(arch, "y");
+			break;
+		case OR:
+			fprintf(arch, "o");
+			break;
+		case NOT:
+			fprintf(arch, "no");
+			break;
+		case MENOR:
+			fprintf(arch, "<");
+			break;
+		case MAYOR:
+			fprintf(arch, ">");
+			break;
+		case MENOR_IGUAL:
+			fprintf(arch, "<=");
+			break;
+		case MAYOR_IGUAL:
+			fprintf(arch, ">=");
+			break;
+		case IGUAL:
+			fprintf(arch, "==");
+			break;
+		case DISTINTO:
+			fprintf(arch, "=/=");
+			break;
+		case AVG:
+			fprintf(arch, "avg");
+			break;
+		case INLIST:
+			fprintf(arch, "inlist");
+			break;
+		case COMA:
+			fprintf(arch, "\',\'");
+			break;
+		case PUNTO_COMA:
+			fprintf(arch, "\';\'");
+			break;
+		case READ:
+			fprintf(arch, "leeme");
+			break;
+		case WRITE:
+			fprintf(arch, "mostrame");
+			break;
+		default:
+			fprintf(arch, "algo esta mal");
+			break;
 		}
 
 		fprintf(arch, ", ");
@@ -799,7 +886,7 @@ void guardarTercetos(){
 		int op = lista_terceto[i].op1;
 
 		if(op == NOOP)
-			fprintf(arch, "-");
+			fprintf(arch, "---");
 		else if(op < TAMANIO_TABLA){
 			//Es una entrada a tabla de simbolos
 			fprintf(arch, "%s", &(tabla_simbolo[op].nombre) );
@@ -811,7 +898,7 @@ void guardarTercetos(){
 		//Escribo op2
 		op = lista_terceto[i].op2;
 		if(op == NOOP)
-			fprintf(arch, "-");
+			fprintf(arch, "---");
 		else if(op < TAMANIO_TABLA){
 			//Es una entrada a tabla de simbolos
 			fprintf(arch, "%s", &(tabla_simbolo[op].nombre) );
@@ -820,32 +907,6 @@ void guardarTercetos(){
 			fprintf(arch, "[%d]", op);
 
 		fprintf(arch, ")\n");
-		/*
-		fprintf(arch, "%s\t", &(tabla_simbolo[i].nombre) );
-
-		switch (tabla_simbolo[i].tipo_dato){
-		case Float:
-			fprintf(arch, "FLOAT");
-			break;
-		case Int:
-			fprintf(arch, "INT");
-			break;
-		case String:
-			fprintf(arch, "STRING");
-			break;
-		case CteFloat:
-			fprintf(arch, "CTE_FLOAT\t%f", tabla_simbolo[i].valor_f);
-			break;
-		case CteInt:
-			fprintf(arch, "CTE_INT\t%d", tabla_simbolo[i].valor_i);
-			break;
-		case CteString:
-			fprintf(arch, "CTE_STRING\t%s\t%d", &(tabla_simbolo[i].valor_s), tabla_simbolo[i].longitud);
-			break;
-		}
-
-		fprintf(arch, "\n");
-		*/
 	}
 	fclose(arch);
 }
