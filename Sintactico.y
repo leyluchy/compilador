@@ -282,23 +282,24 @@ sentencia:
 														};
 
 rutina_if:
-													{ crear_terceto(IF, NOOP, NOOP);};
+														{ crear_terceto(IF, NOOP, NOOP);};
 
 bloque_if:
-    IF rutina_if expresion_logica THEN bloque ENDIF               {
+    IF rutina_if expresion_logica THEN bloque ENDIF    {
 															printf("Regla 18: bloque_if es IF expresion_logica THEN bloque ENDIF\n\n");
 															ind_xplogic = desapilar_xplogic();
 															ind_bif = crear_terceto(IF, ind_xplogic, ind_bloque);
 														};
 
 bloque_if:
-    IF rutina_if expresion_logica THEN bloque_true ELSE bloque ENDIF   {
+    IF rutina_if expresion_logica THEN bloque_true ELSE bloque ENDIF
+														{
 															printf("Regla 19.1: bloque_if es IF expresion_logica THEN bloque ELSE bloque ENDIF\n\n");
 															int ind = crear_terceto(THEN, ind_btrue, ind_bloque);
 															ind_xplogic = desapilar_xplogic();
 															ind_bif = crear_terceto(IF, ind_xplogic, ind);
 														}
-	| IF rutina_if expresion_logica THEN ENDIF					{
+	| IF rutina_if expresion_logica THEN ENDIF			{
 															printf("Regla 19.2: bloque_if es IF expresion_logica THEN ENDIF\n\n");
 															ind_xplogic = desapilar_xplogic();
 															ind_bif = crear_terceto(IF, ind_xplogic, NOOP);
@@ -815,7 +816,7 @@ int crear_terceto(int operador, int op1, int op2){
 	return ultimo_terceto + OFFSET;
 }
 
-/** Moidifica el terceto con el indice indicado en la posicion indicada. El indice debe ser sin el OFFSET
+/** Modifica el terceto con el indice indicado en la posicion indicada. El indice debe ser sin el OFFSET
 y la posicion debe ser OP1, OP2 u OPERADOR. Si el terceto no existe, aborta la compilacion. */
 void modificarTerceto(int indice, int posicion, int valor){
 	if(indice > ultimo_terceto){
