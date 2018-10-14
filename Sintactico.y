@@ -115,12 +115,23 @@
 		int always; //Para los else, y los endwhile
 	} info_elemento_pila;
 	
+	/* Pila de cosas para AVG */
+	typedef struct{
+		int ind_rterm;
+		int ind_term;
+		int ind_pre;
+		int ind_factor;
+		int ind_avg;	
+	} info_anidamiento_exp_aritmeticas;
+	
 	int falseIzq=VALOR_NULO;
 	int falseDer=VALOR_NULO;
 	int verdadero=VALOR_NULO;
 	int always=VALOR_NULO;
 	info_elemento_pila pila_bloques[MAX_ANIDAMIENTOS];
 	int ult_pos_pila_bloques=VALOR_NULO;
+	info_anidamiento_exp_aritmeticas pila_exp[MAX_ANIDAMIENTOS];
+	int ult_pos_pila_exp=VALOR_NULO;
 
 	int pila_ind_xplogic[MAX_ANIDAMIENTOS];
 	int ultimo_pila_ind_xplogic=-1;
@@ -1068,6 +1079,24 @@ int saltarFalse(int comp){
 		return BNE;
 	case DISTINTO:
 		return BEQ;
+	}
+	return NOOP;
+}
+
+int saltarTrue(int comp){
+	switch(comp){
+	case MAYOR:
+		return BGT;
+	case MAYOR_IGUAL:
+		return BGE;
+	case MENOR:
+		return BLT;
+	case MENOR_IGUAL:
+		return BLE;
+	case IGUAL:
+		return BEQ;
+	case DISTINTO:
+		return BNE;
 	}
 	return NOOP;
 }
