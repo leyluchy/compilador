@@ -3,12 +3,24 @@ estimada_cajita_magica
 		enterito a, b;
 	para
 
-	mientras a<2
+	si 1<1
 	por_favor
-		si b>5
+	gracias
+	
+	mientras a<2 o a<2
+	por_favor
+		si b>5 o b<3
 		por_favor
-			b+1;
+			b<-b+1;
+			b<-b+1;
+			b<-b-1;
+		sino
+			b-1;
 		gracias
+		a;
+		a;
 	goto_mientras
+	
+	
 
 salu2

@@ -23,20 +23,20 @@ int crear_terceto(int operador, int op1, int op2){
 /** Modifica el terceto con el indice indicado en la posicion indicada. El indice debe ser sin el OFFSET
 y la posicion debe ser OP1, OP2 u OPERADOR. Si el terceto no existe, aborta la compilacion. */
 void modificarTerceto(int indice, int posicion, int valor){
-	if(indice > ultimo_terceto){
+	if(indice > ultimo_terceto + OFFSET){
 		printf("Ups, algo fallo. Intente modificar un terceto que no existe. Mala mia.");
 		system ("Pause");
 		exit (4);
 	}
 	switch(posicion){
 	case OP1:
-		lista_terceto[indice].op1 = valor;
+		lista_terceto[indice - OFFSET].op1 = valor;
 		break;
 	case OP2:
-		lista_terceto[indice].op2 = valor;
+		lista_terceto[indice - OFFSET].op2 = valor;
 		break;
 	case OPERADOR:
-		lista_terceto[indice].operador = valor;
+		lista_terceto[indice - OFFSET].operador = valor;
 		break;
 	}
 }
@@ -75,10 +75,19 @@ void guardarTercetos(){
 			fprintf(arch, "if");
 			break;
 		case THEN:
-			fprintf(arch, "cuerpoIf");
+			fprintf(arch, "then");
+			break;
+		case ELSE:
+			fprintf(arch, "cuerpoElse");
+			break;
+		case ENDIF:
+			fprintf(arch, "finIf");
 			break;
 		case WHILE:
 			fprintf(arch, "while");
+			break;
+		case ENDWHILE:
+			fprintf(arch, "finWhile");
 			break;
 		case ASIG:
 			fprintf(arch, "<-");
@@ -160,6 +169,9 @@ void guardarTercetos(){
 			break;
 		case BLT:
 			fprintf(arch, "BLT");
+			break;
+		case JMP:
+			fprintf(arch, "JMP");
 			break;
 		default:
 			fprintf(arch, "algo esta mal");

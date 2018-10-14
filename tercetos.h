@@ -16,6 +16,7 @@
 #define BLE 10 /* > */
 #define BEQ 14 /* != */
 #define BGT 8 /* <= */
+#define JMP 16 /* Branch Always o Salto Incondicional*/
 
 /* Posiciones dentro de un terceto */
 #define OP1 2
