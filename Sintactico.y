@@ -7,9 +7,7 @@
 
 	#include "tabla_simbolos.h"
 	#include "tercetos.h"
-
-	#define MAX_ANIDAMIENTOS 10
-	#define VALOR_NULO -1
+	#include "sentencias_control.h"
 
 	#define MAX_ANIDAMIENTOS 10
 
@@ -21,16 +19,8 @@
 	void chequearTipoDato(int tipo);
 	void resetTipoDato();
 
-	int saltarFalse(int comp);
-	int saltarTrue(int comp);
-	void apilar_IEP();
-	void desapilar_IEP();
 	void apilar_IAEA();
 	void desapilar_IAEA();
-	void ponerSaltosThen();
-	void ponerSaltosElse();
-	void ponerSaltoEndif();
-	void ponerSaltoEndwhile();
 
 	int yystopparser=0;
 	FILE  *yyin;
@@ -57,23 +47,6 @@
 	terceto lista_terceto[MAX_TERCETOS];
 	int ultimo_terceto = -1; /* Apunta al ultimo terceto escrito. Incrementarlo para guardar el siguiente. */
 
-	/* Pila de cosas para tercetos */
-	typedef struct{
-		int ind_sent; //Apilamos la sentencia actual
-		int ind_bloque; //Apilamos el bloque actual
-		int ind_branch_pendiente;
-		int ind_branch_pendiente2;
-		int ind_jmp;
-		int ind_if;
-		int ind_endif;
-		int ind_else;
-		int ind_then;
-		int falseIzq; //Si se pasa por false el bool izquierdo
-		int falseDer; //Si se pasa por false el bool derecho
-		int verdadero; //Si hay un OR, el lado izq
-		int always; //Para los else, y los endwhile
-	} info_elemento_pila;
-
 	/* Pila de cosas para AVG */
 	typedef struct{
 		int ind_rterm;
@@ -83,17 +56,22 @@
 		int ind_avg;
 	} info_anidamiento_exp_aritmeticas;
 
+	/* Cosas para anidamientos de if y while */
 	int falseIzq=VALOR_NULO;
 	int falseDer=VALOR_NULO;
 	int verdadero=VALOR_NULO;
 	int always=VALOR_NULO;
+
 	info_elemento_pila pila_bloques[MAX_ANIDAMIENTOS];
 	int ult_pos_pila_bloques=VALOR_NULO;
+
 	info_anidamiento_exp_aritmeticas pila_exp[MAX_ANIDAMIENTOS];
 	int ult_pos_pila_exp=VALOR_NULO;
 
 	int pila_ind_xplogic[MAX_ANIDAMIENTOS];
 	int ultimo_pila_ind_xplogic=-1;
+
+	/* Indices extras para if y while */
 	int ind_branch_pendiente;
 	int ind_branch_pendiente2;
 	int ind_if;
@@ -102,6 +80,7 @@
 	int ind_then;
 	int ind_jmp;
 
+	/* Indices para no terminales */
 	int ind_program;
 	int ind_sdec;
 	int ind_bdec;
@@ -652,49 +631,7 @@ void resetTipoDato(){
 	tipoDatoActual = sinTipo;
 }
 
-void apilar_IEP(){
-	ult_pos_pila_bloques++;
-	if(ult_pos_pila_bloques>=MAX_ANIDAMIENTOS){
-		yyerror("para un poco. Para que tantos anidamientos? Hasta 9 me banco.");
-	}
-	info_elemento_pila aux;
-	aux.ind_sent=ind_sent;
-	aux.ind_bloque=ind_bloque;
-	aux.ind_branch_pendiente=ind_branch_pendiente;
-	aux.ind_branch_pendiente2=ind_branch_pendiente2;
-	aux.ind_if=ind_if;
-	aux.ind_endif=ind_endif;
-	aux.ind_else=ind_else;
-	aux.ind_then=ind_then;
-	aux.ind_jmp=ind_jmp;
-	aux.falseIzq=falseIzq;
-	aux.falseDer=falseDer;
-	aux.verdadero=verdadero;
-	aux.always=always;
-	pila_bloques[ult_pos_pila_bloques] = aux;
-	falseIzq=VALOR_NULO;
-	falseDer=VALOR_NULO;
-	verdadero=VALOR_NULO;
-	always=VALOR_NULO;
-}
 
-void desapilar_IEP(){
-	info_elemento_pila aux=pila_bloques[ult_pos_pila_bloques];
-	ult_pos_pila_bloques--;
-	ind_sent=aux.ind_sent;
-	ind_bloque=aux.ind_sent;
-	ind_branch_pendiente=aux.ind_branch_pendiente;
-	ind_branch_pendiente2=aux.ind_branch_pendiente2;
-	ind_if=aux.ind_if;
-	ind_endif=aux.ind_endif;
-	ind_then=aux.ind_then;
-	ind_else=aux.ind_else;
-	ind_jmp=aux.ind_jmp;
-	falseIzq=aux.falseIzq;
-	falseDer=aux.falseDer;
-	verdadero=aux.verdadero;
-	always=aux.always;
-}
 
 void apilar_IAEA(){
 	ult_pos_pila_exp++;
@@ -720,66 +657,8 @@ void desapilar_IAEA(){
 	ind_avg=aux.ind_avg;
 }
 
-int saltarFalse(int comp){
-	switch(comp){
-	case MAYOR:
-		return BLE;
-	case MAYOR_IGUAL:
-		return BLT;
-	case MENOR:
-		return BGE;
-	case MENOR_IGUAL:
-		return BGT;
-	case IGUAL:
-		return BNE;
-	case DISTINTO:
-		return BEQ;
-	}
-	return NOOP;
-}
 
-int saltarTrue(int comp){
-	switch(comp){
-	case MAYOR:
-		return BGT;
-	case MAYOR_IGUAL:
-		return BGE;
-	case MENOR:
-		return BLT;
-	case MENOR_IGUAL:
-		return BLE;
-	case IGUAL:
-		return BEQ;
-	case DISTINTO:
-		return BNE;
-	}
-	return NOOP;
-}
+
+
 
 //modificarTerceto(indice, posicion, valor);
-void ponerSaltosThen(){
-	if(verdadero!=VALOR_NULO){ //Me di cuenta tarde de que ind_branch_pendiente y compania no hacen falta, soy un boludo
-		modificarTerceto(verdadero, OP2, ind_then);
-	}
-}
-void ponerSaltosElse(){
-	if(falseIzq!=VALOR_NULO){
-		modificarTerceto(falseIzq, OP2, ind_else);
-	}
-	if(falseDer!=VALOR_NULO){
-		modificarTerceto(falseDer, OP2, ind_else);
-	}
-}
-void ponerSaltoEndif(){
-	if(always!=VALOR_NULO){
-		modificarTerceto(always, OP1, ind_endif);
-	}
-}
-void ponerSaltoEndwhile(){
-	if(falseIzq!=VALOR_NULO){
-		modificarTerceto(falseIzq, OP2, always);
-	}
-	if(falseDer!=VALOR_NULO){
-		modificarTerceto(falseDer, OP2, always);
-	}
-}
