@@ -5,59 +5,23 @@
 	#include <string.h>
 	#include "y.tab.h"
 
-	/* Tipos de datos para la tabla de simbolos */
-	#define sinTipo 0
-  	#define Int 1
-	#define Float 2
-	#define String 3
-	#define CteInt 4
-	#define CteFloat 5
-	#define CteString 6
+	#include "tabla_simbolos.h"
+	#include "tercetos.h"
 
-	#define TAMANIO_TABLA 256
-	#define TAM_NOMBRE 32
 	#define MAX_ANIDAMIENTOS 10
 
 	/* Constantes para tercetos */
-	#define OFFSET TAMANIO_TABLA
-	#define MAX_TERCETOS 512
 
-	#define NOOP -1 /* Sin operador */
-	#define BLOQ 7 /* Operador que indica el orden de las sentencias */
-	#define CMP 21 /* Comparador de assembler */
-	#define BNE 2 /* = */
-	#define BGE 4 /* < */
-	#define BLT 6 /* >= */
-	#define BLE 10 /* > */
-	#define BEQ 14 /* != */
-	#define BGT 8 /* <= */
-
-	#define OP1 2
-	#define OP2 3
-	#define OPERADOR 1
 
 	/* Funciones necesarias */
 	int yyerror(char* mensaje);
 	int yyerror();
 	int yylex();
 
-	void agregarVarATabla(char* nombre);
-	void agregarTiposDatosATabla(void);
-	int agregarCteStringATabla(char* nombre);
-	int agregarCteIntATabla(int valor);
-	int agregarCteFloatATabla(float valor);
 
-	int chequearVarEnTabla(char* nombre);
-	int buscarEnTabla(char * name);
-	void escribirNombreEnTabla(char* nombre, int pos);
-	void guardarTabla(void);
 
 	void chequearTipoDato(int tipo);
 	void resetTipoDato();
-
-	int crear_terceto(int operador, int op1, int op2);
-	void guardarTercetos();
-	void modificarTerceto(int indice, int posicion, int valor);
 
 	void apilar_xplogic(int indice);
 	int desapilar_xplogic();
@@ -67,14 +31,6 @@
 	FILE  *yyin;
 
 	/* Cosas de tabla de simbolos */
-	typedef struct {
-		char nombre[TAM_NOMBRE];
-		int tipo_dato;
-		char valor_s[TAM_NOMBRE];
-		float valor_f;
-		int valor_i;
-		int longitud;
-	} simbolo;
 
 	simbolo tabla_simbolo[TAMANIO_TABLA];
 	int fin_tabla = -1; /* Apunta al ultimo registro en la tabla de simbolos. Incrementarlo para guardar el siguiente. */
@@ -94,11 +50,6 @@
 	int cant;
 
 	/* Cosas para tercetos */
-	typedef struct{
-		int operador;
-		int op1;
-		int op2;
-	} terceto;
 	terceto lista_terceto[MAX_TERCETOS];
 	int ultimo_terceto = -1; /* Apunta al ultimo terceto escrito. Incrementarlo para guardar el siguiente. */
 
@@ -585,203 +536,12 @@ int main(int argc,char *argv[])
   return 0;
 }
 
-
 int yyerror(char* mensaje)
  {
 	printf("Syntax Error: %s\n", mensaje);
 	system ("Pause");
 	exit (1);
  }
-
-/* Funciones de la tabla de simbolos */
-
-/* Devuleve la posici�n en la que se encuentra el elemento buscado, -1 si no encontr� el elemento */
-int buscarEnTabla(char * name){
-   int i=0;
-   while(i<=fin_tabla){
-	   if(strcmp(tabla_simbolo[i].nombre,name) == 0){
-		   return i;
-	   }
-	   i++;
-   }
-   return -1;
-}
-
-/** Escribe el nombre de una variable o constante en la posición indicada */
-void escribirNombreEnTabla(char* nombre, int pos){
-	strcpy(tabla_simbolo[pos].nombre, nombre);
-}
-
-/** Agrega un nuevo nombre de variable a la tabla **/
-void agregarVarATabla(char* nombre){
- //Si se llena, error
- if(fin_tabla >= TAMANIO_TABLA - 1){
-	 printf("Error: me quede sin espacio en la tabla de simbolos. Sori, gordi.\n");
-	 system("Pause");
-	 exit(2);
- }
- //Si no hay otra variable con el mismo nombre...
- if(buscarEnTabla(nombre) == -1){
-	 //Agregar a tabla
-	 fin_tabla++;
-	 escribirNombreEnTabla(nombre, fin_tabla);
- }
- else yyerror("Encontre dos declaraciones de variables con el mismo nombre. Decidite."); //Error, ya existe esa variable
-}
-
-/** Agrega los tipos de datos a las variables declaradas. Usa las variables globales varADeclarar1, cantVarsADeclarar y tipoDatoADeclarar */
-void agregarTiposDatosATabla(){
-	for(int i = 0; i < cantVarsADeclarar; i++){
-		tabla_simbolo[varADeclarar1 + i].tipo_dato = tipoDatoADeclarar;
-	}
-}
-
-/** Guarda la tabla de simbolos en un archivo de texto */
-void guardarTabla(){
-	if(fin_tabla == -1)
-		yyerror("No encontre la tabla de simbolos");
-
-	FILE* arch = fopen("ts.txt", "w+");
-	if(!arch){
-		printf("No pude crear el archivo ts.txt\n");
-		return;
-	}
-
-	for(int i = 0; i <= fin_tabla; i++){
-		fprintf(arch, "%s\t", &(tabla_simbolo[i].nombre) );
-
-		switch (tabla_simbolo[i].tipo_dato){
-		case Float:
-			fprintf(arch, "FLOAT");
-			break;
-		case Int:
-			fprintf(arch, "INT");
-			break;
-		case String:
-			fprintf(arch, "STRING");
-			break;
-		case CteFloat:
-			fprintf(arch, "CTE_FLOAT\t%f", tabla_simbolo[i].valor_f);
-			break;
-		case CteInt:
-			fprintf(arch, "CTE_INT\t%d", tabla_simbolo[i].valor_i);
-			break;
-		case CteString:
-			fprintf(arch, "CTE_STRING\t%s\t%d", &(tabla_simbolo[i].valor_s), tabla_simbolo[i].longitud);
-			break;
-		}
-
-		fprintf(arch, "\n");
-	}
-	fclose(arch);
-}
-
-/* Calculo que estas 3 funciones se podrían juntar en una sola */
-
-/** Agrega una constante string a la tabla de simbolos */
-int agregarCteStringATabla(char* nombre){
-	if(fin_tabla >= TAMANIO_TABLA - 1){
-		printf("Error: me quede sin espacio en la tabla de simbolos. Sori, gordi.\n");
-		system("Pause");
-		exit(2);
-	}
-
-	//Preparo el nombre. Nuestras constantes empiezan con _ en la tabla de simbolos
-	char nuevoNombre[strlen(nombre)+2]; //+2 para agregarle el _ al inicio y el \0 al final
-	sprintf(nuevoNombre, "_%s", nombre);
-
-	int pos=buscarEnTabla(nuevoNombre);
-	//Si no hay otra constante string con el mismo nombre...
-	if(pos == -1){
-		//Agregar nombre a tabla
-		fin_tabla++;
-		escribirNombreEnTabla(nuevoNombre, fin_tabla);
-
-		//Agregar tipo de dato
-		tabla_simbolo[fin_tabla].tipo_dato = CteString;
-
-		//Agregar valor a la tabla
-		strcpy(tabla_simbolo[fin_tabla].valor_s, nombre);
-
-		//Agregar longitud
-		tabla_simbolo[fin_tabla].longitud = strlen(nombre) - 1;
-
-		pos=fin_tabla;
-	}
-	return pos;
-}
-
-/** Agrega una constante real a la tabla de simbolos */
-int agregarCteFloatATabla(float valor){
-	if(fin_tabla >= TAMANIO_TABLA - 1){
-		printf("Error: me quede sin espacio en la tabla de simbolos. Sori, gordi.\n");
-		system("Pause");
-		exit(2);
-	}
-
-	//Genero el nombre
-	char nombre[12];
-	sprintf(nombre, "_%f", valor);
-	int pos=buscarEnTabla(nombre);
-	//Si no hay otra variable con el mismo nombre...
-	if(pos == -1){
-		//Agregar nombre a tabla
-		fin_tabla++;
-		escribirNombreEnTabla(nombre, fin_tabla);
-
-		//Agregar tipo de dato
-		tabla_simbolo[fin_tabla].tipo_dato = CteFloat;
-
-		//Agregar valor a la tabla
-		tabla_simbolo[fin_tabla].valor_f = valor;
-		pos = fin_tabla;
-	}
-	return pos;
-}
-
-/** Agrega una constante entera a la tabla de simbolos */
-int agregarCteIntATabla(int valor){
-	if(fin_tabla >= TAMANIO_TABLA - 1){
-		printf("Error: me quede sin espacio en la tabla de simbolos. Sori, gordi.\n");
-		system("Pause");
-		exit(2);
-	}
-
-	//Genero el nombre
-	char nombre[30];
-	sprintf(nombre, "_%d", valor);
-	int pos=buscarEnTabla(nombre);
-
-	//Si no hay otra variable con el mismo nombre...
-	if(pos == -1){
-		//Agregar nombre a tabla
-		fin_tabla++;
-		escribirNombreEnTabla(nombre, fin_tabla);
-
-		//Agregar tipo de dato
-		tabla_simbolo[fin_tabla].tipo_dato = CteInt;
-
-		//Agregar valor a la tabla
-		tabla_simbolo[fin_tabla].valor_i = valor;
-		pos = fin_tabla;
-	}
-	return pos;
-}
-
-/** Se fija si ya existe una entrada con ese nombre en la tabla de simbolos.
-Si no existe, muestra un error de variable sin declarar y aborta la compilacion.
-Si existe, devuelve el tipo de dato de esa variable. */
-int chequearVarEnTabla(char* nombre){
-	int pos = buscarEnTabla(nombre);
-	//Si no existe en la tabla, error
-	if( pos == -1){
-		char msg[100];
-		sprintf(msg,"%s? No, man, tenes que declarar las variables arriba. Esto no es un viva la pepa como java...", nombre);
-		yyerror(msg);
-	}
-	//Si existe en la tabla, devuelvo el tipo de dato
-	return tabla_simbolo[pos].tipo_dato;
-}
 
 /** Compara el tipo de dato pasado por parámetro contra el que se está trabajando actualmente en tipoDatoActual.
 Si es distinto, tira error. Si no hay tipo de dato actual, asigna el pasado por parámetro. */
