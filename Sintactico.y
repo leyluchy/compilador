@@ -8,8 +8,7 @@
 	#include "tabla_simbolos.h"
 	#include "tercetos.h"
 	#include "sentencias_control.h"
-
-	#define MAX_ANIDAMIENTOS 10
+	#include "inlist_y_avg.h"
 
 	/* Funciones necesarias */
 	int yyerror(char* mensaje);
@@ -18,9 +17,6 @@
 
 	void chequearTipoDato(int tipo);
 	void resetTipoDato();
-
-	void apilar_IAEA();
-	void desapilar_IAEA();
 
 	int yystopparser=0;
 	FILE  *yyin;
@@ -47,14 +43,9 @@
 	terceto lista_terceto[MAX_TERCETOS];
 	int ultimo_terceto = -1; /* Apunta al ultimo terceto escrito. Incrementarlo para guardar el siguiente. */
 
-	/* Pila de cosas para AVG */
-	typedef struct{
-		int ind_rterm;
-		int ind_term;
-		int ind_pre;
-		int ind_factor;
-		int ind_avg;
-	} info_anidamiento_exp_aritmeticas;
+	/* Cosas para anidamientos de average e inlist */
+	info_anidamiento_exp_aritmeticas pila_exp[MAX_ANIDAMIENTOS];
+	int ult_pos_pila_exp=VALOR_NULO;
 
 	/* Cosas para anidamientos de if y while */
 	int falseIzq=VALOR_NULO;
@@ -64,12 +55,6 @@
 
 	info_elemento_pila pila_bloques[MAX_ANIDAMIENTOS];
 	int ult_pos_pila_bloques=VALOR_NULO;
-
-	info_anidamiento_exp_aritmeticas pila_exp[MAX_ANIDAMIENTOS];
-	int ult_pos_pila_exp=VALOR_NULO;
-
-	int pila_ind_xplogic[MAX_ANIDAMIENTOS];
-	int ultimo_pila_ind_xplogic=-1;
 
 	/* Indices extras para if y while */
 	int ind_branch_pendiente;
@@ -630,35 +615,3 @@ void chequearTipoDato(int tipo){
 void resetTipoDato(){
 	tipoDatoActual = sinTipo;
 }
-
-
-
-void apilar_IAEA(){
-	ult_pos_pila_exp++;
-	if(ult_pos_pila_exp>=MAX_ANIDAMIENTOS){
-		yyerror("para un poco. Para que tantos anidamientos? Hasta 9 me banco.");
-	}
-	info_anidamiento_exp_aritmeticas aux;
-	aux.ind_rterm=ind_rterm;
-	aux.ind_term=ind_term;
-	aux.ind_pre=ind_pre;
-	aux.ind_factor=ind_factor;
-	aux.ind_avg=ind_avg;
-	pila_exp[ult_pos_pila_exp] = aux;
-}
-
-void desapilar_IAEA(){
-	info_anidamiento_exp_aritmeticas aux=pila_exp[ult_pos_pila_exp];
-	ult_pos_pila_exp--;
-	ind_rterm=aux.ind_rterm;
-	ind_term=aux.ind_term;
-	ind_pre=aux.ind_pre;
-	ind_factor=aux.ind_factor;
-	ind_avg=aux.ind_avg;
-}
-
-
-
-
-
-//modificarTerceto(indice, posicion, valor);
