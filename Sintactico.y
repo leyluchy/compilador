@@ -57,21 +57,13 @@
 	int ult_pos_pila_bloques=VALOR_NULO;
 
 	/* Indices extras para if y while */
-	int ind_branch_pendiente;
-	int ind_branch_pendiente2;
 	int ind_if;
 	int ind_endif;
 	int ind_else;
 	int ind_then;
-	int ind_jmp;
+	int ind_endwhile;
 
 	/* Indices para no terminales */
-	int ind_program;
-	int ind_sdec;
-	int ind_bdec;
-	int ind_dec;
-	int ind_tdato;
-	int ind_list_id;
 	int ind_bloque;
 	int ind_sent;
 	int ind_bif;
@@ -89,7 +81,6 @@
 	int ind_tlogic;
 	int ind_tlogic_izq;
 	int ind_expr_izq;
-	int ind_compbool;
 	int ind_avg;
 	int ind_inlist;
 	int ind_lec; //Lista expresion coma
@@ -143,8 +134,6 @@ programa:
 	START seccion_declaracion bloque END 	            {
 															printf("\nCOMPILACION EXITOSA\n");
 															guardarTabla();
-
-															ind_program = crear_terceto(START, ind_sdec, ind_bloque);
 															guardarTercetos();
 														};
 /*
@@ -253,8 +242,7 @@ rutina_then:
 														};
 rutina_else:
 														{
-															ind_jmp = crear_terceto(JMP, NOOP, NOOP);
-															always=ind_jmp;
+														 	always = crear_terceto(JMP, NOOP, NOOP);
 															ind_else = crear_terceto(ELSE,NOOP,NOOP);
 															ponerSaltosElse();
 														};
@@ -268,8 +256,6 @@ bloque_if:
 															ponerSaltosElse();
 															desapilar_IEP();
 															ind_bif=ind_if;
-															/*ind_xplogic = desapilar_xplogic();
-															ind_bif = crear_terceto(IF, ind_xplogic, ind_bloque);*/
 														};
 
 bloque_if:
@@ -280,9 +266,6 @@ bloque_if:
 															ponerSaltoEndif();
 															desapilar_IEP();
 															ind_bif=ind_if;
-															//int ind = crear_terceto(THEN, ind_btrue, ind_bloque);
-															/*ind_xplogic = desapilar_xplogic();
-															ind_bif = crear_terceto(IF, ind_xplogic, ind);*/
 														}
 	| IF rutina_if expresion_logica THEN rutina_then ENDIF
 														{
@@ -292,8 +275,6 @@ bloque_if:
 															ponerSaltosElse();
 															desapilar_IEP();
 															ind_bif=ind_if;
-														/*	ind_xplogic = desapilar_xplogic();
-															ind_bif = crear_terceto(IF, ind_xplogic, NOOP);*/
 														};
 
 rutina_while:
@@ -306,22 +287,18 @@ bloque_while:
     WHILE rutina_while expresion_logica THEN rutina_then bloque ENDWHILE
 														{
 															printf("Regla 20.1: bloque_while es WHILE expresion_logica THEN bloque ENDWHILE\n\n");
-															ind_jmp = crear_terceto(JMP,ind_bwhile,NOOP);
-															always = crear_terceto(ENDWHILE, NOOP, NOOP);
+															always = crear_terceto(JMP,ind_bwhile,NOOP);
+															ind_endwhile = crear_terceto(ENDWHILE, NOOP, NOOP);
 															ponerSaltoEndwhile();
 															desapilar_IEP();
-															/*ind_xplogic = desapilar_xplogic();
-															ind_bwhile = crear_terceto(WHILE, ind_xplogic, ind_bloque);*/
 														}
 	| WHILE rutina_while expresion_logica THEN rutina_then ENDWHILE
 														{
 															printf("Regla 20.2: bloque_while es WHILE expresion_logica ENDWHILE\n\n");
-															ind_jmp = crear_terceto(JMP,ind_bwhile,NOOP);
-															always = crear_terceto(ENDWHILE, NOOP, NOOP);
+															always = crear_terceto(JMP,ind_bwhile,NOOP);
+															ind_endwhile = crear_terceto(ENDWHILE, NOOP, NOOP);
 															ponerSaltoEndwhile();
 															desapilar_IEP();
-															/*ind_xplogic = desapilar_xplogic();
-															ind_bwhile = crear_terceto(WHILE, ind_xplogic, NOOP);*/
 														};
 
 asignacion:
@@ -440,31 +417,27 @@ factor:
 /* Expresiones logicas */
 
 expresion_logica:
-    termino_logico_izq AND {ind_branch_pendiente = crear_terceto(saltarFalse(comp_bool_actual), ind_tlogic, NOOP); falseIzq=ind_branch_pendiente;}
+    termino_logico_izq AND {falseIzq = crear_terceto(saltarFalse(comp_bool_actual), ind_tlogic, NOOP);}
 							termino_logico              {
 															printf("Regla 36: expresion_logica es termino_logico AND termino_logico\n");
-															ind_branch_pendiente2 =  crear_terceto(saltarFalse(comp_bool_actual), ind_tlogic, NOOP);
-															falseDer=ind_branch_pendiente2;
+															falseDer =  crear_terceto(saltarFalse(comp_bool_actual), ind_tlogic, NOOP);
 															ind_xplogic = crear_terceto(AND, ind_tlogic_izq, ind_tlogic);
 														}
-    | termino_logico_izq OR {ind_branch_pendiente = crear_terceto(saltarTrue(comp_bool_actual), ind_tlogic, NOOP); verdadero=ind_branch_pendiente;}
+    | termino_logico_izq OR {verdadero = crear_terceto(saltarTrue(comp_bool_actual), ind_tlogic, NOOP);}
 							termino_logico              {
 															printf("Regla 37: expresion_logica es termino_logico OR termino_logico\n");
-															ind_branch_pendiente2 =  crear_terceto(saltarFalse(comp_bool_actual), ind_tlogic, NOOP);
-															falseDer=ind_branch_pendiente2;
+															falseDer =  crear_terceto(saltarFalse(comp_bool_actual), ind_tlogic, NOOP);
 															ind_xplogic = crear_terceto(OR, ind_tlogic_izq, ind_tlogic);
 														}
     | termino_logico                                    {
 															printf("Regla 38: expresion_logica es termino_logico\n");
 															ind_xplogic = ind_tlogic;
-															ind_branch_pendiente = crear_terceto(saltarFalse(comp_bool_actual), ind_tlogic, NOOP);
-															falseIzq=ind_branch_pendiente;
+															falseIzq = crear_terceto(saltarFalse(comp_bool_actual), ind_tlogic, NOOP);
 														}
     | NOT termino_logico                                {
 															printf("Regla 39: expresion_logica es NOT termino_logico\n");
 															ind_xplogic = ind_tlogic;
-															ind_branch_pendiente = crear_terceto(saltarTrue(comp_bool_actual), ind_tlogic, NOOP);
-															falseIzq=ind_branch_pendiente;
+															falseIzq = crear_terceto(saltarTrue(comp_bool_actual), ind_tlogic, NOOP);
 														};
 
 termino_logico_izq:

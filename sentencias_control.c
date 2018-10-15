@@ -54,15 +54,7 @@ void apilar_IEP(){
 	}
 
 	info_elemento_pila aux;
-	aux.ind_sent=ind_sent;
 	aux.ind_bloque=ind_bloque;
-	aux.ind_branch_pendiente=ind_branch_pendiente;
-	aux.ind_branch_pendiente2=ind_branch_pendiente2;
-	aux.ind_if=ind_if;
-	aux.ind_endif=ind_endif;
-	aux.ind_else=ind_else;
-	aux.ind_then=ind_then;
-	aux.ind_jmp=ind_jmp;
 	aux.falseIzq=falseIzq;
 	aux.falseDer=falseDer;
 	aux.verdadero=verdadero;
@@ -84,15 +76,7 @@ void desapilar_IEP(){
 	info_elemento_pila aux=pila_bloques[ult_pos_pila_bloques];
 	ult_pos_pila_bloques--;
 
-	ind_sent=aux.ind_sent;
-	ind_bloque=aux.ind_sent;
-	ind_branch_pendiente=aux.ind_branch_pendiente;
-	ind_branch_pendiente2=aux.ind_branch_pendiente2;
-	ind_if=aux.ind_if;
-	ind_endif=aux.ind_endif;
-	ind_then=aux.ind_then;
-	ind_else=aux.ind_else;
-	ind_jmp=aux.ind_jmp;
+	ind_bloque=aux.ind_bloque;
 	falseIzq=aux.falseIzq;
 	falseDer=aux.falseDer;
 	verdadero=aux.verdadero;
@@ -129,7 +113,7 @@ void ponerSaltoEndif(){
 	}
 }
 
-/** 
+/**
 */
 void ponerSaltoEndwhile(){
 	if(falseIzq!=VALOR_NULO){
