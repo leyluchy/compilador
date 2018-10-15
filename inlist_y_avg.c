@@ -12,9 +12,7 @@ void apilar_IAEA(){
 	info_anidamiento_exp_aritmeticas aux;
 	aux.ind_rterm=ind_rterm;
 	aux.ind_term=ind_term;
-	aux.ind_pre=ind_pre;
-	aux.ind_factor=ind_factor;
-	aux.ind_avg=ind_avg;
+	aux.ind_expr = ind_expr;
 	pila_exp[ult_pos_pila_exp] = aux;
 }
 
@@ -24,9 +22,8 @@ void apilar_IAEA(){
 void desapilar_IAEA(){
 	info_anidamiento_exp_aritmeticas aux=pila_exp[ult_pos_pila_exp];
 	ult_pos_pila_exp--;
+
 	ind_rterm=aux.ind_rterm;
 	ind_term=aux.ind_term;
-	ind_pre=aux.ind_pre;
-	ind_factor=aux.ind_factor;
-	ind_avg=aux.ind_avg;
+	ind_expr = aux.ind_expr;
 }

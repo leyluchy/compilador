@@ -386,9 +386,10 @@ pre:
 														};
 
 factor:
-	PA expresion_aritmetica PC	                        {
+	PA {apilar_IAEA();} expresion_aritmetica PC	        {
 															printf("Regla 31: factor es PA expresion_aritmetica PC\n");
 															ind_factor = ind_expr;
+															desapilar_IAEA();
 														}
     | average                                           {
 															printf("Regla 32: factor es average\n");

@@ -1,26 +1,8 @@
 estimada_cajita_magica
 	necesito:
-		enterito a, b;
+		enterito a, b, c, d, e;
 	para
 
-	si 1<1
-	por_favor
-	gracias
-
-	mientras a<2 o a<2
-	por_favor
-		si b>5 y b<3
-		por_favor
-			b<-b+1;
-			b<-b+1;
-			b<-b-1;
-		sino
-			b-1;
-		gracias
-		a;
-		a;
-	goto_mientras
-
-
+	a<- -b*(-1)/(c+d*(2-e));
 
 salu2
