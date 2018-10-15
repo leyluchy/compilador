@@ -6,10 +6,10 @@ estimada_cajita_magica
 	si 1<1
 	por_favor
 	gracias
-	
+
 	mientras a<2 o a<2
 	por_favor
-		si b>5 o b<3
+		si b>5 y b<3
 		por_favor
 			b<-b+1;
 			b<-b+1;
@@ -20,7 +20,7 @@ estimada_cajita_magica
 		a;
 		a;
 	goto_mientras
-	
-	
+
+
 
 salu2
