@@ -46,6 +46,8 @@
 	/* Cosas para anidamientos de average e inlist */
 	info_anidamiento_exp_aritmeticas pila_exp[MAX_ANIDAMIENTOS];
 	int ult_pos_pila_exp=VALOR_NULO;
+	info_anidamiento_avg pilaAVG[MAX_ANIDAMIENTOS];
+	int ult_pos_pilaAVG = VALOR_NULO;
 
 	/* Cosas para anidamientos de if y while */
 	int falseIzq=VALOR_NULO;
@@ -493,10 +495,11 @@ comp_bool:
 /* Funciones nativas */
 
 average:
-    AVG PA CA lista_exp_coma CC PC                      {
+    AVG PA CA {apilarAVG();} lista_exp_coma CC PC       {
 															printf("Regla 48: average es AVG PA CA lista_exp_coma CC PC\n\n");
 															int pos = agregarCteIntATabla(cant);
 															ind_avg = crear_terceto(DIVIDIDO, ind_lec, pos);
+															desapilarAVG();
 														};
 
 inlist:

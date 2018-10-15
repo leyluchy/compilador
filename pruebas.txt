@@ -3,6 +3,7 @@ estimada_cajita_magica
 		enterito a, b, c, d, e;
 	para
 
-	a<- -b*(-1)/(c+d*(2-e));
+	avast([a, 2+a, b*(c-d)]);
+	1+avast([ 2, avast([3, 4*(-5), e]) ]);
 
 salu2
