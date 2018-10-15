@@ -117,9 +117,9 @@ void ponerSaltoEndif(){
 */
 void ponerSaltoEndwhile(){
 	if(falseIzq!=VALOR_NULO){
-		modificarTerceto(falseIzq, OP2, always);
+		modificarTerceto(falseIzq, OP2, ind_endwhile);
 	}
 	if(falseDer!=VALOR_NULO){
-		modificarTerceto(falseDer, OP2, always);
+		modificarTerceto(falseDer, OP2, ind_endwhile);
 	}
 }
