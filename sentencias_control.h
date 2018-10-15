@@ -38,8 +38,8 @@ extern int always;
 extern int ind_endif;
 extern int ind_else;
 extern int ind_then;
-extern int ind_jmp;
 extern int ind_bloque;
+extern int ind_endwhile;
 /* Pila */
 extern info_elemento_pila pila_bloques[MAX_ANIDAMIENTOS];
 extern int ult_pos_pila_bloques;
