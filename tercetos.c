@@ -173,6 +173,15 @@ void guardarTercetos(){
 		case JMP:
 			fprintf(arch, "JMP");
 			break;
+		case INL:
+			fprintf(arch, "INL");
+			break;
+		case INOK:
+			fprintf(arch, "INOK");
+			break;
+		case IOK:
+			fprintf(arch, "IOK");
+			break;
 		default:
 			fprintf(arch, "algo esta mal");
 			break;

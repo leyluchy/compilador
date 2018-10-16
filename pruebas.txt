@@ -5,5 +5,8 @@ estimada_cajita_magica
 
 	avast([a, 2+a, b*(c-d)]);
 	1+avast([ 2, avast([3, 4*(-5), e]) ]);
+	si lta?(a;[b;c;d])
+	por_favor
+	gracias
 
 salu2

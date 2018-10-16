@@ -17,6 +17,9 @@
 #define BEQ 14 /* != */
 #define BGT 8 /* <= */
 #define JMP 16 /* Branch Always o Salto Incondicional*/
+#define INL 18
+#define INOK 20
+#define IOK 22
 
 /* Posiciones dentro de un terceto */
 #define OP1 2

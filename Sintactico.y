@@ -43,17 +43,27 @@
 	terceto lista_terceto[MAX_TERCETOS];
 	int ultimo_terceto = -1; /* Apunta al ultimo terceto escrito. Incrementarlo para guardar el siguiente. */
 
-	/* Cosas para anidamientos de average e inlist */
+	/* Cosas para anidamientos de average */
 	info_anidamiento_exp_aritmeticas pila_exp[MAX_ANIDAMIENTOS];
 	int ult_pos_pila_exp=VALOR_NULO;
 	info_anidamiento_avg pilaAVG[MAX_ANIDAMIENTOS];
 	int ult_pos_pilaAVG = VALOR_NULO;
+	
+	/* Cosas para inlist */
+	int ind_salto_inlist=VALOR_NULO;
+	int ind_cond_salto=VALOR_NULO;
+	int inlist_vector[MAX_ANIDAMIENTOS];
+	int ind_inlist_a=VALOR_NULO; //Indice de inlist a apilar (las direcciones que tengo que ponerle su salto)
+	int contador_inlist=VALOR_NULO;
+	void ponerSaltoInlist();
+	void apilar_inlist();
 
 	/* Cosas para anidamientos de if y while */
 	int falseIzq=VALOR_NULO;
 	int falseDer=VALOR_NULO;
 	int verdadero=VALOR_NULO;
 	int always=VALOR_NULO;
+
 
 	info_elemento_pila pila_bloques[MAX_ANIDAMIENTOS];
 	int ult_pos_pila_bloques=VALOR_NULO;
@@ -84,7 +94,7 @@
 	int ind_tlogic_izq;
 	int ind_expr_izq;
 	int ind_avg;
-	int ind_inlist;
+	int ind_inlist; // El terceto a donde saltan las cosas dentro del inlist
 	int ind_lec; //Lista expresion coma
 	int ind_lepc; //Lista expresion punto y coma
 	int ind_lectura;
@@ -457,6 +467,7 @@ termino_logico:
 														}
     | inlist                                            {
 															printf("Regla 41: termino logico es inlist\n");
+															
 															ind_tlogic = ind_inlist;
 														};
 
@@ -503,13 +514,22 @@ average:
 														};
 
 inlist:
-	INLIST PA ID PUNTO_COMA CA lista_exp_pc CC PC   	{
-															printf("Regla 49: inlist es INLIST PA ID(%s) PUNTO_COMA CA lista_exp_pc CC PC\n\n", $3);
+	INLIST PA ID 										{
 															int tipo = chequearVarEnTabla($3);
 															chequearTipoDato(tipo);
 															resetTipoDato();
 															int pos=chequearVarEnTabla($3);
-															ind_inlist = crear_terceto(INLIST, pos, ind_lepc);
+															ind_cond_salto=crear_terceto(NOOP, pos, NOOP);
+														}
+					PUNTO_COMA CA lista_exp_pc CC PC   	{
+															printf("Regla 49: inlist es INLIST PA ID(%s) PUNTO_COMA CA lista_exp_pc CC PC\n\n", $3);
+															crear_terceto(INOK, NOOP, NOOP);
+															ind_salto_inlist=crear_terceto(JMP, NOOP, NOOP);
+															crear_terceto(IOK, NOOP, NOOP);
+															ind_inlist = crear_terceto(INL, NOOP, NOOP);
+															comp_bool_actual=IGUAL;
+															ponerSaltoInlist();
+															//ind_inlist = crear_terceto(INLIST, pos, ind_lepc);
 														};
 
 lista_exp_coma:
@@ -527,11 +547,17 @@ lista_exp_coma:
 lista_exp_pc:
     lista_exp_pc PUNTO_COMA expresion_aritmetica        {
 															printf("Regla 52: lista_exp_pc es lista_exp_pc PUNTO_COMA expresion_aritmetica\n");
-															ind_lepc = crear_terceto(PUNTO_COMA, ind_lepc, ind_expr);
+															int ind_aux=crear_terceto(CMP, ind_cond_salto, ind_expr);
+															ind_inlist_a=crear_terceto(BEQ, ind_aux, NOOP);
+															apilar_inlist();
+															//ind_lepc = crear_terceto(PUNTO_COMA, ind_lepc, ind_expr);
 														}
     | expresion_aritmetica                              {
 															printf("Regla 53: lista_exp_pc es expresion_aritmetica\n");
 															ind_lepc = ind_expr;
+															int ind_aux=crear_terceto(CMP, ind_cond_salto, ind_lepc);
+															ind_inlist_a=crear_terceto(BEQ, ind_aux, NOOP);
+															apilar_inlist();
 														};
 
 lectura:
@@ -591,4 +617,22 @@ void chequearTipoDato(int tipo){
 /** Vuelve tipoDatoActual a sinTipo */
 void resetTipoDato(){
 	tipoDatoActual = sinTipo;
+}
+
+void apilar_inlist(){
+	contador_inlist++;
+	if(contador_inlist>=MAX_ANIDAMIENTOS){
+		yyerror("NOP, STOP RIGHT THERE CRIMINAL SCUM! YOU CANNOT PUT MORE THAN 10 EXPRESIONS IN A INLIST!");
+	}
+	inlist_vector[contador_inlist]=ind_inlist;
+	ind_inlist=VALOR_NULO;
+}
+
+
+void ponerSaltoInlist(){
+	modificarTerceto(ind_salto_inlist, OP1, ind_inlist);
+	for(int i=contador_inlist;i>=0; i--){
+		modificarTerceto(inlist_vector[i], ind_inlist, OP2);
+	}
+	contador_inlist=VALOR_NULO;
 }

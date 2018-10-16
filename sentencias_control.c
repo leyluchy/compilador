@@ -22,7 +22,7 @@ int saltarFalse(int comp){
 	return NOOP;
 }
 
-/** Dado un comprador, devuelve el branch correspondiente al salto por verdadero.
+/** Dado un comparador, devuelve el branch correspondiente al salto por verdadero.
 */
 int saltarTrue(int comp){
 	switch(comp){
