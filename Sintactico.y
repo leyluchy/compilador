@@ -518,7 +518,7 @@ inlist:
 															int tipo = chequearVarEnTabla($3);
 															chequearTipoDato(tipo);
 															resetTipoDato();
-															int pos=chequearVarEnTabla($3);
+															int pos=buscarEnTabla($3);
 															ind_cond_salto=crear_terceto(NOOP, pos, NOOP);
 														}
 					PUNTO_COMA CA lista_exp_pc CC PC   	{
