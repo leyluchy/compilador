@@ -1,11 +1,13 @@
 estimada_cajita_magica
 	necesito:
-		enterito a, b, c, d, e;
+		posta a;
+		enterito b, c, d, e;
+		jeroglifico cadeña;
 	para
 
- 	mientras lta?(c;[e;5;d; 5]) o lta?(a;[b])
-	por_favor
-		d<-e;
-	goto_mientras
+	si lta? (cadeña;[22;43;89;100]) y a>=b
+		por_favor
+			a+300;
+		gracias
 
 salu2

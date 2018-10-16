@@ -523,19 +523,20 @@ inlist:
 	INLIST PA ID 										{
 															int tipo = chequearVarEnTabla($3);
 															chequearTipoDato(tipo);
-															resetTipoDato();
 															int pos=buscarEnTabla($3);
 															ind_cond_salto=crear_terceto(NOOP, pos, NOOP);
 														}
 					PUNTO_COMA CA lista_exp_pc CC PC   	{
 															printf("Regla 49: inlist es INLIST PA ID(%s) PUNTO_COMA CA lista_exp_pc CC PC\n\n", $3);
+															resetTipoDato();
+
 															crear_terceto(INOK, NOOP, NOOP);
 															ind_salto_inlist=crear_terceto(JMP, NOOP, NOOP);
 															int ind_ok = crear_terceto(IOK, NOOP, NOOP);
 															ind_inlist = crear_terceto(INL, NOOP, NOOP);
+
 															comp_bool_actual=IGUAL;
 															ponerSaltoInlist(ind_ok);
-															//ind_inlist = crear_terceto(INLIST, pos, ind_lepc);
 														};
 
 lista_exp_coma:
