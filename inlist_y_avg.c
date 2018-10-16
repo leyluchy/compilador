@@ -1,4 +1,5 @@
 #include "inlist_y_avg.h"
+#include "tercetos.h"
 
 /** Apila los indices de termino, termino_r, pre, factor y average para entrar
 * en un average o inlist.
@@ -55,4 +56,26 @@ void desapilarAVG(){
 	ind_expr = pilaAVG[ult_pos_pilaAVG].etc.ind_expr;
 
 	ult_pos_pilaAVG--;
+}
+
+/** Apila indices de tercetos donde hay que rellenar con saltos a IOK
+*/
+void apilar_inlist(){
+	contador_inlist++;
+	if(contador_inlist>=MAX_ANIDAMIENTOS){
+		yyerror("NOP, STOP RIGHT THERE CRIMINAL SCUM! Hasta 10 expresiones en una inlist");
+	}
+	inlist_vector[contador_inlist]=ind_inlist_a;
+	ind_inlist_a=VALOR_NULO;
+}
+
+/** Desapila inlist_vector y rellena esos tercetos son saltos a IOK.
+* Recibe el indice del terceto IOK como parametro.
+*/
+void ponerSaltoInlist(int ok){
+	modificarTerceto(ind_salto_inlist, OP1, ind_inlist);
+	for(int i=contador_inlist;i>=0; i--){
+		modificarTerceto(inlist_vector[i], OP2, ok);
+	}
+	contador_inlist=VALOR_NULO;
 }
