@@ -8,9 +8,16 @@ estimada_cajita_magica
 
 	-/ Esto es un comentario simple/-
 
+	-/ Esto es un comentario
+	multilinea -/ y anidado
+	tambien multilinea /-
+	solo para hinchar /-
+
 	cadeña <- "Yo era un infeliz.";
-	
-		si a>1
+
+	-/ Anidamientos de if, máximo 9 niveles/-
+
+	si a>1
 	por_favor
 		si b>2
 		por_favor
@@ -28,7 +35,12 @@ estimada_cajita_magica
 								por_favor
 									si a<9
 									por_favor
-										a+1;
+										si a<10
+											por_favor
+
+												a+1;
+
+										gracias
 									gracias
 								gracias
 							gracias
@@ -39,26 +51,28 @@ estimada_cajita_magica
 		gracias
 	gracias
 
-	
-	
-	si lta? (b;[43;22;110;89;500]) o a>=b
+	-/ inlist en if/-
+
+	si lta?(p;[4.3;2.2;1.10;8.9;5.200]) o a>=b
 	por_favor
 		a+100;
 	sino
-	a<-c+b;
+		a<-c+b;
 	gracias
-	
+
 	si lta? (a;[43;22;43;89;100]) y a>=b
 	por_favor
 		a+300;
 	gracias
-	
+
+	-/ inlist en while/-
+
 	mientras lta? (b;[43;22;43;89;1002]) o a>b
 	por_favor
 		a<-33;
 	goto_mientras
-	
-	 
+
+	 -/ Anidamientos de while, máximo 9 niveles/-
 	mientras a>=10
 	por_favor
 			mientras a>=200
@@ -77,12 +91,12 @@ estimada_cajita_magica
 																											por_favor
 																																		mientras a>=9000
 																																		por_favor
-																																						mientras a>=9000
+																																						mientras a>=10000
 																																						por_favor
-																																																																																
+
 																																								b<-11100;
-																																						goto_mientras		
-																																						
+																																						goto_mientras
+
 																																		goto_mientras
 																											goto_mientras
 																									goto_mientras
@@ -92,10 +106,53 @@ estimada_cajita_magica
 							goto_mientras
 			goto_mientras
 	goto_mientras
-	
 
-	f<-avast ([2,a+b,c*(d+e),48, 45.3]);
+-/ avg, con ctes y variables float y ctes y variables enteras/-
 
-p<- avast ([33,22,avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23])]);	
-	
+f<-avast ([3.3,2,a+b,c*(d+e),48, 45.3, z]);
+
+-/ Anidamientos de avg, máximo 9 niveles/-
+
+p<- avast ([avast ([avast ([avast ([avast ([avast ([avast ([avast ([avast ([avast ([22,2]) ]) ]) ]) ]) ]) ]) ]) ]) ]);
+
+
+-/ while con condición OR/-
+
+mientras a>=9000 o a*33+b<=1
+	por_favor
+		b<-98100;
+goto_mientras
+
+-/ while con condición and/-
+
+mientras a>=9000 y a*35+b<=10
+	por_favor
+		b<-1178900;
+goto_mientras
+
+-/ while con NOT en condición/-
+
+mientras  no a*83+b<=14
+	por_favor
+		b<-1456400;
+goto_mientras
+
+
+si b>c y a>b
+por_favor
+	a<- (a+b)*(-2);
+
+	a<- (a+b)*(-c)/2;
+gracias
+
+
+a<- (a+b)*(-2);
+
+a<- (a+b)*(-c)/2;
+
+b<- a-b+(-b);
+
+a <- -b;
+
+
 salu2
