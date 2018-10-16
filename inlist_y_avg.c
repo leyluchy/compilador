@@ -34,7 +34,7 @@ void desapilar_IAEA(){
 */
 void apilarAVG(){
 	ult_pos_pilaAVG++;
-	if(ult_pos_pila_exp>=MAX_ANIDAMIENTOS){
+	if(ult_pos_pilaAVG>=MAX_ANIDAMIENTOS){
 		yyerror("para un poco. Para que tantos avast uno dentro de otro? Hasta 9 me banco.");
 	}
 
