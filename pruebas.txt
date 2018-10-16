@@ -3,10 +3,9 @@ estimada_cajita_magica
 		enterito a, b, c, d, e;
 	para
 
-	avast([a, 2+a, b*(c-d)]);
-	1+avast([ 2, avast([3, 4*(-5), e]) ]);
-	si lta?(c;[e;c;d]) o a<a 
+ 	mientras lta?(c;[e;5;d; 5]) o lta?(a;[b])
 	por_favor
-	gracias
+		d<-e;
+	goto_mientras
 
 salu2

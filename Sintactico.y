@@ -48,14 +48,14 @@
 	int ult_pos_pila_exp=VALOR_NULO;
 	info_anidamiento_avg pilaAVG[MAX_ANIDAMIENTOS];
 	int ult_pos_pilaAVG = VALOR_NULO;
-	
+
 	/* Cosas para inlist */
 	int ind_salto_inlist=VALOR_NULO;
 	int ind_cond_salto=VALOR_NULO;
 	int inlist_vector[MAX_ANIDAMIENTOS];
 	int ind_inlist_a=VALOR_NULO; //Indice de inlist a apilar (las direcciones que tengo que ponerle su salto)
 	int contador_inlist=VALOR_NULO;
-	void ponerSaltoInlist();
+	void ponerSaltoInlist(int ok);
 	void apilar_inlist();
 
 	/* Cosas para anidamientos de if y while */
@@ -467,7 +467,7 @@ termino_logico:
 														}
     | inlist                                            {
 															printf("Regla 41: termino logico es inlist\n");
-															
+
 															ind_tlogic = ind_inlist;
 														};
 
@@ -525,10 +525,10 @@ inlist:
 															printf("Regla 49: inlist es INLIST PA ID(%s) PUNTO_COMA CA lista_exp_pc CC PC\n\n", $3);
 															crear_terceto(INOK, NOOP, NOOP);
 															ind_salto_inlist=crear_terceto(JMP, NOOP, NOOP);
-															crear_terceto(IOK, NOOP, NOOP);
+															int ind_ok = crear_terceto(IOK, NOOP, NOOP);
 															ind_inlist = crear_terceto(INL, NOOP, NOOP);
 															comp_bool_actual=IGUAL;
-															ponerSaltoInlist();
+															ponerSaltoInlist(ind_ok);
 															//ind_inlist = crear_terceto(INLIST, pos, ind_lepc);
 														};
 
@@ -629,10 +629,10 @@ void apilar_inlist(){
 }
 
 
-void ponerSaltoInlist(){
+void ponerSaltoInlist(int ok){
 	modificarTerceto(ind_salto_inlist, OP1, ind_inlist);
 	for(int i=contador_inlist;i>=0; i--){
-		modificarTerceto(inlist_vector[i], OP2, ind_inlist);
+		modificarTerceto(inlist_vector[i], OP2, ok);
 	}
 	contador_inlist=VALOR_NULO;
 }
