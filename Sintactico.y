@@ -64,7 +64,6 @@
 	int verdadero=VALOR_NULO;
 	int always=VALOR_NULO;
 
-
 	info_elemento_pila pila_bloques[MAX_ANIDAMIENTOS];
 	int ult_pos_pila_bloques=VALOR_NULO;
 
@@ -242,6 +241,8 @@ sentencia:
 															ind_sent = ind_expr;
 														};
 
+/* Cosas de if */
+
 rutina_if:
 														{
 															ind_if=crear_terceto(IF, NOOP, NOOP);
@@ -289,6 +290,8 @@ bloque_if:
 															ind_bif=ind_if;
 														};
 
+/* Cosas de while */
+
 rutina_while:
 														{
 															ind_bwhile = crear_terceto(WHILE, NOOP, NOOP);
@@ -313,6 +316,8 @@ bloque_while:
 															desapilar_IEP();
 														};
 
+/* Otras cosas */
+
 asignacion:
 	ID ASIG {strcpy(idAsignar, $1);} expresion	        {
 															printf("Regla 21: asignacion es ID(%s) ASIG expresion\n\n", idAsignar);
@@ -329,7 +334,7 @@ bloque_true:
 															ind_btrue = ind_bloque;
 														};
 
-/* Expresiones aritmeticas y otras */
+/* Expresiones */
 
 expresion:
 	expresion_cadena				                    {
@@ -347,6 +352,8 @@ expresion_cadena:
 															int pos=agregarCteStringATabla(yylval.string_val);
 															ind_xpcad = crear_terceto(NOOP,pos,NOOP);
 														};
+
+/* Expresiones aritmeticas */
 
 expresion_aritmetica:
 	expresion_aritmetica MAS termino_r 		            {
@@ -617,6 +624,8 @@ void resetTipoDato(){
 	tipoDatoActual = sinTipo;
 }
 
+/** Apila indices de tercetos donde hay que rellenar con saltos a IOK
+*/
 void apilar_inlist(){
 	contador_inlist++;
 	if(contador_inlist>=MAX_ANIDAMIENTOS){
@@ -626,7 +635,9 @@ void apilar_inlist(){
 	ind_inlist_a=VALOR_NULO;
 }
 
-
+/** Desapila inlist_vector y rellena esos tercetos son saltos a IOK.
+* Recibe el indice del terceto IOK como parametro.
+*/
 void ponerSaltoInlist(int ok){
 	modificarTerceto(ind_salto_inlist, OP1, ind_inlist);
 	for(int i=contador_inlist;i>=0; i--){
