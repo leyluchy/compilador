@@ -405,6 +405,7 @@ factor:
 														}
     | average                                           {
 															printf("Regla 32: factor es average\n");
+															chequearTipoDato(Float);
 															ind_factor = ind_avg;
 														}
 	| ID			                                    {
@@ -536,11 +537,13 @@ lista_exp_coma:
     lista_exp_coma COMA expresion_aritmetica            {
 															printf("Regla 50: lista_exp_coma es lista_exp_coma COMA expresion_aritmetica\n");
 															ind_lec = crear_terceto(MAS, ind_lec, ind_expr);
+															resetTipoDato();
 															cant++;
 														}
     | expresion_aritmetica                              {
 															printf("Regla 51: lista_exp_coma es expresion_aritmetica\n");
 															ind_lec = ind_expr;
+															resetTipoDato();
 															cant = 1;
 														};
 
@@ -596,12 +599,7 @@ int main(int argc,char *argv[])
   return 0;
 }
 
-int yyerror(char* mensaje)
- {
-	printf("Syntax Error: %s\n", mensaje);
-	system ("Pause");
-	exit (1);
- }
+
 
 /** Compara el tipo de dato pasado por parámetro contra el que se está trabajando actualmente en tipoDatoActual.
 Si es distinto, tira error. Si no hay tipo de dato actual, asigna el pasado por parámetro. */
