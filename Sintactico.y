@@ -622,17 +622,17 @@ void resetTipoDato(){
 void apilar_inlist(){
 	contador_inlist++;
 	if(contador_inlist>=MAX_ANIDAMIENTOS){
-		yyerror("NOP, STOP RIGHT THERE CRIMINAL SCUM! YOU CANNOT PUT MORE THAN 10 EXPRESIONS IN A INLIST!");
+		yyerror("NOP, STOP RIGHT THERE CRIMINAL SCUM! Hasta 10 expresiones en una inlist");
 	}
-	inlist_vector[contador_inlist]=ind_inlist;
-	ind_inlist=VALOR_NULO;
+	inlist_vector[contador_inlist]=ind_inlist_a;
+	ind_inlist_a=VALOR_NULO;
 }
 
 
 void ponerSaltoInlist(){
 	modificarTerceto(ind_salto_inlist, OP1, ind_inlist);
 	for(int i=contador_inlist;i>=0; i--){
-		modificarTerceto(inlist_vector[i], ind_inlist, OP2);
+		modificarTerceto(inlist_vector[i], OP2, ind_inlist);
 	}
 	contador_inlist=VALOR_NULO;
 }

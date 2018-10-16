@@ -1,0 +1,38 @@
+if inlist(a,[1,2]) 
+then
+	a; 
+endif
+
+[0] IF, NOOP, NOOP
+[1] NOOP, a, NOOP
+[2] NOOP, _1, NOOP
+[3] CMP, [1], [2]
+[4] BEQ, [3], [10]
+[5] NOOP, _2, NOOP
+[6] CMP, [1], [5]
+[7] BEQ, [6], [10]
+[8] INOK, NOOP, NOOP
+[9] JMP, [11], NOOP
+[10] IOK, NOOP, NOOP
+//[8] JPI, NOOP, NOOP
+//[8] CMI, _1, _0
+//[9] JMP, [11], NOOP
+//[10] CMI, _0,_0
+[11] INL, NOOP, NOOP //Prepara el @res_CMP para el termino_logico
+[12] BNE, [11], [14]
+[12.5]THEN, NOOP, NOOP
+[13] BLQ, NOOP, NOOP
+[14] ENDIF, NOOP, NOOP
+[15] sentencia_if, [0.1],  
+ind_inlist=crear_terceto
+
+INL:
+
+MOVE reg1,@inlist
+
+
+Imprimir_BEQ([4]){
+	int a=Calcular_destino([11])
+	Imprimir_CMP([3]);
+	printf("BEQ _destino %s",a);
+}
