@@ -1,0 +1,101 @@
+estimada_cajita_magica
+	necesito:
+		enterito a, b, d, e,c, g;
+		discretito z;
+		posta f,p;
+		jeroglifico s, cadeña;
+	para
+
+	-/ Esto es un comentario simple/-
+
+	cadeña <- "Yo era un infeliz.";
+	
+		si a>1
+	por_favor
+		si b>2
+		por_favor
+			si a>3
+			por_favor
+				si a>4
+				por_favor
+					si a>5
+					por_favor
+						si a>6
+						por_favor
+							si a<7
+							por_favor
+								si a<8
+								por_favor
+									si a<9
+									por_favor
+										a+1;
+									gracias
+								gracias
+							gracias
+						gracias
+					gracias
+				gracias
+			gracias
+		gracias
+	gracias
+
+	
+	
+	si lta? (b;[43;22;110;89;500]) o a>=b
+	por_favor
+		a+100;
+	sino
+	a<-c+b;
+	gracias
+	
+	si lta? (a;[43;22;43;89;100]) y a>=b
+	por_favor
+		a+300;
+	gracias
+	
+	mientras lta? (b;[43;22;43;89;1002]) o a>b
+	por_favor
+		a<-33;
+	goto_mientras
+	
+	 
+	mientras a>=10
+	por_favor
+			mientras a>=200
+			por_favor
+							mientras a>=3000
+							por_favor
+											mientras a>=4000
+											por_favor
+															mientras a>=5000
+															por_favor
+																				mientras a>=6000
+																				por_favor
+																									mientras a>=7000
+																									por_favor
+																											mientras a>=8000
+																											por_favor
+																																		mientras a>=9000
+																																		por_favor
+																																						mientras a>=9000
+																																						por_favor
+																																																																																
+																																								b<-11100;
+																																						goto_mientras		
+																																						
+																																		goto_mientras
+																											goto_mientras
+																									goto_mientras
+																				goto_mientras
+															goto_mientras
+											goto_mientras
+							goto_mientras
+			goto_mientras
+	goto_mientras
+	
+
+	f<-avast ([2,a+b,c*(d+e),48, 45.3]);
+
+p<- avast ([33,22,avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23]),avast ([45,23])]);	
+	
+salu2
