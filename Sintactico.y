@@ -143,6 +143,7 @@ programa:
 	START seccion_declaracion bloque END 	            {
 															printf("\nCOMPILACION EXITOSA\n");
 															guardarTabla();
+															optimizarTercetos();
 															guardarTercetos();
 														};
 /*
