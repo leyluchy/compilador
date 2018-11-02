@@ -1,0 +1,23 @@
+estimada_cajita_magica
+	necesito:
+		enterito a, b, c;
+		posta f,p;
+	para
+	p <- 1.1;
+	f<-p;
+	a <- 4 * ( 2 * (3 + ( 4 * ( 5 + 1)))  + 1) - 7 ;
+	f <- 4.1 * ( 4.2 + (3.5*avast ([avast ([3.3,2,a+b,c*(a+b),48, 45.3, p]),avast ([3.3,2,a+b,c*(a+b),48, 45.3, p]),a+b,c*(a+b),48, 45.3, p]) /2.8) +1.124314 );
+	c<-2;
+	
+	si b>c y a>b
+por_favor
+	a<- (a+b)*(-2);
+
+	a<- (a+b)*(-c)/2;
+sino
+	b<-256;
+gracias
+	mostrame a;
+	mostrame b;
+	mostrame c;
+salu2 
