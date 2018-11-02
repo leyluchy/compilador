@@ -1,2 +1,2 @@
-Primera.exe prueba_codigo.txt
+GrupoM2.exe prueba.txt
 pause
