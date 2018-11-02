@@ -20,6 +20,29 @@ void agregarVarATabla(char* nombre){
  else yyerror("Encontre dos declaraciones de variables con el mismo nombre. Decidite."); //Error, ya existe esa variable
 }
 
+/** Si la variable ya existe, devuelve la posicion. Si no, agrega un nuevo
+* nombre de variable y tipo a la tabla y devuelve la posicion donde la agrego
+*/
+int agregarVarATabla2(char* nombre, int tipo){
+ //Si se llena, error
+ if(fin_tabla >= TAMANIO_TABLA - 1){
+	 printf("Error: me quede sin espacio en la tabla de simbolos. Sori, gordi.\n");
+	 system("Pause");
+	 exit(2);
+ }
+
+ int pos = buscarEnTabla(nombre);
+ //Si no hay otra variable con el mismo nombre...
+ if(pos == -1){
+	 //Agregar a tabla
+	 fin_tabla++;
+	 escribirNombreEnTabla(nombre, fin_tabla);
+   tabla_simbolo[fin_tabla].tipo_dato = tipo;
+   return fin_tabla;
+ }
+ return pos;
+}
+
 /** Agrega los tipos de datos a las variables declaradas. Usa las variables globales varADeclarar1, cantVarsADeclarar y tipoDatoADeclarar */
 void agregarTiposDatosATabla(){
 	for(int i = 0; i < cantVarsADeclarar; i++){

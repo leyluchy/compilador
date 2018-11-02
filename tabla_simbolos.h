@@ -15,6 +15,7 @@
 
 /* Funciones */
 void agregarVarATabla(char* nombre);
+int agregarVarATabla2(char* nombre, int tipo);
 void agregarTiposDatosATabla(void);
 int agregarCteStringATabla(char* nombre);
 int agregarCteIntATabla(int valor);

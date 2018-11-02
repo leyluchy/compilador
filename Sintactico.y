@@ -531,11 +531,17 @@ inlist:
 															printf("Regla 49: inlist es INLIST PA ID(%s) PUNTO_COMA CA lista_exp_pc CC PC\n\n", $3);
 															resetTipoDato();
 
-															crear_terceto(INOK, NOOP, NOOP);
-															ind_salto_inlist=crear_terceto(JMP, NOOP, NOOP);
-															int ind_ok = crear_terceto(IOK, NOOP, NOOP);
-															ind_inlist = crear_terceto(INL, NOOP, NOOP);
+															// Creo una variable @inlist (o la reutilizo)
+															int posInlist = agregarVarATabla2("@inlist", Int);
+															int pos = agregarCteIntATabla(0);
+															crear_terceto(ASIG, posInlist, pos); //Inicializo @inlist en 0 (falso)
+															ind_salto_inlist=crear_terceto(JMP, NOOP, NOOP); //Saltea la asignacion de verdadero
 
+															pos = agregarCteIntATabla(1);
+															int ind_ok = crear_terceto(ASIG, posInlist, pos); //A este terceto se llega si es verdadero, asigno 1 a @inlist
+															ind_inlist = crear_terceto(CMP, posInlist, pos); //Comparo @inlist contra verdadero
+
+															// Relleno saltos
 															comp_bool_actual=IGUAL;
 															ponerSaltoInlist(ind_ok);
 														};
