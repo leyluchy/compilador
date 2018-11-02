@@ -33,6 +33,7 @@
 int crear_terceto(int operador, int op1, int op2);
 void guardarTercetos();
 void modificarTerceto(int indice, int posicion, int valor);
+void optimizarTercetos();
 
 typedef struct{
   int operador;

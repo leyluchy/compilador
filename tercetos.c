@@ -54,165 +54,198 @@ void guardarTercetos(){
 
 	for(int i = 0; i <= ultimo_terceto; i++){
 		//La forma es [i] (operador, op1, op2)
-		//Escribo indice
-		fprintf(arch, "[%d] (", i + OFFSET);
 
-		//escribo operador
-		switch(lista_terceto[i].operador){
-		case NOOP:
-			fprintf(arch, "---");
-			break;
-		case BLOQ:
-			fprintf(arch, "sentencia");
-			break;
-		case START:
-			fprintf(arch, "start");
-			break;
-		case ID:
-			fprintf(arch, "declaracion");
-			break;
-		case IF:
-			fprintf(arch, "if");
-			break;
-		case THEN:
-			fprintf(arch, "then");
-			break;
-		case ELSE:
-			fprintf(arch, "cuerpoElse");
-			break;
-		case ENDIF:
-			fprintf(arch, "finIf");
-			break;
-		case WHILE:
-			fprintf(arch, "while");
-			break;
-		case ENDWHILE:
-			fprintf(arch, "finWhile");
-			break;
-		case ASIG:
-			fprintf(arch, "<-");
-			break;
-		case MAS:
-			fprintf(arch, "+");
-			break;
-		case MENOS:
-			fprintf(arch, "-");
-			break;
-		case POR:
-			fprintf(arch, "*");
-			break;
-		case DIVIDIDO:
-			fprintf(arch, "/");
-			break;
-		case AND:
-			fprintf(arch, "y");
-			break;
-		case OR:
-			fprintf(arch, "o");
-			break;
-		case NOT:
-			fprintf(arch, "no");
-			break;
-		case MENOR:
-			fprintf(arch, "<");
-			break;
-		case MAYOR:
-			fprintf(arch, ">");
-			break;
-		case MENOR_IGUAL:
-			fprintf(arch, "<=");
-			break;
-		case MAYOR_IGUAL:
-			fprintf(arch, ">=");
-			break;
-		case IGUAL:
-			fprintf(arch, "==");
-			break;
-		case DISTINTO:
-			fprintf(arch, "=/=");
-			break;
-		case AVG:
-			fprintf(arch, "avg");
-			break;
-		case INLIST:
-			fprintf(arch, "inlist");
-			break;
-		case COMA:
-			fprintf(arch, "\',\'");
-			break;
-		case PUNTO_COMA:
-			fprintf(arch, "\';\'");
-			break;
-		case READ:
-			fprintf(arch, "leeme");
-			break;
-		case WRITE:
-			fprintf(arch, "mostrame");
-			break;
-		case CMP:
-			fprintf(arch, "CMP");
-			break;
-		case BNE:
-			fprintf(arch, "BNE");
-			break;
-		case BEQ:
-			fprintf(arch, "BEQ");
-			break;
-		case BGT:
-			fprintf(arch, "BGT");
-			break;
-		case BGE:
-			fprintf(arch, "BGE");
-			break;
-		case BLE:
-			fprintf(arch, "BLE");
-			break;
-		case BLT:
-			fprintf(arch, "BLT");
-			break;
-		case JMP:
-			fprintf(arch, "JMP");
-			break;
-		case INL:
-			fprintf(arch, "INL");
-			break;
-		case INOK:
-			fprintf(arch, "INOK");
-			break;
-		case IOK:
-			fprintf(arch, "IOK");
-			break;
-		default:
-			fprintf(arch, "algo esta mal");
-			break;
+		//Si el operador es NOOP, es solo una ID o CTE que ya optimizamos, lo ignoro
+		if(lista_terceto[i].operador != NOOP){
+			//Escribo indice
+			fprintf(arch, "[%d] (", i + OFFSET);
+
+			//escribo operador
+			switch(lista_terceto[i].operador){
+			case NOOP:
+				fprintf(arch, "---");
+				break;
+			case BLOQ:
+				fprintf(arch, "sentencia");
+				break;
+			case START:
+				fprintf(arch, "start");
+				break;
+			case ID:
+				fprintf(arch, "declaracion");
+				break;
+			case IF:
+				fprintf(arch, "if");
+				break;
+			case THEN:
+				fprintf(arch, "then");
+				break;
+			case ELSE:
+				fprintf(arch, "cuerpoElse");
+				break;
+			case ENDIF:
+				fprintf(arch, "finIf");
+				break;
+			case WHILE:
+				fprintf(arch, "while");
+				break;
+			case ENDWHILE:
+				fprintf(arch, "finWhile");
+				break;
+			case ASIG:
+				fprintf(arch, "<-");
+				break;
+			case MAS:
+				fprintf(arch, "+");
+				break;
+			case MENOS:
+				fprintf(arch, "-");
+				break;
+			case POR:
+				fprintf(arch, "*");
+				break;
+			case DIVIDIDO:
+				fprintf(arch, "/");
+				break;
+			case AND:
+				fprintf(arch, "y");
+				break;
+			case OR:
+				fprintf(arch, "o");
+				break;
+			case NOT:
+				fprintf(arch, "no");
+				break;
+			case MENOR:
+				fprintf(arch, "<");
+				break;
+			case MAYOR:
+				fprintf(arch, ">");
+				break;
+			case MENOR_IGUAL:
+				fprintf(arch, "<=");
+				break;
+			case MAYOR_IGUAL:
+				fprintf(arch, ">=");
+				break;
+			case IGUAL:
+				fprintf(arch, "==");
+				break;
+			case DISTINTO:
+				fprintf(arch, "=/=");
+				break;
+			case AVG:
+				fprintf(arch, "avg");
+				break;
+			case INLIST:
+				fprintf(arch, "inlist");
+				break;
+			case COMA:
+				fprintf(arch, "\',\'");
+				break;
+			case PUNTO_COMA:
+				fprintf(arch, "\';\'");
+				break;
+			case READ:
+				fprintf(arch, "leeme");
+				break;
+			case WRITE:
+				fprintf(arch, "mostrame");
+				break;
+			case CMP:
+				fprintf(arch, "CMP");
+				break;
+			case BNE:
+				fprintf(arch, "BNE");
+				break;
+			case BEQ:
+				fprintf(arch, "BEQ");
+				break;
+			case BGT:
+				fprintf(arch, "BGT");
+				break;
+			case BGE:
+				fprintf(arch, "BGE");
+				break;
+			case BLE:
+				fprintf(arch, "BLE");
+				break;
+			case BLT:
+				fprintf(arch, "BLT");
+				break;
+			case JMP:
+				fprintf(arch, "JMP");
+				break;
+			case INL:
+				fprintf(arch, "INL");
+				break;
+			case INOK:
+				fprintf(arch, "INOK");
+				break;
+			case IOK:
+				fprintf(arch, "IOK");
+				break;
+			default:
+				fprintf(arch, "algo esta mal");
+				break;
+			}
+
+			fprintf(arch, ", ");
+			//Escribo op1
+			int op = lista_terceto[i].op1;
+
+			if(op == NOOP)
+				fprintf(arch, "---");
+			else if(op < TAMANIO_TABLA){
+				//Es una entrada a tabla de simbolos
+				fprintf(arch, "%s", &(tabla_simbolo[op].nombre) );
+			}
+			else //Es el indice de otro terceto
+				fprintf(arch, "[%d]", op);
+
+			fprintf(arch, ", ");
+			//Escribo op2
+			op = lista_terceto[i].op2;
+			if(op == NOOP)
+				fprintf(arch, "---");
+			else if(op < TAMANIO_TABLA){
+				//Es una entrada a tabla de simbolos
+				fprintf(arch, "%s", &(tabla_simbolo[op].nombre) );
+			}
+			else //Es el indice de otro terceto
+				fprintf(arch, "[%d]", op);
+
+			fprintf(arch, ")\n");
 		}
-
-		fprintf(arch, ", ");
-		//Escribo op1
-		int op = lista_terceto[i].op1;
-
-		if(op == NOOP)
-			fprintf(arch, "---");
-		else if(op < TAMANIO_TABLA){
-			//Es una entrada a tabla de simbolos
-			fprintf(arch, "%s", &(tabla_simbolo[op].nombre) );
-		}
-		else //Es el indice de otro terceto
-			fprintf(arch, "[%d]", op);
-
-		fprintf(arch, ", ");
-		//Escribo op2
-		op = lista_terceto[i].op2;
-		if(op == NOOP)
-			fprintf(arch, "---");
-		else if(op < TAMANIO_TABLA){
-			//Es una entrada a tabla de simbolos
-			fprintf(arch, "%s", &(tabla_simbolo[op].nombre) );
-		}
-		else //Es el indice de otro terceto
-			fprintf(arch, "[%d]", op);
-
-		fprintf(arch, ")\n");
 	}
 	fclose(arch);
+}
+
+/**
+* Hay tercetos que solo tienen una CTE o ID. En esos casos subimos la CTE o ID
+* a los tercetos que las usan.
+*/
+void optimizarTercetos(){
+	//Recorro todos los tercetos
+	for(int i=0; i<MAX_TERCETOS; i++){
+		//Por cada terceto...
+
+		//Si el operando 1 es otro terceto...
+		if(lista_terceto[i].op1 >= OFFSET){
+			//Busco el terceto referenciado
+			int ref = lista_terceto[i].op1 - OFFSET;
+			if(lista_terceto[ref].operador == NOOP) //Si el referenciado solo tiene una ID o CTE
+				// Reemplazo la referencia al terceto por una referencia a la ID o CTE directamente
+				lista_terceto[i].op1 = lista_terceto[ref].op1;
+		}
+
+		//Si el operando 2 es otro terceto...
+		if(lista_terceto[i].op2 >= OFFSET){
+			//Busco el terceto referenciado
+			int ref = lista_terceto[i].op2 - OFFSET;
+			if(lista_terceto[ref].operador == NOOP) //Si el referenciado solo tiene una ID o CTE
+				// Reemplazo la referencia al terceto por una referencia a la ID o CTE directamente
+				lista_terceto[i].op2 = lista_terceto[ref].op1;
+		}
+	}
 }
