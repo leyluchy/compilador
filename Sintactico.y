@@ -9,6 +9,7 @@
 	#include "tercetos.h"
 	#include "sentencias_control.h"
 	#include "inlist_y_avg.h"
+	#include "assembler.h"
 
 	/* Funciones necesarias */
 	int yyerror(char* mensaje);
@@ -145,6 +146,7 @@ programa:
 															guardarTabla();
 															optimizarTercetos();
 															guardarTercetos();
+															generarAssembler();
 														};
 /*
 programa:
