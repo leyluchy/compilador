@@ -1,0 +1,48 @@
+ts: indice a tabla de simbolos
+te: indice a otro terceto
+
+Asignacion 
+(ASIG, ts, ts) //Pueden ser int, float, string
+(ASIG, ts, te) //Pueden ser int o float
+
+Comparaciones
+(CMP, ts, ts)
+(CMP, te, te)
+//Creo que estan las 4 combinaciones
+
+
+Saltos
+(branch, te, te) //El 1º te es el CMP, no daria ninguna accion y creo que siempre es el anterior. El 2º es a donde salta, es siempre una etiqueta?
+Si llega (branch, te, NOOP) hay un error, nos olvidamos de poner un salto.
+(JMP, te, NOOP) //Distinto de los otros branch, el 1º te es a donde salta
+
+(OR, te, te) //Creo que no haria nada
+(AND, te, te) //Creo que no haria nada
+
+If
+Puede haber muchos, incluso anidados. Enumerar las etiquetas para que sean unicas.
+(IF, NOOP, NOOP) //Puede que no haga nada
+(THEN, NOOP, NOOP) //Etiqueta para los saltos a true.
+(ELSE, NOOP, NOOP) //Etiqueta para falso con else.
+(ENDIF, NOOP, NOOP) //Etiqueta para fin de true con else o para falso sin else.
+
+While
+(WHILE, NOOP, NOOP) //Etiqueta de inicio de while para que vuelva cuando termina
+//Mismo THEN de if
+(ENDWHILE, NOOP, NOOP) //Etiqueta de fin de while para cuando no cumpla
+
+Operadores
+(MAS, ts, te) //y las 4 combinaciones
+(MENOS, ts, te) //y las 4 combinaciones
+(MENOS, ts, NOOP) //cambiar signo
+(MENOS, te, NOOP) //cambiar signo de toda una expresion
+(POR, ts, te) //y las 4 combinaciones
+(DIVIDIDO, ts, te) //y las 4 combinaciones
+
+Inlist
+INOK, IOK, INL se podrian expresar mejor en tercetos.
+
+Otros
+(BLOQ, te, te) //Orden de sentencias. Creo que no hace nada.
+(READ, ts, NOOP) //Ingresar por teclado y guardar en var
+(WRITE, ts, NOOP) //Mostrar en pantalla, puede ser int, float, string
