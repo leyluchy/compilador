@@ -20,7 +20,7 @@ void generarAssembler(){
         break;
 
       case BGT:
-            break;
+        break;
       case BGE:
         break;
       case BLT:
@@ -35,15 +35,20 @@ void generarAssembler(){
         break;
 
       case THEN:
+        escribirEtiqueta(arch, "then", i);
         break;
       case ELSE:
+        escribirEtiqueta(arch, "else", i);
         break;
       case ENDIF:
+        escribirEtiqueta(arch, "endif", i);
         break;
 
       case WHILE:
+        escribirEtiqueta(arch, "while", i);
         break;
       case ENDWHILE:
+        escribirEtiqueta(arch, "endwhile", i);
         break;
 
       case MAS:
@@ -96,4 +101,8 @@ void generarTabla(FILE *arch){
     }
 
     fprintf(arch, "\n");
+}
+
+void escribirEtiqueta(FILE* arch, char* etiqueta, int n){
+    fprintf(arch, "%s%d: ", etiqueta, n);
 }
