@@ -6,6 +6,7 @@
 
 void generarAssembler();
 void escribirInicio(FILE* arch);
+void escribirFinal(FILE *arch);
 void generarTabla(FILE* arch);
 
 //Variables externas
