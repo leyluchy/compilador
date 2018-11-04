@@ -20,6 +20,7 @@ void agregarTiposDatosATabla(void);
 int agregarCteStringATabla(char* nombre);
 int agregarCteIntATabla(int valor);
 int agregarCteFloatATabla(float valor);
+void ponerNombreFloat(char nombre[], float valor);
 
 int chequearVarEnTabla(char* nombre);
 int buscarEnTabla(char * name);
