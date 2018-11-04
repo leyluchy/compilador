@@ -127,7 +127,8 @@ int agregarCteFloatATabla(float valor){
 
 	//Genero el nombre
 	char nombre[12];
-	sprintf(nombre, "_%f", valor);
+	//sprintf(nombre, "_%f", valor); OLD
+	ponerNombreFloat(nombre, valor);
 	int pos=buscarEnTabla(nombre);
 	//Si no hay otra variable con el mismo nombre...
 	if(pos == -1){
@@ -143,6 +144,13 @@ int agregarCteFloatATabla(float valor){
 		pos = fin_tabla;
 	}
 	return pos;
+}
+
+void ponerNombreFloat(char nombre[], float valor){
+	sprintf(nombre, "_%f", valor);
+	for(int i=0;i<strlen(nombre);i++)
+		if(nombre[i]=='.')
+			nombre[i]='_';
 }
 
 /** Se fija si ya existe una entrada con ese nombre en la tabla de simbolos.
