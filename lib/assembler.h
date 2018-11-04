@@ -6,7 +6,9 @@
 
 void generarAssembler();
 void escribirInicio(FILE* arch);
+void escribirFinal(FILE *arch);
 void generarTabla(FILE* arch);
+void escribirEtiqueta(FILE* arch, char* etiqueta, int n);
 
 //Variables externas
 extern simbolo tabla_simbolo[TAMANIO_TABLA];
