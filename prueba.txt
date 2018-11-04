@@ -14,6 +14,9 @@ estimada_cajita_magica
 	solo para hinchar /-
 
 	cadeña <- "Yo era un infeliz.";
+	s <- "Yo era un infeli.";
+	cadeña <- "Yo era un inf.";
+	s <- "Yo era un";
 
 	-/ Anidamientos de if, máximo 9 niveles/-
 

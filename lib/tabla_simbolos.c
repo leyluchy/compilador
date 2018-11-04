@@ -3,6 +3,9 @@
 #include <string.h>
 #include "tabla_simbolos.h"
 
+//Variable de control de nombres para las String
+int contadorString=0;
+
 /** Agrega un nuevo nombre de variable a la tabla **/
 void agregarVarATabla(char* nombre){
  //Si se llena, error
@@ -59,14 +62,16 @@ int agregarCteStringATabla(char* nombre){
 	}
 
 	//Preparo el nombre. Nuestras constantes empiezan con _ en la tabla de simbolos
-	char nuevoNombre[strlen(nombre)+2]; //+2 para agregarle el _ al inicio y el \0 al final
-	sprintf(nuevoNombre, "_%s", nombre);
-
-	int pos=buscarEnTabla(nuevoNombre);
-	//Si no hay otra constante string con el mismo nombre...
+	//sprintf(nuevoNombre, "_%s", nombre); OLD
+	int pos=buscarStringEnTabla(nombre);
+	//int pos=buscarEnTabla(nuevoNombre);
+	//Si no hay otra constante string con el mismo contenido...
 	if(pos == -1){
 		//Agregar nombre a tabla
 		fin_tabla++;
+		char nuevoNombre[10]; //10 porque EL maximo tamaño que puede tener está dado por "StringXXX" mas el fin de linea
+		sprintf(nuevoNombre, "String%d", contadorString);
+		contadorString++;
 		escribirNombreEnTabla(nuevoNombre, fin_tabla);
 
 		//Agregar tipo de dato
@@ -160,6 +165,18 @@ int buscarEnTabla(char * name){
    int i=0;
    while(i<=fin_tabla){
 	   if(strcmp(tabla_simbolo[i].nombre,name) == 0){
+		   return i;
+	   }
+	   i++;
+   }
+   return -1;
+}
+
+/* Devuleve la posici�n en la que se encuentra el elemento String buscado, -1 si no encontr� el elemento */
+int buscarStringEnTabla(char * name){
+   int i=0;
+   while(i<=fin_tabla){
+	   if(tabla_simbolo[i].tipo_dato==6 && strcmp(tabla_simbolo[i].valor_s,name) == 0){
 		   return i;
 	   }
 	   i++;

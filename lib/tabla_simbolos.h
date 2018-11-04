@@ -23,6 +23,7 @@ int agregarCteFloatATabla(float valor);
 
 int chequearVarEnTabla(char* nombre);
 int buscarEnTabla(char * name);
+int buscarStringEnTabla(char * name);
 void escribirNombreEnTabla(char* nombre, int pos);
 void guardarTabla(void);
 
