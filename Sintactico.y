@@ -540,8 +540,10 @@ inlist:
 															ind_salto_inlist=crear_terceto(JMP, NOOP, NOOP); //Saltea la asignacion de verdadero
 
 															pos = agregarCteIntATabla(1);
-															int ind_ok = crear_terceto(ASIG, posInlist, pos); //A este terceto se llega si es verdadero, asigno 1 a @inlist
-															ind_inlist = crear_terceto(CMP, posInlist, pos); //Comparo @inlist contra verdadero
+															int ind_ok = crear_terceto(INLIST_TRUE, NOOP, NOOP);
+															crear_terceto(ASIG, posInlist, pos); //A este terceto se llega si es verdadero, asigno 1 a @inlist
+															ind_inlist = crear_terceto(INLIST_CMP, NOOP, NOOP);
+															crear_terceto(CMP, posInlist, pos); //Comparo @inlist contra verdadero
 
 															// Relleno saltos
 															comp_bool_actual=IGUAL;

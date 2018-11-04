@@ -140,11 +140,11 @@ void guardarTercetos(){
 			case INLIST:
 				fprintf(arch, "inlist");
 				break;
-			case COMA:
-				fprintf(arch, "\',\'");
+			case INLIST_TRUE:
+				fprintf(arch, "inlist_true");
 				break;
-			case PUNTO_COMA:
-				fprintf(arch, "\';\'");
+			case INLIST_CMP:
+				fprintf(arch, "inlist_cmp");
 				break;
 			case READ:
 				fprintf(arch, "leeme");
@@ -175,15 +175,6 @@ void guardarTercetos(){
 				break;
 			case JMP:
 				fprintf(arch, "JMP");
-				break;
-			case INL:
-				fprintf(arch, "INL");
-				break;
-			case INOK:
-				fprintf(arch, "INOK");
-				break;
-			case IOK:
-				fprintf(arch, "IOK");
 				break;
 			default:
 				fprintf(arch, "algo esta mal");

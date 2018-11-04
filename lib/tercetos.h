@@ -21,8 +21,9 @@
                 * Representa la comparacion de dos numeros iguales si dio verdadero
                 * o de dos numeros distintos si dio falso.
                 */
-#define INOK 20 /* Compara dos numeros distintos para representar el falso del inlist. */
-#define IOK 22  /* Compara dos numeros iguales para representar el verdadero del inlist. */
+#define INLIST_TRUE 20 /* Etiqueta de asignacion por true para inlist */
+#define INLIST_CMP 22 /* Etiqueta de comparacion para inlist */
+
 
 /* Posiciones dentro de un terceto */
 #define OP1 2
