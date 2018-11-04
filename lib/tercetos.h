@@ -17,10 +17,6 @@
 #define BEQ 14  /* != */
 #define BGT 8   /* <= */
 #define JMP 16  /* Branch Always o Salto Incondicional*/
-#define INL 18  /* Un terceto con este operador representa el resultado del inlist.
-                * Representa la comparacion de dos numeros iguales si dio verdadero
-                * o de dos numeros distintos si dio falso.
-                */
 #define INLIST_TRUE 20 /* Etiqueta de asignacion por true para inlist */
 #define INLIST_CMP 22 /* Etiqueta de comparacion para inlist */
 
