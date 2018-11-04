@@ -22,22 +22,22 @@ void generarAssembler(){
         break;
 
       case BGT:
-        escribirSalto(arch, "BGT", lista_terceto[i].op2);
+        escribirSalto(arch, "JG", lista_terceto[i].op2);
         break;
       case BGE:
-        escribirSalto(arch, "BGE", lista_terceto[i].op2);
+        escribirSalto(arch, "JGE", lista_terceto[i].op2);
         break;
       case BLT:
-        escribirSalto(arch, "BLT", lista_terceto[i].op2);
+        escribirSalto(arch, "JL", lista_terceto[i].op2);
         break;
       case BLE:
-        escribirSalto(arch, "BLE", lista_terceto[i].op2);
+        escribirSalto(arch, "JLE", lista_terceto[i].op2);
         break;
       case BNE:
-        escribirSalto(arch, "BNE", lista_terceto[i].op2);
+        escribirSalto(arch, "JNE", lista_terceto[i].op2);
         break;
       case BEQ:
-        escribirSalto(arch, "BEQ", lista_terceto[i].op2);
+        escribirSalto(arch, "JE", lista_terceto[i].op2);
         break;
       case JMP:
         escribirSalto(arch, "JMP", lista_terceto[i].op1);
