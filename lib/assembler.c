@@ -14,9 +14,12 @@ void generarAssembler(){
   escribirInicio(arch);
   generarTabla(arch);
 
+  fprintf(arch, ".CODE\n");
+
   for(int i=0; i <= ultimo_terceto; i++){
     switch(lista_terceto[i].operador){
       case ASIG:
+	  	asignacion(arch, i);
         break;
       case CMP:
         break;
@@ -157,4 +160,23 @@ void escribirSalto(FILE* arch, char* salto, int tercetoDestino){
     }
 
     fprintf(arch, "%d\n", tercetoDestino);
+}
+
+void asignacion(FILE* arch, int ind){
+	int destino = lista_terceto[ind].op1;
+	int origen = lista_terceto[ind].op2;
+
+	//Ver tipo de dato
+	switch(tabla_simbolo[destino].tipo_dato){
+	case Int:
+		break;
+	case Float:
+		break;
+	case String:
+		//mov [destino] origen
+		//destino y origen son entradas a tabla de simbolos
+		fprintf(arch, "LEA EAX, %s\nMOV %s, EAX", tabla_simbolo[origen].nombre, tabla_simbolo[destino].nombre);
+	}
+
+	fprintf(arch, "\n");
 }
