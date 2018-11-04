@@ -100,19 +100,19 @@ void generarTabla(FILE *arch){
     fprintf(arch, ".DATA\n");
 
     for(int i=0; i<=fin_tabla; i++){
-        fprintf(arch, "_%s dd ", tabla_simbolo[i].nombre);
+        fprintf(arch, "%s ", tabla_simbolo[i].nombre);
         switch(tabla_simbolo[i].tipo_dato){
         case CteInt:
-            fprintf(arch, "%d\n", tabla_simbolo[i].valor_i);
+            fprintf(arch, "dd %d\n", tabla_simbolo[i].valor_i);
             break;
         case CteFloat:
-            fprintf(arch, "%f\n", tabla_simbolo[i].valor_f);
+            fprintf(arch, "dd %f\n", tabla_simbolo[i].valor_f);
             break;
         case CteString:
-            fprintf(arch, "%s\n", tabla_simbolo[i].valor_s);
+            fprintf(arch, "db \"%s\", 0\n", tabla_simbolo[i].valor_s);
             break;
         default: //Es una variable
-            fprintf(arch, "?\n");
+            fprintf(arch, "dd ?\n");
         }
     }
 
