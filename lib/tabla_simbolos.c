@@ -14,11 +14,13 @@ void agregarVarATabla(char* nombre){
 	 system("Pause");
 	 exit(2);
  }
+ char newNombre[strlen(nombre)+2];
+ sprintf(newNombre, "_%s",nombre);
  //Si no hay otra variable con el mismo nombre...
- if(buscarEnTabla(nombre) == -1){
+ if(buscarEnTabla(newNombre) == -1){
 	 //Agregar a tabla
 	 fin_tabla++;
-	 escribirNombreEnTabla(nombre, fin_tabla);
+	 escribirNombreEnTabla(newNombre, fin_tabla);
  }
  else yyerror("Encontre dos declaraciones de variables con el mismo nombre. Decidite."); //Error, ya existe esa variable
 }
@@ -145,7 +147,7 @@ int agregarCteFloatATabla(float valor){
 	}
 	return pos;
 }
-
+/** Funcion de apoyo a agregarCteFloatATabla */
 void ponerNombreFloat(char nombre[], float valor){
 	sprintf(nombre, "_%f", valor);
 	for(int i=0;i<strlen(nombre);i++)
@@ -157,7 +159,9 @@ void ponerNombreFloat(char nombre[], float valor){
 Si no existe, muestra un error de variable sin declarar y aborta la compilacion.
 Si existe, devuelve el tipo de dato de esa variable. */
 int chequearVarEnTabla(char* nombre){
-	int pos = buscarEnTabla(nombre);
+	char newNombre[strlen(nombre)+2];
+	sprintf(newNombre, "_%s",nombre);
+	int pos = buscarEnTabla(newNombre);
 	//Si no existe en la tabla, error
 	if( pos == -1){
 		char msg[100];
