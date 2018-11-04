@@ -325,7 +325,7 @@ asignacion:
 															int tipo = chequearVarEnTabla(idAsignar);
 															chequearTipoDato(tipo);
 															resetTipoDato();
-															int pos=buscarEnTabla(idAsignar);
+															int pos=buscarIDEnTabla(idAsignar);
 															ind_asig = crear_terceto(ASIG, pos, ind_xp);
 														};
 
@@ -421,7 +421,7 @@ factor:
 															int tipo = chequearVarEnTabla(yylval.string_val);
 															chequearTipoDato(tipo);
 
-															int pos = buscarEnTabla($1);
+															int pos = buscarIDEnTabla($1);
 															ind_factor = crear_terceto(NOOP, pos, NOOP);
 														}
 	| CTE_FLOAT	                                        {
@@ -526,7 +526,7 @@ inlist:
 	INLIST PA ID 										{
 															int tipo = chequearVarEnTabla($3);
 															chequearTipoDato(tipo);
-															int pos=buscarEnTabla($3);
+															int pos=buscarIDEnTabla($3);
 															ind_cond_salto=crear_terceto(NOOP, pos, NOOP);
 														}
 					PUNTO_COMA CA lista_exp_pc CC PC   	{
@@ -584,7 +584,7 @@ lectura:
     READ ID												{
 															printf("Regla 54: lectura es READ ID(%s)\n", $2);
 															chequearVarEnTabla($2);
-															int pos = buscarEnTabla($2);
+															int pos = buscarIDEnTabla($2);
 															ind_lectura = crear_terceto(READ, pos, NOOP);
 														};
 
@@ -592,7 +592,7 @@ escritura:
     WRITE ID                                            {
 															printf("Regla 55: escritura es WRITE ID(%s)\n", $2);
 															chequearVarEnTabla($2);
-															int pos = buscarEnTabla($2);
+															int pos = buscarIDEnTabla($2);
 															ind_escritura = crear_terceto(WRITE, pos, NOOP);
 														}
     | WRITE CTE_STRING                                  {

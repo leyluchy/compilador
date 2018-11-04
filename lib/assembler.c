@@ -22,6 +22,7 @@ void generarAssembler(){
 	  	asignacion(arch, i);
         break;
       case CMP:
+		comparacion(arch, i);
         break;
 
       case BGT:
@@ -179,4 +180,17 @@ void asignacion(FILE* arch, int ind){
 	}
 
 	fprintf(arch, "\n");
+}
+
+void comparacion(FILE* arch, int ind){
+	int elemIzq = lista_terceto[ind].op1;
+	int elemDer = lista_terceto[ind].op2;
+	switch(tabla_simbolo[elemIzq].tipo_dato){
+	case Int:
+		break;
+	case Float:
+		break;
+	case String:
+		break;
+	}
 }

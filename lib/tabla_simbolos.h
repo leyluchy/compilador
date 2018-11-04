@@ -25,6 +25,7 @@ void ponerNombreFloat(char nombre[], float valor);
 int chequearVarEnTabla(char* nombre);
 int buscarEnTabla(char * name);
 int buscarStringEnTabla(char * name);
+int buscarIDEnTabla(char * name);
 void escribirNombreEnTabla(char* nombre, int pos);
 void guardarTabla(void);
 

@@ -196,6 +196,17 @@ int buscarStringEnTabla(char * name){
    return -1;
 }
 
+int buscarIDEnTabla(char * name){
+   int i=0;
+   while(i<=fin_tabla){
+	   if(strcmp(tabla_simbolo[i].nombre+1,name) == 0){
+		   return i;
+	   }
+	   i++;
+   }
+   return -1;
+}
+
 /** Escribe el nombre de una variable o constante en la posición indicada */
 void escribirNombreEnTabla(char* nombre, int pos){
 	strcpy(tabla_simbolo[pos].nombre, nombre);
