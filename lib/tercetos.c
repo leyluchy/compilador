@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "tercetos.h"
-#include "y.tab.h"
+#include "../y.tab.h"
 
 /** Agrega un terceto a la lista de tercetos. Si se quiere guardar solo una constante o variable, mandar NOOP en
 el campo de operador y op2. Para los operadores pasar el token literal, para los operandos pasar la posicion en

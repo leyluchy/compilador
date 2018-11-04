@@ -5,11 +5,11 @@
 	#include <string.h>
 	#include "y.tab.h"
 
-	#include "tabla_simbolos.h"
-	#include "tercetos.h"
-	#include "sentencias_control.h"
-	#include "inlist_y_avg.h"
-	#include "assembler.h"
+	#include "./lib/tabla_simbolos.h"
+	#include "./lib/tercetos.h"
+	#include "./lib/sentencias_control.h"
+	#include "./lib/inlist_y_avg.h"
+	#include "./lib/assembler.h"
 
 	/* Funciones necesarias */
 	int yyerror(char* mensaje);

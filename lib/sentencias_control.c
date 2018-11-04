@@ -1,6 +1,6 @@
 #include "sentencias_control.h"
 #include "tercetos.h"
-#include "y.tab.h"
+#include "../y.tab.h"
 
 /** Dado un comparador, devuelve el branch correspondiente al salto por falso.
 */
