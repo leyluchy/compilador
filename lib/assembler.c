@@ -1,6 +1,8 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "assembler.h"
 #include "../y.tab.h"
+#include "tercetos.h"
 
 void generarAssembler(){
   FILE* arch = fopen("final.asm", "w");
@@ -20,18 +22,25 @@ void generarAssembler(){
         break;
 
       case BGT:
+        escribirSalto(arch, "BGT", lista_terceto[i].op2);
         break;
       case BGE:
+        escribirSalto(arch, "BGE", lista_terceto[i].op2);
         break;
       case BLT:
+        escribirSalto(arch, "BLT", lista_terceto[i].op2);
         break;
       case BLE:
+        escribirSalto(arch, "BLE", lista_terceto[i].op2);
         break;
       case BNE:
+        escribirSalto(arch, "BNE", lista_terceto[i].op2);
         break;
       case BEQ:
+        escribirSalto(arch, "BEQ", lista_terceto[i].op2);
         break;
       case JMP:
+        escribirSalto(arch, "JMP", lista_terceto[i].op1);
         break;
 
       case THEN:
@@ -50,6 +59,13 @@ void generarAssembler(){
       case ENDWHILE:
         escribirEtiqueta(arch, "endwhile", i);
         break;
+
+	case INLIST_TRUE:
+		escribirEtiqueta(arch, "inlistTrue", i);
+		break;
+	case INLIST_CMP:
+		escribirEtiqueta(arch, "inlistCMP", i);
+		break;
 
       case MAS:
         break;
@@ -104,5 +120,41 @@ void generarTabla(FILE *arch){
 }
 
 void escribirEtiqueta(FILE* arch, char* etiqueta, int n){
-    fprintf(arch, "%s%d: ", etiqueta, n);
+    fprintf(arch, "%s%d: ", etiqueta, n+OFFSET);
+}
+
+void escribirSalto(FILE* arch, char* salto, int tercetoDestino){
+    fprintf(arch, "%s ", salto);
+
+    //Por si nos olvidamos de rellenar un salto
+    if(tercetoDestino == NOOP){
+        printf("Ups. Parece que me olvide de rellenar un salto en los tercetos y ahora no se como seguir.\n");
+        system("Pause");
+        exit(10);
+    }
+
+    switch( lista_terceto[tercetoDestino - OFFSET].operador ){
+    case THEN:
+        fprintf(arch, "then");
+        break;
+    case ELSE:
+        fprintf(arch, "else");
+        break;
+    case ENDIF:
+        fprintf(arch, "endif");
+        break;
+    case WHILE:
+        fprintf(arch, "while");
+        break;
+    case ENDWHILE:
+        fprintf(arch, "endwhile");
+		break;
+	case INLIST_TRUE:
+        fprintf(arch, "inlistTrue");
+		break;
+	case INLIST_CMP:
+        fprintf(arch, "inlistCMP");
+    }
+
+    fprintf(arch, "%d\n", tercetoDestino);
 }
