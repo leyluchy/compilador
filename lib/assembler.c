@@ -13,8 +13,7 @@ void generarAssembler(){
 
   escribirInicio(arch);
   generarTabla(arch);
-
-  fprintf(arch, ".CODE\n");
+  escribirInicioCodigo(arch);
 
   for(int i=0; i <= ultimo_terceto; i++){
     switch(lista_terceto[i].operador){
@@ -97,8 +96,12 @@ void escribirInicio(FILE *arch){
   fprintf(arch, "include macros2.asm\ninclude number.asm\n\n.MODEL SMALL\n.386\n.STACK 200h\n\n");
 }
 
+void escribirInicioCodigo(FILE* arch){
+	fprintf(arch, ".CODE\n\nMOV AX, @DATA\nMOV DS, AX\nFINIT\n\n");
+}
+
 void escribirFinal(FILE *arch){
-    fprintf(arch, "\nend\n");
+    fprintf(arch, "\nMOV AH, 1\nINT 21h\nMOV AX, 4C00h\nINT 21h\n\nEND\n");
 }
 
 void generarTabla(FILE *arch){
