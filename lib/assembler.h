@@ -13,6 +13,7 @@ void escribirSalto(FILE* arch, char* salto, int tercetoDestino);
 void asignacion(FILE* arch, int terceto);
 void comparacion(FILE* arch, int terceto);
 void levantarEnPila(FILE* arch, const int ind);
+void write(FILE* arch, int ind);
 
 //Variables externas
 extern simbolo tabla_simbolo[TAMANIO_TABLA];

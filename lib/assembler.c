@@ -83,6 +83,7 @@ void generarAssembler(){
       case READ:
         break;
       case WRITE:
+	  	write(arch, i);
         break;
     }
   }
@@ -184,8 +185,8 @@ void asignacion(FILE* arch, int ind){
 		fprintf(arch, "FSTP %s", tabla_simbolo[destino].nombre);
 		break;
 	case String:
-		//mov [destino] origen
 		//destino y origen son entradas a tabla de simbolos
+		//Cargo direccion del origen y pongo esa direccion en la variable en memoria. La variable sera puntero a string.
 		fprintf(arch, "LEA EAX, %s\nMOV %s, EAX", tabla_simbolo[origen].nombre, tabla_simbolo[destino].nombre);
 	}
 
@@ -196,7 +197,7 @@ void asignacion(FILE* arch, int ind){
 void comparacion(FILE* arch, int ind){
 	levantarEnPila(arch, ind);
 	fprintf(arch, "FXCH\nFCOMP\nFSTSW AX\nSAHF\n");
-	
+
 }
 
 /** Asegura que el elemento de la izquierda esté en st1, y el de la derecha en st0 */
@@ -250,4 +251,20 @@ void levantarEnPila(FILE* arch, const int ind){
 	if(izqLevantado){
 		fprintf(arch, "FXCH\n");
 	}
+}
+
+void write(FILE* arch, int terceto){
+	int ind = lista_terceto[terceto].op1; //Indice de entrada a tabla de simbolos del mensaje a mostrar
+	switch(tabla_simbolo[ind].tipo_dato){
+	case Int:
+		fprintf(arch, "DisplayInteger %s", tabla_simbolo[ind].nombre);
+		break;
+	case Float:
+		break;
+	case String:
+		break;
+	case CteString:
+	break;
+	}
+	fprintf(arch, "\n");
 }
