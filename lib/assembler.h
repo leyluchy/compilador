@@ -20,6 +20,7 @@ void multiplicacion(FILE* arch, int terceto);
 void division(FILE* arch, int terceto);
 void levantarEnPila(FILE* arch, const int ind);
 void write(FILE* arch, int ind);
+void read(FILE* arch, int ind);
 
 //Variables externas
 extern simbolo tabla_simbolo[TAMANIO_TABLA];
