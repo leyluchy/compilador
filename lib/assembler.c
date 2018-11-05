@@ -72,12 +72,16 @@ void generarAssembler(){
 		break;
 
       case MAS:
+		suma(arch,i);
         break;
       case MENOS:
+		resta(arch,i);
         break;
       case POR:
+		multiplicacion(arch,i);
         break;
       case DIVIDIDO:
+		division(arch,i);
         break;
 
       case READ:
@@ -197,6 +201,52 @@ void comparacion(FILE* arch, int ind){
 	levantarEnPila(arch, ind);
 	fprintf(arch, "FXCH\nFCOMP\nFSTSW AX\nSAHF\n");
 	
+}
+/** Levanta, suma, y deja en pila */
+void suma(FILE* arch, int ind){
+	levantarEnPila(arch, ind);
+	fprintf(arch, "FADD\n");
+}
+/** Levanta, revisa si hay dos operadores: Si hay uno, calcula el negativo. Si hay dos, resta y deja en pila*/
+void resta(FILE* arch, int ind){
+	if(lista_terceto[ind].op2==NOOP){
+		int aux;
+		if((aux = lista_terceto[ind].op1) < OFFSET){ //Es decir si está en la tabla
+			switch(tabla_simbolo[aux].tipo_dato){
+				case Int:
+					//FILD n; Donde n es el numero integer en memoria
+					fprintf(arch, "FILD %s\n", tabla_simbolo[aux].nombre);
+					break;
+				case Float:
+					//FLD n; Donde n es el numero float en memoria
+					fprintf(arch, "FLD %s\n", tabla_simbolo[aux].nombre);
+					break;
+				case CteInt:
+					//FILD n;Donde n es el numero integer en tabla
+					fprintf(arch, "FILD %s\n", tabla_simbolo[aux].nombre);
+					break;
+				case CteFloat:
+					//FLD n;Donde n es el numero float en tabla
+					fprintf(arch, "FLD %s\n", tabla_simbolo[aux].nombre);
+					break;
+			}
+		}
+		fprintf(arch, "FCHS\n");
+	}
+	else{
+		levantarEnPila(arch, ind);
+		fprintf(arch, "FSUB\n");
+	}
+}
+/** Levanta, multiplica, y deja en pila */
+void multiplicacion(FILE* arch, int ind){
+	levantarEnPila(arch, ind);
+	fprintf(arch, "FMUL\n");
+}
+/** Levanta, divide, si la cuenta era de enteros se asegura de truncar y deja en pila */
+void division(FILE* arch, int ind){ //Mañana reviso, seguro acá distinguimos operación integer de flotante
+	levantarEnPila(arch, ind);
+	fprintf(arch, "FDIV\n");
 }
 
 /** Asegura que el elemento de la izquierda esté en st1, y el de la derecha en st0 */

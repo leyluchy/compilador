@@ -20,7 +20,7 @@ int yyerror(char* mensaje);
 /* Pila de cosas para tercetos */
 typedef struct{
   int ind_bloque; //Apilamos el bloque actual
-
+  int ind_bwhile; //Apilamos el bloque while actual
   int falseIzq; //Si se pasa por false el bool izquierdo
   int falseDer; //Si se pasa por false el bool derecho
   int verdadero; //Si hay un OR, el lado izq
@@ -39,6 +39,7 @@ extern int ind_endif;
 extern int ind_else;
 extern int ind_then;
 extern int ind_bloque;
+extern int ind_bwhile;
 extern int ind_endwhile;
 /* Pila */
 extern info_elemento_pila pila_bloques[MAX_ANIDAMIENTOS];

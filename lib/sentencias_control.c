@@ -55,6 +55,7 @@ void apilar_IEP(){
 
 	info_elemento_pila aux;
 	aux.ind_bloque=ind_bloque;
+	aux.ind_bwhile=ind_bwhile;
 	aux.falseIzq=falseIzq;
 	aux.falseDer=falseDer;
 	aux.verdadero=verdadero;
@@ -77,6 +78,7 @@ void desapilar_IEP(){
 	ult_pos_pila_bloques--;
 
 	ind_bloque=aux.ind_bloque;
+	ind_bwhile=aux.ind_bwhile;
 	falseIzq=aux.falseIzq;
 	falseDer=aux.falseDer;
 	verdadero=aux.verdadero;

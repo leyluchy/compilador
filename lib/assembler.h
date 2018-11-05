@@ -12,6 +12,10 @@ void escribirEtiqueta(FILE* arch, char* etiqueta, int n);
 void escribirSalto(FILE* arch, char* salto, int tercetoDestino);
 void asignacion(FILE* arch, int terceto);
 void comparacion(FILE* arch, int terceto);
+void suma(FILE* arch, int terceto);
+void resta(FILE* arch, int terceto);
+void multiplicacion(FILE* arch, int terceto);
+void division(FILE* arch, int terceto);
 void levantarEnPila(FILE* arch, const int ind);
 
 //Variables externas
