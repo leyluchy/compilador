@@ -83,7 +83,7 @@ void generarAssembler(){
 		division(arch,i);
         break;
 
-      case READ:
+      case READ: read (arch,i);
         break;
       case WRITE:
 	  	write(arch, i);
@@ -112,7 +112,8 @@ void escribirFinal(FILE *arch){
 void generarTabla(FILE *arch){
     fprintf(arch, ".DATA\n");
     fprintf(arch, "NEW_LINE DB 0AH,0DH,'$'\n");
-
+    fprintf(arch, "_msgIngrese_entero db 'Ingrese un numero entero: ','$'\n_msgIngrese_float db 'Ingrese un numero real: ', '$'\n_msgIngrese_string db 'Ingrese un string: ','$'\n");
+	
     for(int i=0; i<=fin_tabla; i++){
         fprintf(arch, "%s ", tabla_simbolo[i].nombre);
         switch(tabla_simbolo[i].tipo_dato){
@@ -125,7 +126,10 @@ void generarTabla(FILE *arch){
         case CteString:
             fprintf(arch, "db \"%s\", '$'\n", tabla_simbolo[i].valor_s);
             break;
-        default: //Es una variable
+	case String:
+            fprintf(arch, "db \"%s\", '$'\n", tabla_simbolo[i].valor_s);
+            break;
+        default: //Es una int o float
             fprintf(arch, "dd ?\n");
         }
     }
@@ -330,3 +334,22 @@ void write(FILE* arch, int terceto){
 	}
 	fprintf(arch, "\n");
 }
+
+void read(FILE* arch, int terceto){
+	int ind = lista_terceto[terceto].op1; 
+	switch(tabla_simbolo[ind].tipo_dato){
+	case Int:
+		fprintf(arch, "displayString _msgIngrese_entero\ngetInteger %s\n", tabla_simbolo[ind].nombre);
+		
+		break;
+	case Float:
+		fprintf(arch, "displayString _msgIngrese_float\ngetFloat %s\n", tabla_simbolo[ind].nombre);
+		
+		break;
+	case String:
+		fprintf(arch, "displayString _msgIngrese_string\ngetString %s\n", tabla_simbolo[ind].nombre);
+	
+	}
+	fprintf(arch, "\n");
+}
+
