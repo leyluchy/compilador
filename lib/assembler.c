@@ -111,6 +111,7 @@ void escribirFinal(FILE *arch){
 
 void generarTabla(FILE *arch){
     fprintf(arch, ".DATA\n");
+    fprintf(arch, "NEW_LINE DB 0AH,0DH,'$'\n");
 
     for(int i=0; i<=fin_tabla; i++){
         fprintf(arch, "%s ", tabla_simbolo[i].nombre);
@@ -311,14 +312,20 @@ void write(FILE* arch, int terceto){
 	int ind = lista_terceto[terceto].op1; //Indice de entrada a tabla de simbolos del mensaje a mostrar
 	switch(tabla_simbolo[ind].tipo_dato){
 	case Int:
-		fprintf(arch, "DisplayInteger %s", tabla_simbolo[ind].nombre);
+		fprintf(arch, "DisplayInteger %s\n", tabla_simbolo[ind].nombre);
+		fprintf(arch, "displayString NEW_LINE\n");
 		break;
 	case Float:
-		fprintf(arch, "DisplayFloat %s,2", tabla_simbolo[ind].nombre);
+		fprintf(arch, "DisplayFloat %s,2\n", tabla_simbolo[ind].nombre);
+		fprintf(arch, "displayString NEW_LINE\n");
 		break;
-	case String:
+	case String:	
+			fprintf(arch, "displayString %s\n", tabla_simbolo[ind].nombre);
+			fprintf(arch, "displayString NEW_LINE\n");
 		break;
 	case CteString:
+			fprintf(arch, "displayString %s\n", tabla_simbolo[ind].nombre);
+			fprintf(arch, "displayString NEW_LINE\n");
 		break;
 	}
 	fprintf(arch, "\n");
