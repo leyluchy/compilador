@@ -13,8 +13,7 @@ void generarAssembler(){
 
   escribirInicio(arch);
   generarTabla(arch);
-
-  fprintf(arch, ".CODE\n");
+  escribirInicioCodigo(arch);
 
   for(int i=0; i <= ultimo_terceto; i++){
     switch(lista_terceto[i].operador){
@@ -87,6 +86,7 @@ void generarAssembler(){
       case READ:
         break;
       case WRITE:
+	  	write(arch, i);
         break;
     }
   }
@@ -100,8 +100,12 @@ void escribirInicio(FILE *arch){
   fprintf(arch, "include macros2.asm\ninclude number.asm\n\n.MODEL SMALL\n.386\n.STACK 200h\n\n");
 }
 
+void escribirInicioCodigo(FILE* arch){
+	fprintf(arch, ".CODE\n\nMOV AX, @DATA\nMOV DS, AX\nFINIT\n\n");
+}
+
 void escribirFinal(FILE *arch){
-    fprintf(arch, "\nend\n");
+    fprintf(arch, "\nMOV AH, 1\nINT 21h\nMOV AX, 4C00h\nINT 21h\n\nEND\n");
 }
 
 void generarTabla(FILE *arch){
@@ -188,8 +192,8 @@ void asignacion(FILE* arch, int ind){
 		fprintf(arch, "FSTP %s", tabla_simbolo[destino].nombre);
 		break;
 	case String:
-		//mov [destino] origen
 		//destino y origen son entradas a tabla de simbolos
+		//Cargo direccion del origen y pongo esa direccion en la variable en memoria. La variable sera puntero a string.
 		fprintf(arch, "LEA EAX, %s\nMOV %s, EAX", tabla_simbolo[origen].nombre, tabla_simbolo[destino].nombre);
 	}
 
@@ -200,7 +204,7 @@ void asignacion(FILE* arch, int ind){
 void comparacion(FILE* arch, int ind){
 	levantarEnPila(arch, ind);
 	fprintf(arch, "FXCH\nFCOMP\nFSTSW AX\nSAHF\n");
-	
+
 }
 /** Levanta, suma, y deja en pila */
 void suma(FILE* arch, int ind){
@@ -300,4 +304,20 @@ void levantarEnPila(FILE* arch, const int ind){
 	if(izqLevantado){
 		fprintf(arch, "FXCH\n");
 	}
+}
+
+void write(FILE* arch, int terceto){
+	int ind = lista_terceto[terceto].op1; //Indice de entrada a tabla de simbolos del mensaje a mostrar
+	switch(tabla_simbolo[ind].tipo_dato){
+	case Int:
+		fprintf(arch, "DisplayInteger %s", tabla_simbolo[ind].nombre);
+		break;
+	case Float:
+		break;
+	case String:
+		break;
+	case CteString:
+	break;
+	}
+	fprintf(arch, "\n");
 }

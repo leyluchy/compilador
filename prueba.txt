@@ -21,6 +21,8 @@ estimada_cajita_magica
 	f <- 5.6;
 	p<- .3 + 4.;
 
+	mostrame a;
+
 	-/ Anidamientos de if, máximo 9 niveles/-
 
 	si a>1
