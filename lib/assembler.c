@@ -122,7 +122,7 @@ void generarTabla(FILE *arch){
             fprintf(arch, "dd %f\n", tabla_simbolo[i].valor_f);
             break;
         case CteString:
-            fprintf(arch, "db \"%s\", 0\n", tabla_simbolo[i].valor_s);
+            fprintf(arch, "db \"%s\", '$'\n", tabla_simbolo[i].valor_s);
             break;
         default: //Es una variable
             fprintf(arch, "dd ?\n");
