@@ -112,8 +112,8 @@ void escribirFinal(FILE *arch){
 void generarTabla(FILE *arch){
     fprintf(arch, ".DATA\n");
     fprintf(arch, "NEW_LINE DB 0AH,0DH,'$'\n");
-    fprintf(arch, "_msgIngrese_entero db 'Ingrese un numero entero: ','$'\n_msgIngrese_float db 'Ingrese un numero real: ', '$'\n_msgIngrese_string db 'Ingrese un string: ','$'\n");
-	
+	fprintf(arch, "CWprevio DW ?\n");
+
     for(int i=0; i<=fin_tabla; i++){
         fprintf(arch, "%s ", tabla_simbolo[i].nombre);
         switch(tabla_simbolo[i].tipo_dato){
@@ -126,10 +126,7 @@ void generarTabla(FILE *arch){
         case CteString:
             fprintf(arch, "db \"%s\", '$'\n", tabla_simbolo[i].valor_s);
             break;
-	case String:
-            fprintf(arch, "db \"%s\", '$'\n", tabla_simbolo[i].valor_s);
-            break;
-        default: //Es una int o float
+        default: //Es una variable int, float o puntero a string
             fprintf(arch, "dd ?\n");
         }
     }
