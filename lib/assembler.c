@@ -4,10 +4,6 @@
 #include "../y.tab.h"
 #include "tercetos.h"
 
-int writeInt = 0;
-int writeFloat = 0;
-int writeString = 0;
-
 void generarAssembler(){
   FILE* arch = fopen("final.asm", "w");
   if(!arch){
@@ -315,17 +311,15 @@ void write(FILE* arch, int terceto){
 	int ind = lista_terceto[terceto].op1; //Indice de entrada a tabla de simbolos del mensaje a mostrar
 	switch(tabla_simbolo[ind].tipo_dato){
 	case Int:
-		writeInt = 1;
-		//fprintf(arch, "DisplayInteger %s", tabla_simbolo[ind].nombre);
+		fprintf(arch, "DisplayInteger %s", tabla_simbolo[ind].nombre);
 		break;
 	case Float:
-		writeFloat = 1;
+		fprintf(arch, "DisplayFloat %s,2", tabla_simbolo[ind].nombre);
 		break;
 	case String:
-		writeString = 1;
 		break;
 	case CteString:
-		writeString = 1;
+		break;
 	}
 	fprintf(arch, "\n");
 }
