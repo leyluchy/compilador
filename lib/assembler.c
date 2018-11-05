@@ -319,13 +319,13 @@ void write(FILE* arch, int terceto){
 		fprintf(arch, "DisplayFloat %s,2\n", tabla_simbolo[ind].nombre);
 		fprintf(arch, "displayString NEW_LINE\n");
 		break;
-	case String:	
-			fprintf(arch, "displayString %s\n", tabla_simbolo[ind].nombre);
-			fprintf(arch, "displayString NEW_LINE\n");
+	case String:
+		fprintf(arch, "MOV EBX, %s\ndisplayString [EBX]\n", tabla_simbolo[ind].nombre);
+		fprintf(arch, "displayString NEW_LINE\n");
 		break;
 	case CteString:
-			fprintf(arch, "displayString %s\n", tabla_simbolo[ind].nombre);
-			fprintf(arch, "displayString NEW_LINE\n");
+		fprintf(arch, "displayString %s\n", tabla_simbolo[ind].nombre);
+		fprintf(arch, "displayString NEW_LINE\n");
 		break;
 	}
 	fprintf(arch, "\n");
