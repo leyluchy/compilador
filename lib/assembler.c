@@ -185,6 +185,8 @@ void asignacion(FILE* arch, int ind){
 		// Sino es el resultado de una expresion anterior y ya esta en st(0)
 		if(origen < OFFSET) //Es un int en tabla de simbolos
 			fprintf(arch, "FILD %s\n", tabla_simbolo[origen].nombre);
+		else //El valor ya esta en el copro, puede que haga falta redondear
+			fprintf(arch, "FSTCW CWprevio ;Guardo Control Word del copro\nOR CWprevio, 0400h ;Preparo Control Word seteando RC con redondeo hacia abajo\nFLDCW CWprevio ;Cargo nueva Control Word\n");
 		fprintf(arch, "FISTP %s", tabla_simbolo[destino].nombre);
 		break;
 	case Float:
@@ -333,20 +335,19 @@ void write(FILE* arch, int terceto){
 }
 
 void read(FILE* arch, int terceto){
-	int ind = lista_terceto[terceto].op1; 
+	int ind = lista_terceto[terceto].op1;
 	switch(tabla_simbolo[ind].tipo_dato){
 	case Int:
 		fprintf(arch, "displayString _msgIngrese_entero\ngetInteger %s\n", tabla_simbolo[ind].nombre);
-		
+
 		break;
 	case Float:
 		fprintf(arch, "displayString _msgIngrese_float\ngetFloat %s\n", tabla_simbolo[ind].nombre);
-		
+
 		break;
 	case String:
 		fprintf(arch, "displayString _msgIngrese_string\ngetString %s\n", tabla_simbolo[ind].nombre);
-	
+
 	}
 	fprintf(arch, "\n");
 }
-
