@@ -124,7 +124,7 @@ void generarTabla(FILE *arch){
 }
 
 void escribirEtiqueta(FILE* arch, char* etiqueta, int n){
-    fprintf(arch, "%s%d: ", etiqueta, n+OFFSET);
+    fprintf(arch, "%s%d:\n", etiqueta, n+OFFSET);
 }
 
 void escribirSalto(FILE* arch, char* salto, int tercetoDestino){
@@ -170,8 +170,18 @@ void asignacion(FILE* arch, int ind){
 	//Ver tipo de dato
 	switch(tabla_simbolo[destino].tipo_dato){
 	case Int:
+		// Si es un int de tabla de simbolos, primero hay que traerlo de memoria a st(0)
+		// Sino es el resultado de una expresion anterior y ya esta en st(0)
+		if(origen < OFFSET) //Es un int en tabla de simbolos
+			fprintf(arch, "FILD %s\n", tabla_simbolo[origen].nombre);
+		fprintf(arch, "FISTP %s", tabla_simbolo[destino].nombre);
 		break;
 	case Float:
+		// Si es un float de tabla de simbolos, primero hay que traerlo de memoria a st(0)
+		// Sino es el resultado de una expresion anterior y ya esta en st(0)
+		if(origen < OFFSET) //Es un float en tabla de simbolos
+			fprintf(arch, "FLD %s\n", tabla_simbolo[origen].nombre);
+		fprintf(arch, "FSTP %s", tabla_simbolo[destino].nombre);
 		break;
 	case String:
 		//mov [destino] origen
