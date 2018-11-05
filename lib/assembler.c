@@ -4,6 +4,10 @@
 #include "../y.tab.h"
 #include "tercetos.h"
 
+int writeInt = 0;
+int writeFloat = 0;
+int writeString = 0;
+
 void generarAssembler(){
   FILE* arch = fopen("final.asm", "w");
   if(!arch){
@@ -106,6 +110,7 @@ void escribirInicioCodigo(FILE* arch){
 
 void escribirFinal(FILE *arch){
     fprintf(arch, "\nMOV AH, 1\nINT 21h\nMOV AX, 4C00h\nINT 21h\n\nEND\n");
+	// TODO: Preguntar por flags y escribir subrutinas
 }
 
 void generarTabla(FILE *arch){
@@ -310,14 +315,17 @@ void write(FILE* arch, int terceto){
 	int ind = lista_terceto[terceto].op1; //Indice de entrada a tabla de simbolos del mensaje a mostrar
 	switch(tabla_simbolo[ind].tipo_dato){
 	case Int:
-		fprintf(arch, "DisplayInteger %s", tabla_simbolo[ind].nombre);
+		writeInt = 1;
+		//fprintf(arch, "DisplayInteger %s", tabla_simbolo[ind].nombre);
 		break;
 	case Float:
+		writeFloat = 1;
 		break;
 	case String:
+		writeString = 1;
 		break;
 	case CteString:
-	break;
+		writeString = 1;
 	}
 	fprintf(arch, "\n");
 }
