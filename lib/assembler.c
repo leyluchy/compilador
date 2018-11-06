@@ -5,7 +5,7 @@
 #include "tercetos.h"
 
 void generarAssembler(){
-  FILE* arch = fopen("final.asm", "w");
+  FILE* arch = fopen("Final.asm", "w");
   if(!arch){
 		printf("No pude crear el archivo final.txt\n");
 		return;
