@@ -23,6 +23,16 @@ mostrame g;
 a<-10;
 b<-20;
 
+-/IF y WHILE vacios/-
+
+si a > 0
+por_favor
+gracias
+
+mientras b < 0
+por_favor
+goto_mientras
+
 -/Inlist TRUE/-
 
 si lta?(a;[20;30;40;10])

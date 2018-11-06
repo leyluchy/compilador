@@ -312,7 +312,7 @@ bloque_while:
 														}
 	| WHILE rutina_while expresion_logica THEN rutina_then ENDWHILE
 														{
-															printf("Regla 20.2: bloque_while es WHILE expresion_logica ENDWHILE\n\n");
+															printf("Regla 20.2: bloque_while es WHILE expresion_logica THEN ENDWHILE\n\n");
 															always = crear_terceto(JMP,ind_bwhile,NOOP);
 															ind_endwhile = crear_terceto(ENDWHILE, NOOP, NOOP);
 															ponerSaltoEndwhile();
