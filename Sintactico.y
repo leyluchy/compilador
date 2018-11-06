@@ -295,14 +295,16 @@ bloque_if:
 
 rutina_while:
 														{
-															ind_bwhile = crear_terceto(WHILE, NOOP, NOOP);
 															apilar_IEP();
+															ind_bwhile = crear_terceto(WHILE, NOOP, NOOP);
+															
 														};
 
 bloque_while:
     WHILE rutina_while expresion_logica THEN rutina_then bloque ENDWHILE
 														{
 															printf("Regla 20.1: bloque_while es WHILE expresion_logica THEN bloque ENDWHILE\n\n");
+															
 															always = crear_terceto(JMP,ind_bwhile,NOOP);
 															ind_endwhile = crear_terceto(ENDWHILE, NOOP, NOOP);
 															ponerSaltoEndwhile();
