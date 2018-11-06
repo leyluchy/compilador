@@ -338,15 +338,15 @@ void read(FILE* arch, int terceto){
 	int ind = lista_terceto[terceto].op1;
 	switch(tabla_simbolo[ind].tipo_dato){
 	case Int:
-		fprintf(arch, "displayString _msgIngrese_entero\ngetInteger %s\n", tabla_simbolo[ind].nombre);
+		fprintf(arch, "getInteger %s\n", tabla_simbolo[ind].nombre);
 
 		break;
 	case Float:
-		fprintf(arch, "displayString _msgIngrese_float\ngetFloat %s\n", tabla_simbolo[ind].nombre);
+		fprintf(arch, "getFloat %s\n", tabla_simbolo[ind].nombre);
 
 		break;
 	case String:
-		fprintf(arch, "displayString _msgIngrese_string\ngetString %s\n", tabla_simbolo[ind].nombre);
+		fprintf(arch, "getString %s\n", tabla_simbolo[ind].nombre);
 
 	}
 	fprintf(arch, "\n");
