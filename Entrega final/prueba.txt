@@ -6,13 +6,13 @@ estimada_cajita_magica
 		jeroglifico s, cadena, mi, mf;
 	para
 
-f<-4.2;
+f<-4.2; 	
 mostrame f;
 
-cadena<-"Hola";
+cadena<-"Hola"; 
 mostrame cadena;
 
-d<--45;
+d<--45; 
 mostrame d;
 c<-50;
 mostrame c;
@@ -32,8 +32,8 @@ si lta?(a;[20;30;40;10])
 		mostrame b;
 	gracias
 
-
--/Inlist FALSE/-
+	
+-/Inlist FALSE/-	
 
 si lta?(a;[20;30;40])
 	por_favor
@@ -41,13 +41,13 @@ si lta?(a;[20;30;40])
 	sino
 		mostrame b;
 	gracias
-
-
-
+	
+	
+	
 -/ While con AND/-
 
 b<--22;
-a<-1;
+a<-1;	
 mientras a<10 y b<12
 por_favor
 	mostrame a;
@@ -64,15 +64,15 @@ por_favor
 
 	a<-a+2;
 	b<-b+1;
-goto_mientras
-mostrame b;
+goto_mientras		
+mostrame b;	
 
-
+	
 -/ While anidado/-
-
+				
 	a<-0;
 	b<-99;
-
+	
 	mientras b<100
 	por_favor
 			mostrame b;
@@ -80,16 +80,16 @@ mostrame b;
 			por_favor
 				a<-a+1;
 				mostrame a;
-
-
-			goto_mientras
+				
+															
+			goto_mientras																																					
 			b<-200;
-			mostrame b;
+			mostrame b;																														
 	goto_mientras
-
+		
 a<-20;
 -/ Anidamientos de if, máximo 9 niveles/-
-
+		
 	si a>1
 	por_favor
 		a<-a+1;
@@ -131,22 +131,25 @@ a<-20;
 				gracias
 			gracias
 		gracias
-	gracias
-
+	gracias		
+	
 -/ AVG/-
 
 
 b<-20;
 a<-10;
-
+		
 f<-avast ([1.5,b/10,1.5,5,a*2,7.5+7.4+15.1]);
-mostrame f;
-
+mostrame f;			
+		
+		
 a<-4;
 mostrame a;
+
+
 
 mostrame "Salu2!";
 
 
-
+	
 salu2
