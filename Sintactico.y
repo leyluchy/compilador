@@ -352,6 +352,7 @@ expresion:
 expresion_cadena:
 	CTE_STRING						                    {
 															printf("Regla 24: expresion_cadena es CTE_STRING(%s)\n", $1);
+															chequearTipoDato(String);
 															int pos=agregarCteStringATabla(yylval.string_val);
 															ind_xpcad = crear_terceto(NOOP,pos,NOOP);
 														};
