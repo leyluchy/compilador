@@ -297,14 +297,14 @@ rutina_while:
 														{
 															apilar_IEP();
 															ind_bwhile = crear_terceto(WHILE, NOOP, NOOP);
-															
+
 														};
 
 bloque_while:
     WHILE rutina_while expresion_logica THEN rutina_then bloque ENDWHILE
 														{
 															printf("Regla 20.1: bloque_while es WHILE expresion_logica THEN bloque ENDWHILE\n\n");
-															
+
 															always = crear_terceto(JMP,ind_bwhile,NOOP);
 															ind_endwhile = crear_terceto(ENDWHILE, NOOP, NOOP);
 															ponerSaltoEndwhile();
@@ -312,7 +312,7 @@ bloque_while:
 														}
 	| WHILE rutina_while expresion_logica THEN rutina_then ENDWHILE
 														{
-															printf("Regla 20.2: bloque_while es WHILE expresion_logica ENDWHILE\n\n");
+															printf("Regla 20.2: bloque_while es WHILE expresion_logica THEN ENDWHILE\n\n");
 															always = crear_terceto(JMP,ind_bwhile,NOOP);
 															ind_endwhile = crear_terceto(ENDWHILE, NOOP, NOOP);
 															ponerSaltoEndwhile();
@@ -352,6 +352,7 @@ expresion:
 expresion_cadena:
 	CTE_STRING						                    {
 															printf("Regla 24: expresion_cadena es CTE_STRING(%s)\n", $1);
+															chequearTipoDato(String);
 															int pos=agregarCteStringATabla(yylval.string_val);
 															ind_xpcad = crear_terceto(NOOP,pos,NOOP);
 														};
@@ -628,7 +629,7 @@ void chequearTipoDato(int tipo){
 		return;
 	}
 	if(tipoDatoActual != tipo)
-		yyerror("me estas mezclando numeros enteros con reales. Por que me odias tanto?");
+		yyerror("me estas mezclando los tipos de datos. Por que me odias tanto?");
 }
 
 /** Vuelve tipoDatoActual a sinTipo */
